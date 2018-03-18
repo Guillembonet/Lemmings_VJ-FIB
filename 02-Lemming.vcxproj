@@ -22,9 +22,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Sprite.h" />
-    <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="TexturedQuad.h" />
     <ClInclude Include="VariableTexture.h" />
   </ItemGroup>
   <ItemGroup>
@@ -38,9 +36,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="TexturedQuad.cpp" />
     <ClCompile Include="VariableTexture.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
