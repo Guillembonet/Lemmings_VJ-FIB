@@ -3,8 +3,8 @@
 
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
+#include "Button.h"
 #include <functional>
-#include "Quad.h"
 
 
 class Menu
@@ -26,9 +26,10 @@ private:
 private:
 	float currentTime;
 
-	std::function<void()> callback;
 	ShaderProgram program;
-	Quad *quad;
+	Texture tex;
+	Button *button;
+	glm::mat4 projection;
 };
 
 

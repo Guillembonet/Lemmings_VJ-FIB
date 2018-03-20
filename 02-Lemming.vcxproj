@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="common_defs.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Lemming.h" />
@@ -26,6 +27,7 @@
     <ClInclude Include="VariableTexture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Lemming.cpp" />
     <ClCompile Include="main.cpp" />
@@ -87,7 +89,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>.\libs\freeglut\lib;.\libs\glew-1.13.0\lib\Release\Win32;.\libs\Simple OpenGL Image Library\projects\VC9\Debug;.\libs\freetype-2.3.5-1-bin\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\libs\glew-1.13.0\lib\Release\Win32;.\libs\freeglut\lib;.\libs\Simple OpenGL Image Library\projects\VC9\Debug;.\libs\freetype-2.3.5-1-bin\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>freeglut.lib;glew32.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
