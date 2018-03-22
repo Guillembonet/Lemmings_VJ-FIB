@@ -1,4 +1,4 @@
-./libs/*
-./Debug/*
-./libs/!README.md
-./vs/*
+libs/*
+Debug/*
+libs/!README.md
+vs/*
