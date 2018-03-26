@@ -35,7 +35,7 @@ private:
 	void applyMask(int mouseX, int mouseY);
 
 private:
-	Texture colorTexture, test;
+	Texture colorTexture;
 	VariableTexture maskTexture;
 	MaskedTexturedQuad *map;
 	ShaderProgram simpleTexProgram, maskedTexProgram, overlayProgram;
@@ -43,7 +43,7 @@ private:
 	glm::mat4 projection;
 	Lemming lemming;
 	std::vector<Button*> habilities;
-
+	std::vector<Texture*> habilitiesTexs;
 };
 
 
