@@ -10,16 +10,18 @@ class Button {
 
 public:
 	// Quads can only be created inside an OpenGL context
-	static Button *createButton(glm::vec2 geom[2], glm::vec2 texCoords[2], ShaderProgram &program, std::function<void()> callback);
+	static Button *createButton(glm::vec2 geom[2], glm::vec2 texCoords[2], std::function<void()> callback, Texture *buttonTex, ShaderProgram *program);
 
-	Button(glm::vec2 geom[2], glm::vec2 texCoords[2], ShaderProgram &program, std::function<void()> callback);
+	Button(glm::vec2 geom[2], glm::vec2 texCoords[2], std::function<void()> callback, Texture *buttonTex, ShaderProgram *program);
 
-	void render(ShaderProgram &program, const Texture &tex) const;
+	void render() const;
 	void free();
 
 	void mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton);
 
 private:
+	Texture *texture;
+	ShaderProgram *shaderProgram;
 	GLuint vao;
 	GLuint vbo;
 	GLint posLocation, texCoordLocation;

@@ -3,9 +3,11 @@
 
 
 #include <glm/glm.hpp>
+#include <vector>
 #include "ShaderProgram.h"
 #include "MaskedTexturedQuad.h"
 #include "Lemming.h"
+#include "Button.h"
 
 
 
@@ -21,6 +23,7 @@ public:
 	~Scene();
 
 	void init();
+	void initHabilities();
 	void update(int deltaTime);
 	void render();
 	
@@ -32,13 +35,14 @@ private:
 	void applyMask(int mouseX, int mouseY);
 
 private:
-	Texture colorTexture;
+	Texture colorTexture, test;
 	VariableTexture maskTexture;
 	MaskedTexturedQuad *map;
-	ShaderProgram simpleTexProgram, maskedTexProgram;
+	ShaderProgram simpleTexProgram, maskedTexProgram, overlayProgram;
 	float currentTime;
 	glm::mat4 projection;
 	Lemming lemming;
+	std::vector<Button*> habilities;
 
 };
 

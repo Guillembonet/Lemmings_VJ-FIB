@@ -34,12 +34,30 @@ void Scene::init()
 
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
-	
+
 	lemming.init(glm::vec2(60, 30), simpleTexProgram);
 	lemming.setMapMask(&maskTexture);
+
+	initHabilities();
 }
 
 unsigned int x = 0;
+
+void Scene::initHabilities()
+{
+	glm::vec2 geom[2] = { glm::vec2(float(CAMERA_WIDTH-1)/2.0f - 25.0f, float(CAMERA_HEIGHT-1) - 25.0f), glm::vec2(float(CAMERA_WIDTH-1)/2.0f, float(CAMERA_HEIGHT-1)) };
+	glm::vec2 texCoords[2] = { glm::vec2(0.0f, 0.f), glm::vec2(1.0f, 1.0f) }; //creo que si pones 1 en los dos coge todo
+	
+	test.loadFromFile("images/umbrellaLemming.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	test.setMinFilter(GL_NEAREST);
+	test.setMagFilter(GL_NEAREST);
+
+	std::function<void()> callback;
+
+	for (int i = 0; i < 1; ++i) {
+		habilities.push_back(Button::createButton(geom, texCoords, callback, &test, &overlayProgram));
+	}
+}
 
 void Scene::update(int deltaTime)
 {
@@ -64,6 +82,16 @@ void Scene::render()
 	modelview = glm::mat4(1.0f);
 	simpleTexProgram.setUniformMatrix4f("modelview", modelview);
 	lemming.render();
+
+
+	overlayProgram.use();
+	overlayProgram.setUniformMatrix4f("projection", projection);
+	overlayProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+	modelview = glm::mat4(1.0f);
+	overlayProgram.setUniformMatrix4f("modelview", modelview);
+	for (Button* h : habilities) {
+		h->render();
+	}
 }
 
 void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
@@ -128,6 +156,18 @@ void Scene::initShaders()
 		cout << "" << simpleTexProgram.log() << endl << endl;
 	}
 	simpleTexProgram.bindFragmentOutput("outColor");
+
+	overlayProgram.init();
+	overlayProgram.addShader(vShader);
+	overlayProgram.addShader(fShader);
+	overlayProgram.link();
+	if (!overlayProgram.isLinked())
+	{
+		cout << "Shader Linking Error" << endl;
+		cout << "" << overlayProgram.log() << endl << endl;
+	}
+	overlayProgram.bindFragmentOutput("outColor");
+
 	vShader.free();
 	fShader.free();
 

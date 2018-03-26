@@ -27,10 +27,10 @@ void Menu::init(std::function<void()> callback)
 
 	initShaders();
 
-	button = Button::createButton(geom, texCoords, program, callback);
 	tex.loadFromFile("images/play_button.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	tex.setMinFilter(GL_NEAREST);
 	tex.setMagFilter(GL_NEAREST);
+	button = Button::createButton(geom, texCoords, callback, &tex, &program);
 
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 
@@ -50,7 +50,7 @@ void Menu::render()
 	program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	modelview = glm::mat4(1.0f);
 	program.setUniformMatrix4f("modelview", modelview);
-	button->render(program, tex);
+	button->render();
 }
 
 void Menu::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)

@@ -1,17 +1,18 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
+#include <glm/gtc/matrix_transform.hpp>
 #include "Button.h"
 
 
-Button *Button::createButton(glm::vec2 geom[2], glm::vec2 texCoords[2], ShaderProgram &program, std::function<void()> callback)
+Button *Button::createButton(glm::vec2 geom[2], glm::vec2 texCoords[2], std::function<void()> callback, Texture *buttonTex, ShaderProgram *program)
 {
-	Button *quad = new Button(geom, texCoords, program, callback);
+	Button *quad = new Button(geom, texCoords, callback, buttonTex, program);
 
 	return quad;
 }
 
 
-Button::Button(glm::vec2 geom[2], glm::vec2 texCoords[2], ShaderProgram &program, std::function<void()> callback)
+Button::Button(glm::vec2 geom[2], glm::vec2 texCoords[2], std::function<void()> callback, Texture *buttonTex, ShaderProgram *program)
 {
 	this->callback = callback;
 	this->x = geom[0].x;
@@ -24,22 +25,27 @@ Button::Button(glm::vec2 geom[2], glm::vec2 texCoords[2], ShaderProgram &program
 		geom[0].x, geom[0].y, texCoords[0].x, texCoords[0].y,
 		geom[1].x, geom[1].y, texCoords[1].x, texCoords[1].y,
 		geom[0].x, geom[1].y, texCoords[0].x, texCoords[1].y };
+	this->texture = buttonTex;
+	this->shaderProgram = program;
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, 24 * sizeof(float), vertices, GL_STATIC_DRAW);
-	posLocation = program.bindVertexAttribute("position", 2, 4 * sizeof(float), 0);
-	texCoordLocation = program.bindVertexAttribute("texCoord", 2, 4 * sizeof(float), (void *)(2 * sizeof(float)));
+	posLocation = program->bindVertexAttribute("position", 2, 4 * sizeof(float), 0);
+	texCoordLocation = program->bindVertexAttribute("texCoord", 2, 4 * sizeof(float), (void *)(2 * sizeof(float)));
 }
 
-void Button::render(ShaderProgram &program, const Texture &tex) const
+void Button::render() const
 {
+	glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.f));
+	//shaderProgram->setUniformMatrix4f("modelview", modelview);
+	//shaderProgram->setUniform2f("texCoordDispl", 0.0f, 0.0f);
 	glEnable(GL_TEXTURE_2D);
-	program.setTextureUnit("tex", 0);
+	shaderProgram->setTextureUnit("tex", 0);
 	glActiveTexture(GL_TEXTURE0);
-	tex.use();
+	this->texture->use();
 	glBindVertexArray(vao);
 	glEnableVertexAttribArray(posLocation);
 	glEnableVertexAttribArray(texCoordLocation);
