@@ -36,16 +36,16 @@ void Scene::init()
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 
-	Lemming *newLemming = new Lemming();
-	newLemming->init(glm::vec2(60, 30), simpleTexProgram);
-	newLemming->setMapMask(&maskTexture);
-
-	lemmings.push_back(newLemming);
-
+	initDoors();
 	initHabilities();
 }
 
 unsigned int x = 0;
+
+void Scene::initDoors() {
+	door = new SkyDoor();
+	door->init(glm::vec2(80, 25), simpleTexProgram);
+}
 
 void Scene::initHabilities()
 {
@@ -72,10 +72,10 @@ void Scene::update(int deltaTime)
 	currentTime += deltaTime;
 
 	int currentTimeSec = currentTime / 1000;
-	if ((currentTimeSec % 3 == 0) && currentTimeSec != lastLemmingGenTime && lemmings.size() < MAX_LEMMINGS) {
+	if (door->isDoorOpen() && (currentTimeSec % 3 == 0) && currentTimeSec != lastLemmingGenTime && lemmings.size() < MAX_LEMMINGS) {
 		lastLemmingGenTime = currentTimeSec;
 		Lemming *newLemming = new Lemming();
-		newLemming->init(glm::vec2(60, 30), simpleTexProgram);
+		newLemming->init(glm::vec2(90, 27), simpleTexProgram);
 		newLemming->setMapMask(&maskTexture);
 
 		lemmings.push_back(newLemming);
@@ -85,6 +85,8 @@ void Scene::update(int deltaTime)
 	{
 		lem->update(deltaTime);
 	}
+
+	door->update(deltaTime);
 }
 
 void Scene::render()
@@ -108,6 +110,8 @@ void Scene::render()
 	{
 		lem->render();
 	}
+
+	door->render();
 
 	overlayProgram.use();
 	overlayProgram.setUniformMatrix4f("projection", projection);

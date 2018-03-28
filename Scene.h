@@ -8,6 +8,7 @@
 #include "MaskedTexturedQuad.h"
 #include "Lemming.h"
 #include "Button.h"
+#include "SkyDoor.h"
 
 
 
@@ -33,6 +34,8 @@ private:
 	void initShaders();
 	void eraseMask(int mouseX, int mouseY);
 	void applyMask(int mouseX, int mouseY);
+	void initLemmings();
+	void initDoors();
 
 private:
 	Texture colorTexture;
@@ -46,6 +49,8 @@ private:
 	std::vector<Lemming*> lemmings;
 	std::vector<Button*> habilities;
 	std::vector<Texture*> habilitiesTexs;
+
+	SkyDoor *door;
 };
 
 
