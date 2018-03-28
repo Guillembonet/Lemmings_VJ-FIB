@@ -36,8 +36,11 @@ void Scene::init()
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 
-	lemming.init(glm::vec2(60, 30), simpleTexProgram);
-	lemming.setMapMask(&maskTexture);
+	Lemming *newLemming = new Lemming();
+	newLemming->init(glm::vec2(60, 30), simpleTexProgram);
+	newLemming->setMapMask(&maskTexture);
+
+	lemmings.push_back(newLemming);
 
 	initHabilities();
 }
@@ -67,7 +70,21 @@ void Scene::initHabilities()
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
-	lemming.update(deltaTime);
+
+	int currentTimeSec = currentTime / 1000;
+	if ((currentTimeSec % 3 == 0) && currentTimeSec != lastLemmingGenTime && lemmings.size() < MAX_LEMMINGS) {
+		lastLemmingGenTime = currentTimeSec;
+		Lemming *newLemming = new Lemming();
+		newLemming->init(glm::vec2(60, 30), simpleTexProgram);
+		newLemming->setMapMask(&maskTexture);
+
+		lemmings.push_back(newLemming);
+	}
+
+	for each (Lemming *lem in lemmings)
+	{
+		lem->update(deltaTime);
+	}
 }
 
 void Scene::render()
@@ -86,8 +103,11 @@ void Scene::render()
 	simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	modelview = glm::mat4(1.0f);
 	simpleTexProgram.setUniformMatrix4f("modelview", modelview);
-	lemming.render();
 
+	for each (Lemming *lem in lemmings)
+	{
+		lem->render();
+	}
 
 	overlayProgram.use();
 	overlayProgram.setUniformMatrix4f("projection", projection);

@@ -41,7 +41,9 @@ private:
 	ShaderProgram simpleTexProgram, maskedTexProgram, overlayProgram;
 	float currentTime;
 	glm::mat4 projection;
-	Lemming lemming;
+	int lastLemmingGenTime;
+	int const MAX_LEMMINGS = 10;
+	std::vector<Lemming*> lemmings;
 	std::vector<Button*> habilities;
 	std::vector<Texture*> habilitiesTexs;
 };
