@@ -2,6 +2,7 @@
 
 #include "Sprite.h"
 #include "VariableTexture.h"
+#include <iostream>
 
 class SkyDoor
 {
@@ -14,5 +15,7 @@ public:
 private:
 	Sprite * sprite;
 	Texture spritesheet;
+
+	float currentTime;
 };
 
