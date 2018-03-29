@@ -1,5 +1,6 @@
 #include <SOIL.h>
 #include "Texture.h"
+#include <iostream>
 
 
 using namespace std;
@@ -27,8 +28,10 @@ bool Texture::loadFromFile(const string &filename, PixelFormat format)
 		image = SOIL_load_image(filename.c_str(), &widthTex, &heightTex, 0, SOIL_LOAD_RGBA);
 		break;
 	}
-	if(image == NULL)
+	if (image == NULL) {
+		std::cout << "sorry" << std::endl;
 		return false;
+	}
 
 	glGenTextures(1, &texId);
 	glBindTexture(GL_TEXTURE_2D, texId);
