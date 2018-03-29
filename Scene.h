@@ -9,7 +9,7 @@
 #include "Lemming.h"
 #include "Button.h"
 #include "SkyDoor.h"
-
+#include "ExitDoor.h"
 
 
 // Scene contains all the entities of our game.
@@ -50,7 +50,8 @@ private:
 	std::vector<Button*> habilities;
 	std::vector<Texture*> habilitiesTexs;
 
-	SkyDoor *door;
+	SkyDoor *skyDoor;
+	ExitDoor *exitDoor;
 };
 
 

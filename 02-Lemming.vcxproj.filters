@@ -60,6 +60,9 @@
     <ClInclude Include="SkyDoor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ExitDoor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -102,6 +105,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SkyDoor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExitDoor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

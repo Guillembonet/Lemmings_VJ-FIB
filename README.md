@@ -5,3 +5,5 @@
 **Semana 9** -> Pausar, velocidades, explotar, musica,...
 
 **Semana 16** -> extras, refactoring, testing
+
+http://funhtml5games.com/jslems/img/lemms2.gif
