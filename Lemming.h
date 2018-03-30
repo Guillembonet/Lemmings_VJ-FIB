@@ -22,6 +22,7 @@ public:
 	void setExitDoorCoords(int x, int y, int w, int h);
 
 	bool hasLeft();
+	void mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton);
 	
 private:
 	int collisionFloor(int maxFall);
@@ -31,7 +32,12 @@ private:
 private:
 	enum LemmingState
 	{
-		WALKING_LEFT_STATE, WALKING_RIGHT_STATE, FALLING_LEFT_STATE, FALLING_RIGHT_STATE, LEAVING_STATE, OUT_OF_SCENE_STATE
+		WALKING_LEFT_STATE, WALKING_RIGHT_STATE, FALLING_LEFT_STATE, FALLING_RIGHT_STATE, LEAVING_STATE, OUT_OF_SCENE_STATE,
+		DIGGING_STATE
+	};
+
+	enum Side {
+		RIGHT, LEFT
 	};
 
 	struct Box {
@@ -46,6 +52,8 @@ private:
 	Sprite *sprite;
 	VariableTexture *mask;
 	Box exitDoor;
+
+	Side side;
 };
 
 

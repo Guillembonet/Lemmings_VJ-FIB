@@ -143,6 +143,11 @@ void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButt
 		eraseMask(mouseX, mouseY);
 	else if(bRightButton)
 		applyMask(mouseX, mouseY);
+
+	for each (Lemming* lem in lemmings)
+	{
+		lem->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+	}
 }
 
 void Scene::eraseMask(int mouseX, int mouseY)

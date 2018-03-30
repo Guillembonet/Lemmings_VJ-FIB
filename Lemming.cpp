@@ -13,7 +13,7 @@
 
 enum LemmingAnims
 {
-	WALKING_LEFT, WALKING_RIGHT, LEAVING, OUT_OF_SCENE, FALLING_LEFT, FALLING_RIGHT
+	WALKING_LEFT, WALKING_RIGHT, LEAVING, OUT_OF_SCENE, FALLING_LEFT, FALLING_RIGHT, DIGGING
 };
 
 
@@ -24,7 +24,7 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(1/32.0f, 1/34.0f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(6);
+	sprite->setNumberAnimations(7);
 	
 		sprite->setAnimationSpeed(WALKING_RIGHT, 12);
 		for(int i=0; i<8; i++)
@@ -48,8 +48,14 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 		sprite->setAnimationSpeed(FALLING_RIGHT, 8);
 		for (int i = 0; i<4; i++)
 			sprite->addKeyframe(FALLING_RIGHT, glm::vec2(float(i) / 32, 18 / 34.0f));
+
+		sprite->setAnimationSpeed(DIGGING, 10);
+		for (int i = 0; i<16; i++)
+			sprite->addKeyframe(DIGGING, glm::vec2(float(i) / 32, 11 / 34.0f));
 		
+
 	sprite->changeAnimation(FALLING_RIGHT);
+	side = RIGHT;
 	sprite->setPosition(initialPosition);
 }
 
@@ -77,7 +83,6 @@ void Lemming::update(int deltaTime)
 			sprite->changeAnimation(WALKING_RIGHT);
 			state = WALKING_RIGHT_STATE;
 		}
-			
 	}
 	else if (state == WALKING_LEFT_STATE) {
 		sprite->position() += glm::vec2(-1, -1);
@@ -86,6 +91,7 @@ void Lemming::update(int deltaTime)
 			sprite->position() -= glm::vec2(-1, -1);
 			sprite->changeAnimation(WALKING_RIGHT);
 			state = WALKING_RIGHT_STATE;
+			side = RIGHT;
 		}
 		else
 		{
@@ -108,6 +114,7 @@ void Lemming::update(int deltaTime)
 			sprite->position() -= glm::vec2(1, -1);
 			sprite->changeAnimation(WALKING_LEFT);
 			state = WALKING_LEFT_STATE;
+			side = LEFT;
 		}
 		else
 		{
@@ -125,6 +132,29 @@ void Lemming::update(int deltaTime)
 		if (sprite->getCurrentKeyFrameIndex() == sprite->getKeyFramesLenght() - 1) {
 			state = OUT_OF_SCENE_STATE;
 			sprite->changeAnimation(OUT_OF_SCENE);
+		}
+	}
+	else if (state == DIGGING_STATE) {
+		fall = collisionFloor(1);
+		std::cout << fall << std::endl;
+		if (fall >= 1) {
+			if (side == RIGHT) {
+				state = FALLING_RIGHT_STATE;
+				sprite->changeAnimation(FALLING_RIGHT);
+			}
+			else {
+				state = FALLING_LEFT_STATE;
+				sprite->changeAnimation(FALLING_LEFT);
+			}
+		}
+		else {
+			sprite->position() += glm::vec2(0, 0.2);
+			glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
+			posBase += glm::ivec2(7, 16);
+			for (int i = -4; i <= 4; i++)
+			{
+				mask->setPixel(posBase.x + i, posBase.y - 2, 1);
+			}
 		}
 	}
 
@@ -146,6 +176,7 @@ void Lemming::render()
 void Lemming::setMapMask(VariableTexture *mapMask)
 {
 	mask = mapMask;
+	std::cout << "otra vez" << std::endl;
 }
 
 void Lemming::setExitDoorCoords(int x, int y, int w, int h) {
@@ -192,6 +223,13 @@ bool Lemming::hasLeft() {
 	return state == OUT_OF_SCENE_STATE;
 }
 
+void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton) {
+	auto pos = sprite->position();
+	if (bLeftButton && mouseX > pos.x && (state == WALKING_LEFT_STATE || state == WALKING_RIGHT_STATE)) {
+		state = DIGGING_STATE;
+		sprite->changeAnimation(DIGGING);
+	}
+}
 
 
 
