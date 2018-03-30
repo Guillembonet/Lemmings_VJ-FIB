@@ -13,7 +13,7 @@
 
 enum LemmingAnims
 {
-	WALKING_LEFT, WALKING_RIGHT
+	WALKING_LEFT, WALKING_RIGHT, LEAVING, OUT_OF_SCENE
 };
 
 
@@ -24,7 +24,7 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(1/32.0f, 1/34.0f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(2);
+	sprite->setNumberAnimations(4);
 	
 		sprite->setAnimationSpeed(WALKING_RIGHT, 12);
 		for(int i=0; i<8; i++)
@@ -33,6 +33,13 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 		sprite->setAnimationSpeed(WALKING_LEFT, 12);
 		for(int i=0; i<8; i++)
 			sprite->addKeyframe(WALKING_LEFT, glm::vec2(float(i) / 32, 0.0f));
+
+		sprite->setAnimationSpeed(LEAVING, 8);
+		for(int i = 0; i<8; i++)
+			sprite->addKeyframe(LEAVING, glm::vec2(float(i) / 32, 13/34.0f));
+
+		sprite->setAnimationSpeed(OUT_OF_SCENE, 1);
+		sprite->addKeyframe(OUT_OF_SCENE, glm::vec2(30/32.0f, 0.0f));
 		
 	sprite->changeAnimation(WALKING_RIGHT);
 	sprite->setPosition(initialPosition);
@@ -45,25 +52,23 @@ void Lemming::update(int deltaTime)
 	if(sprite->update(deltaTime) == 0)
 		return;
 
-	switch(state)
-	{
-	case FALLING_LEFT_STATE:
+	if(state ==  FALLING_LEFT_STATE){
 		fall = collisionFloor(2);
 		if(fall > 0)
 			sprite->position() += glm::vec2(0, fall);
 		else
 			state = WALKING_LEFT_STATE;
-		break;
-	case FALLING_RIGHT_STATE:
+	}
+	else if (state == FALLING_RIGHT_STATE) {
 		fall = collisionFloor(2);
-		if(fall > 0)
+		if (fall > 0)
 			sprite->position() += glm::vec2(0, fall);
 		else
 			state = WALKING_RIGHT_STATE;
-		break;
-	case WALKING_LEFT_STATE:
+	}
+	else if (state == WALKING_LEFT_STATE) {
 		sprite->position() += glm::vec2(-1, -1);
-		if(collision())
+		if (collision())
 		{
 			sprite->position() -= glm::vec2(-1, -1);
 			sprite->changeAnimation(WALKING_RIGHT);
@@ -72,17 +77,17 @@ void Lemming::update(int deltaTime)
 		else
 		{
 			fall = collisionFloor(3);
-			if(fall > 0)
+			if (fall > 0)
 				sprite->position() += glm::vec2(0, 1);
-			if(fall > 1)
+			if (fall > 1)
 				sprite->position() += glm::vec2(0, 1);
-			if(fall > 2)
+			if (fall > 2)
 				state = FALLING_LEFT_STATE;
 		}
-		break;
-	case WALKING_RIGHT_STATE:
+	}
+	else if (state == WALKING_RIGHT_STATE) {
 		sprite->position() += glm::vec2(1, -1);
-		if(collision())
+		if (collision())
 		{
 			sprite->position() -= glm::vec2(1, -1);
 			sprite->changeAnimation(WALKING_LEFT);
@@ -91,12 +96,27 @@ void Lemming::update(int deltaTime)
 		else
 		{
 			fall = collisionFloor(3);
-			if(fall < 3)
+			if (fall < 3)
 				sprite->position() += glm::vec2(0, fall);
 			else
 				state = FALLING_RIGHT_STATE;
 		}
-		break;
+	}
+	else if (state == LEAVING_STATE) { 
+		// Si hemos acabado de salir por la puerta, nos vamos fuera de la escena
+		if (sprite->getCurrentKeyFrameIndex() == sprite->getKeyFramesLenght() - 1) {
+			state = OUT_OF_SCENE_STATE;
+			sprite->changeAnimation(OUT_OF_SCENE);
+		}
+	}
+
+	// Si estamos caminando y nos encontramos en frente de la puerta...
+	if (state == WALKING_RIGHT_STATE || state == WALKING_LEFT_STATE) {
+		glm::ivec2 posBase = sprite->position();
+		if (inFrontOfExitDoor(posBase.x, posBase.y)) {
+			state = LEAVING_STATE;
+			sprite->changeAnimation(LEAVING);
+		}
 	}
 }
 
@@ -108,6 +128,13 @@ void Lemming::render()
 void Lemming::setMapMask(VariableTexture *mapMask)
 {
 	mask = mapMask;
+}
+
+void Lemming::setExitDoorCoords(int x, int y, int w, int h) {
+	exitDoor.x = x;
+	exitDoor.y = y;
+	exitDoor.width = w;
+	exitDoor.height = h;
 }
 
 int Lemming::collisionFloor(int maxFall)
@@ -137,6 +164,14 @@ bool Lemming::collision()
 		return false;
 
 	return true;
+}
+
+bool Lemming::inFrontOfExitDoor(int x, int y) {
+	return x > exitDoor.x && x < exitDoor.x + exitDoor.width && y < exitDoor.y && y > exitDoor.y - exitDoor.height;
+}
+
+bool Lemming::hasLeft() {
+	return state == OUT_OF_SCENE_STATE;
 }
 
 

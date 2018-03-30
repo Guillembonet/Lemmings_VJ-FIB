@@ -80,6 +80,7 @@ void Scene::update(int deltaTime)
 		Lemming *newLemming = new Lemming();
 		newLemming->init(glm::vec2(90, 27), simpleTexProgram);
 		newLemming->setMapMask(&maskTexture);
+		newLemming->setExitDoorCoords(233, 117, 4, 5);
 
 		lemmings.push_back(newLemming);
 	}
@@ -87,6 +88,9 @@ void Scene::update(int deltaTime)
 	for each (Lemming *lem in lemmings)
 	{
 		lem->update(deltaTime);
+		if (lem->hasLeft()) {
+			std::cout << "Se ha ido!" << std::endl;
+		}
 	}
 
 	skyDoor->update(deltaTime);
