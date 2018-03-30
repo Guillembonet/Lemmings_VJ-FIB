@@ -75,7 +75,7 @@ void Scene::update(int deltaTime)
 	currentTime += deltaTime;
 
 	int currentTimeSec = currentTime / 1000;
-	if (skyDoor->isDoorOpen() && (currentTimeSec % 3 == 0) && currentTimeSec != lastLemmingGenTime && lemmings.size() < MAX_LEMMINGS) {
+	if (skyDoor->isDoorOpen() && (currentTimeSec % 3 == 0) && currentTimeSec != lastLemmingGenTime && lemmingCount < MAX_LEMMINGS) {
 		lastLemmingGenTime = currentTimeSec;
 		Lemming *newLemming = new Lemming();
 		newLemming->init(glm::vec2(90, 27), simpleTexProgram);
@@ -83,18 +83,24 @@ void Scene::update(int deltaTime)
 		newLemming->setExitDoorCoords(233, 117, 4, 5);
 
 		lemmings.push_back(newLemming);
+
+		lemmingCount++;
 	}
 
-	for each (Lemming *lem in lemmings)
-	{
-		lem->update(deltaTime);
-		if (lem->hasLeft()) {
-			std::cout << "Se ha ido!" << std::endl;
+	for (int i = 0; i < lemmings.size(); i++) {
+		lemmings[i]->update(deltaTime);
+		if (lemmings[i]->hasLeft()) {
+			lemmings.erase(lemmings.begin() + i);
+			i--;
 		}
 	}
 
 	skyDoor->update(deltaTime);
 	exitDoor->update(deltaTime);
+
+	if (lemmings.size() == 0 && (currentTime/1000 > 5)) {
+		std::cout << "Fin de la escena" << std::endl;
+	}
 }
 
 void Scene::render()
