@@ -26,6 +26,7 @@ public:
 	
 private:
 	int collisionFloor(int maxFall);
+	int Lemming::collisionFloorWithCoords(int maxFall, int x, int y);
 	bool collision();
 	bool inFrontOfExitDoor(int x, int y);
 	

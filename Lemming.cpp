@@ -135,9 +135,19 @@ void Lemming::update(int deltaTime)
 		}
 	}
 	else if (state == DIGGING_STATE) {
-		fall = collisionFloor(1);
-		std::cout << fall << std::endl;
-		if (fall >= 1) {
+		sprite->position() += glm::vec2(0, 0.2);
+		glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
+		posBase += glm::ivec2(7, 16);
+
+		fall = collisionFloorWithCoords(4, posBase.x, posBase.y-2.2);
+		//std::cout << fall << std::endl;
+		if (fall < 4) {
+			for (int i = -5; i <= 5; i++)
+			{
+				mask->setPixel(posBase.x + i, posBase.y - 2.2, 0);
+			}
+		}
+		else {
 			if (side == RIGHT) {
 				state = FALLING_RIGHT_STATE;
 				sprite->changeAnimation(FALLING_RIGHT);
@@ -145,15 +155,6 @@ void Lemming::update(int deltaTime)
 			else {
 				state = FALLING_LEFT_STATE;
 				sprite->changeAnimation(FALLING_LEFT);
-			}
-		}
-		else {
-			sprite->position() += glm::vec2(0, 0.2);
-			glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
-			posBase += glm::ivec2(7, 16);
-			for (int i = -4; i <= 4; i++)
-			{
-				mask->setPixel(posBase.x + i, posBase.y - 2, 1);
 			}
 		}
 	}
@@ -188,14 +189,18 @@ void Lemming::setExitDoorCoords(int x, int y, int w, int h) {
 
 int Lemming::collisionFloor(int maxFall)
 {
+	glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
+	posBase += glm::ivec2(7, 16);
+	return collisionFloorWithCoords(maxFall, posBase.x, posBase.y);
+}
+
+int Lemming::collisionFloorWithCoords(int maxFall, int x, int y) {
 	bool bContact = false;
 	int fall = 0;
-	glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
-	
-	posBase += glm::ivec2(7, 16);
-	while((fall < maxFall) && !bContact)
+
+	while ((fall < maxFall) && !bContact)
 	{
-		if((mask->pixel(posBase.x, posBase.y+fall) == 0) && (mask->pixel(posBase.x+1, posBase.y+fall) == 0))
+		if ((mask->pixel(x, y + fall) == 0) && (mask->pixel(x + 1, y + fall) == 0))
 			fall += 1;
 		else
 			bContact = true;
@@ -211,7 +216,8 @@ bool Lemming::collision()
 	posBase += glm::ivec2(7, 15);
 	if((mask->pixel(posBase.x, posBase.y) == 0) && (mask->pixel(posBase.x+1, posBase.y) == 0))
 		return false;
-
+	
+	std::cout << "Colision" << std::endl;
 	return true;
 }
 
@@ -228,6 +234,7 @@ void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBu
 	if (bLeftButton && mouseX > pos.x && (state == WALKING_LEFT_STATE || state == WALKING_RIGHT_STATE)) {
 		state = DIGGING_STATE;
 		sprite->changeAnimation(DIGGING);
+		sprite->position() += glm::vec2(0, 0.5);
 	}
 }
 
