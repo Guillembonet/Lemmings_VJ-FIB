@@ -8,6 +8,10 @@ void Game::callback(){ // En caso de que esta función sea llamada, se iniciará l
 	state = PLAYING;
 }
 
+void Game::end_game() { // En caso de que esta función sea llamada, se iniciará la escena del juego y se cambiará el estado
+	bPlay = false;
+}
+
 void Game::init()
 {
 	bPlay = true;
@@ -17,7 +21,8 @@ void Game::init()
 	state = MENU; // Inicialmente tendremos el menú
 
 	std::function<void()> functionObject = std::bind(&Game::callback, this); // Creamos obj. function y le enlazamos nuestro callback
-	menu.init(functionObject); // Iniciamos el menú pasándole el obj. function que se podrá ejecutar como si de una función se tratase
+	std::function<void()> exitFunction = std::bind(&Game::end_game, this);
+	menu.init(functionObject, exitFunction); // Iniciamos el menú pasándole el obj. function que se podrá ejecutar como si de una función se tratase
 }
 
 bool Game::update(int deltaTime)

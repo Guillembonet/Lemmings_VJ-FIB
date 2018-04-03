@@ -5,32 +5,45 @@
 #include "Menu.h"
 
 
-Menu::Menu()
-{
-	button = NULL;
+Menu::Menu(){
 }
 
-Menu::~Menu()
-{
-	if (button != NULL)
-		delete button;
-}
+Menu::~Menu(){}
 
-
-void Menu::init(std::function<void()> callback)
+void Menu::init(std::function<void()> callback, std::function<void()> exit)
 {
+
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+
 	currentTime = 0.0f;
-
-	//posicion del boton
-	glm::vec2 geom[2] = { glm::vec2(float(CAMERA_WIDTH)/4.0f, float(CAMERA_HEIGHT)/4.0f), glm::vec2(float(CAMERA_WIDTH) * 3.0f / 4.0f, float(CAMERA_HEIGHT) / 2.0f) };
-	glm::vec2 texCoords[2] = { glm::vec2(0.0f, 0.f), glm::vec2(1.0f, 1.0f) }; //creo que si pones 1 en los dos coge todo
+	
+	glm::vec2 texCoords[2] = { glm::vec2(0.0f, 0.f), glm::vec2(1.0f, 1.0f) };
 
 	initShaders();
 
-	tex.loadFromFile("images/play_button.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	tex.setMinFilter(GL_NEAREST);
-	tex.setMagFilter(GL_NEAREST);
-	button = Button::createButton(geom, texCoords, callback, &tex, &program);
+	glm::vec2 geomPlay[2] = { glm::vec2(float(CAMERA_WIDTH) / 3.0f, float(CAMERA_HEIGHT) / 10.0f), glm::vec2(float(CAMERA_WIDTH) * 2.0f / 3.0f, float(CAMERA_HEIGHT)*3.0f / 10.0f) };
+
+	texPlay.loadFromFile("images/play_button.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texPlay.setMinFilter(GL_NEAREST);
+	texPlay.setMagFilter(GL_NEAREST);
+	playButton = Button::createButton(geomPlay, texCoords, callback, &texPlay, &program);
+
+	glm::vec2 geomIns[2] = { glm::vec2(float(CAMERA_WIDTH) / 3.0f, float(CAMERA_HEIGHT)*4.0 / 10.0f), glm::vec2(float(CAMERA_WIDTH) * 2.0f / 3.0f, float(CAMERA_HEIGHT)*6.0f / 10.0f) };
+
+	std::function<void()> none;
+
+	texIns.loadFromFile("images/instructions_button.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texIns.setMinFilter(GL_NEAREST);
+	texIns.setMagFilter(GL_NEAREST);
+	
+	insButton = Button::createButton(geomIns, texCoords, none, &texIns, &program);
+
+	glm::vec2 geomExit[2] = { glm::vec2(float(CAMERA_WIDTH) / 3.0f, float(CAMERA_HEIGHT)*7.0 / 10.0f), glm::vec2(float(CAMERA_WIDTH) * 2.0f / 3.0f, float(CAMERA_HEIGHT)*9.0f / 10.0f) };
+
+	texExit.loadFromFile("images/exit_button.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texExit.setMinFilter(GL_NEAREST);
+	texExit.setMagFilter(GL_NEAREST);
+	exitButton = Button::createButton(geomExit, texCoords, exit, &texExit, &program);
 
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 
@@ -50,12 +63,16 @@ void Menu::render()
 	program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	modelview = glm::mat4(1.0f);
 	program.setUniformMatrix4f("modelview", modelview);
-	button->render();
+	playButton->render();
+	insButton->render();
+	exitButton->render();
 }
 
 void Menu::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
 { 
-	button->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+	playButton->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+	insButton->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+	exitButton->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 }
 
 void Menu::initShaders()

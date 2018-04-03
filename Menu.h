@@ -14,7 +14,7 @@ public:
 	Menu();
 	~Menu();
 
-	void init(std::function<void()>);
+	void init(std::function<void()>, std::function<void()>);
 	void update(int deltaTime);
 	void render();
 
@@ -27,8 +27,8 @@ private:
 	float currentTime;
 
 	ShaderProgram program;
-	Texture tex;
-	Button *button;
+	Texture texPlay, texIns, texExit;
+	Button *playButton, *insButton, *exitButton;
 	glm::mat4 projection;
 };
 

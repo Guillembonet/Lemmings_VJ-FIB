@@ -39,6 +39,7 @@ public:
 	void mouseRelease(int button);
 
 	void callback();
+	void end_game();
 	
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
