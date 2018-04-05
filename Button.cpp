@@ -39,9 +39,8 @@ Button::Button(glm::vec2 geom[2], glm::vec2 texCoords[2], std::function<void()> 
 
 void Button::render() const
 {
-	glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.f));
-	//shaderProgram->setUniformMatrix4f("modelview", modelview);
-	//shaderProgram->setUniform2f("texCoordDispl", 0.0f, 0.0f);
+	glm::mat4 modelview = glm::mat4(1.0f);
+	glEnable (GL_BLEND); glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_TEXTURE_2D);
 	shaderProgram->setTextureUnit("tex", 0);
 	glActiveTexture(GL_TEXTURE0);

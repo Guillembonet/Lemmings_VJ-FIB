@@ -8,7 +8,7 @@ void Game::callback(){ // En caso de que esta función sea llamada, se iniciará l
 	state = PLAYING;
 }
 
-void Game::end_game() { // En caso de que esta función sea llamada, se iniciará la escena del juego y se cambiará el estado
+void Game::end_game() {
 	bPlay = false;
 }
 

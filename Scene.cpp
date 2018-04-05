@@ -57,10 +57,13 @@ void Scene::initDoors() {
 void Scene::initHabilities()
 {
 	glm::vec2 texCoords[2] = { glm::vec2(0.0f, 0.f), glm::vec2(1.0f, 1.0f) }; //creo que si pones 1 en los dos coge todo
+
+	string habilitiesNames[] = { "control_bash.png", "control_block.png", "control_build.png", "control_climb.png" };
 	
 	for (int i = 0; i < HABILITIES_NUMBER; ++i) {
 		habilitiesTexs.push_back(new Texture());
-		habilitiesTexs[i]->loadFromFile("images/umbrellaLemming.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		cout << "images/buttons/" + habilitiesNames[i] << endl;
+		habilitiesTexs[i]->loadFromFile("images/buttons/" + habilitiesNames[i], TEXTURE_PIXEL_FORMAT_RGBA);
 		habilitiesTexs[i]->setMinFilter(GL_NEAREST);
 		habilitiesTexs[i]->setMagFilter(GL_NEAREST);
 	}
@@ -68,8 +71,8 @@ void Scene::initHabilities()
 	std::function<void()> callback;
 
 	for (int i = 0; i < HABILITIES_NUMBER; ++i) {
-		glm::vec2 geom[2] = { glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (25.0f*HABILITIES_NUMBER/2.0f) + i*25.0f, float(CAMERA_HEIGHT - 1) - 25.0f),
-			glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (25.0f*HABILITIES_NUMBER / 2.0f) + (i+1)*25.0f, float(CAMERA_HEIGHT - 1)) };
+		glm::vec2 geom[2] = { glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (20.0f*HABILITIES_NUMBER/2.0f) + i*20.0f, float(CAMERA_HEIGHT - 1) - 25.0f),
+			glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (20.0f*HABILITIES_NUMBER / 2.0f) + (i+1)*20.0f, float(CAMERA_HEIGHT - 1)) };
 		habilities.push_back(Button::createButton(geom, texCoords, callback, habilitiesTexs[i], &overlayProgram));
 	}
 }
@@ -156,6 +159,10 @@ void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButt
 	}
 
 	mousePointer->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+	for each (Button* b in habilities)
+	{
+		b->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+	}
 }
 
 void Scene::eraseMask(int mouseX, int mouseY)
