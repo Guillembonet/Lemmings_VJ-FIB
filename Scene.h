@@ -3,6 +3,8 @@
 
 
 #include <glm/glm.hpp>
+#include <GL/glew.h>
+#include <GL/glut.h>
 #include <vector>
 #include "ShaderProgram.h"
 #include "MaskedTexturedQuad.h"
@@ -10,6 +12,7 @@
 #include "Button.h"
 #include "SkyDoor.h"
 #include "ExitDoor.h"
+#include "MousePointer.h"
 
 
 // Scene contains all the entities of our game.
@@ -45,7 +48,7 @@ private:
 	float currentTime;
 	glm::mat4 projection;
 	int lastLemmingGenTime;
-	int const MAX_LEMMINGS = 10;
+	int const MAX_LEMMINGS = 1;
 	int lemmingCount = 0;
 	std::vector<Lemming*> lemmings;
 	std::vector<Button*> habilities;
@@ -53,6 +56,7 @@ private:
 
 	SkyDoor *skyDoor;
 	ExitDoor *exitDoor;
+	MousePointer *mousePointer;
 };
 
 

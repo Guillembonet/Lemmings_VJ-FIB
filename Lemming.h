@@ -31,6 +31,8 @@ private:
 	bool inFrontOfExitDoor(int x, int y);
 	
 private:
+	bool isLemmingSelected(int x, int y, int i, int j);
+
 	enum LemmingState
 	{
 		WALKING_LEFT_STATE, WALKING_RIGHT_STATE, FALLING_LEFT_STATE, FALLING_RIGHT_STATE, LEAVING_STATE, OUT_OF_SCENE_STATE,
