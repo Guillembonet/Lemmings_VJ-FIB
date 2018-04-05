@@ -48,7 +48,7 @@ private:
 	float currentTime;
 	glm::mat4 projection;
 	int lastLemmingGenTime;
-	int const MAX_LEMMINGS = 1;
+	int const MAX_LEMMINGS = 10;
 	int lemmingCount = 0;
 	std::vector<Lemming*> lemmings;
 	std::vector<Button*> habilities;
