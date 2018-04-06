@@ -10,6 +10,7 @@
 #include "Button.h"
 #include "SkyDoor.h"
 #include "ExitDoor.h"
+#include "BottomBox.h"
 
 
 // Scene contains all the entities of our game.
@@ -48,11 +49,10 @@ private:
 	int const MAX_LEMMINGS = 10;
 	int lemmingCount = 0;
 	std::vector<Lemming*> lemmings;
-	std::vector<Button*> habilities;
-	std::vector<Texture*> habilitiesTexs;
 
 	SkyDoor *skyDoor;
 	ExitDoor *exitDoor;
+	BottomBox *bb;
 };
 
 
