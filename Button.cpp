@@ -59,6 +59,7 @@ void Button::free()
 
 void Button::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
 {
-	if ((bLeftButton || bRightButton) && (x <= mouseX/3) && (mouseX/3 <= (x + width)) && (y <= mouseY/3) && (mouseY/3 <= (y + height)))
+	if ((bLeftButton || bRightButton) && (x <= mouseX / 3) && (mouseX / 3 <= (x + width)) && (y <= mouseY / 3) && (mouseY / 3 <= (y + height))) {
 		callback(); // En caso de que se haga click izquierdo o derecho, llamamos al callback
+	}
 }

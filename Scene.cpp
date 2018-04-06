@@ -9,6 +9,7 @@
 Scene::Scene()
 {
 	map = NULL;
+	selectedHab = "NONE";
 }
 
 Scene::~Scene()
@@ -59,7 +60,7 @@ void Scene::initHabilities()
 	std::function<void()> callback;
 
 	bb = new BottomBox();
-	bb->init(callback, &overlayProgram);
+	bb->init(&selectedHab, &overlayProgram);
 }
 
 void Scene::update(int deltaTime)
@@ -119,9 +120,8 @@ void Scene::render()
 	{
 		lem->render();
 	}
-	mousePointer->render();
-
 	bb->render();
+	mousePointer->render();
 }
 
 void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
@@ -137,7 +137,7 @@ void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButt
 	}
 
 	mousePointer->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
-
+	bb->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 }
 
 void Scene::eraseMask(int mouseX, int mouseY)

@@ -52,6 +52,7 @@ private:
 	int const MAX_LEMMINGS = 10;
 	int lemmingCount = 0;
 	std::vector<Lemming*> lemmings;
+	string selectedHab;
 
 	SkyDoor *skyDoor;
 	ExitDoor *exitDoor;
