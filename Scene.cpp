@@ -38,6 +38,10 @@ void Scene::init()
 
 	initDoors();
 	initHabilities();
+
+	mousePointer = new MousePointer();
+	mousePointer->init(glm::vec2(80, 25), simpleTexProgram);
+	glutSetCursor(GLUT_CURSOR_NONE);
 }
 
 unsigned int x = 0;
@@ -85,6 +89,7 @@ void Scene::update(int deltaTime)
 
 	skyDoor->update(deltaTime);
 	exitDoor->update(deltaTime);
+	mousePointer->update(deltaTime);
 
 	if (lemmings.size() == 0 && (currentTime/1000 > 5)) {
 		std::cout << "Fin de la escena" << std::endl;
@@ -114,6 +119,7 @@ void Scene::render()
 	{
 		lem->render();
 	}
+	mousePointer->render();
 
 	bb->render();
 }
@@ -130,10 +136,8 @@ void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButt
 		lem->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 	}
 
-	/*for each (Button* b in habilities)
-	{
-		b->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
-	}*/
+	mousePointer->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+
 }
 
 void Scene::eraseMask(int mouseX, int mouseY)

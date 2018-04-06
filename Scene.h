@@ -3,6 +3,8 @@
 
 
 #include <glm/glm.hpp>
+#include <GL/glew.h>
+#include <GL/glut.h>
 #include <vector>
 #include "ShaderProgram.h"
 #include "MaskedTexturedQuad.h"
@@ -11,6 +13,7 @@
 #include "SkyDoor.h"
 #include "ExitDoor.h"
 #include "BottomBox.h"
+#include "MousePointer.h"
 
 
 // Scene contains all the entities of our game.
@@ -53,6 +56,7 @@ private:
 	SkyDoor *skyDoor;
 	ExitDoor *exitDoor;
 	BottomBox *bb;
+	MousePointer *mousePointer;
 };
 
 

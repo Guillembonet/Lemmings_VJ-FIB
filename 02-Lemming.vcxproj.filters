@@ -66,6 +66,9 @@
     <ClInclude Include="BottomBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MousePointer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -113,7 +116,11 @@
     <ClCompile Include="ExitDoor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="BottomBox.cpp">
+=======
+    <ClCompile Include="MousePointer.cpp">
+>>>>>>> 066c6788213f2008ca8cad5e1e2dd33e2e4c453b
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

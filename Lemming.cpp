@@ -231,11 +231,26 @@ bool Lemming::hasLeft() {
 
 void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton) {
 	auto pos = sprite->position();
-	if (bLeftButton && mouseX > pos.x && (state == WALKING_LEFT_STATE || state == WALKING_RIGHT_STATE)) {
+	if (isLemmingSelected(pos.x, pos.y, mouseX, mouseY) && bLeftButton &&(state == WALKING_LEFT_STATE || state == WALKING_RIGHT_STATE)) {
 		state = DIGGING_STATE;
 		sprite->changeAnimation(DIGGING);
 		sprite->position() += glm::vec2(0, 0.5);
 	}
+}
+
+/* x, y are lemming coords and i, j are mouse coords*/
+bool Lemming::isLemmingSelected(int x, int y, int i, int j) {
+	// We normalize mouse coords
+	i = i / 3 - 7;
+	j = j / 3 - 7;
+
+	int constN = 6;
+
+	int xx = x - constN;
+	int	width = constN * 2;
+	int yy = y - constN;
+	int height = constN * 2;
+	return i > xx && i < xx + width && j > yy && j < yy + height;
 }
 
 
