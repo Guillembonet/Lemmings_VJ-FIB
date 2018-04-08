@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
 #include "Button.h"
+#include "Text.h"
 #include <functional>
 #include <vector>
 
@@ -24,6 +25,8 @@ public:
 
 private:
 	std::vector<Button*> habilities;
+	std::vector<int> habilitiesQuant;
+	std::vector<Text*> habsNums;
 	std::vector<Texture*> habilitiesTexs;
 	ShaderProgram *overlayProgram;
 	glm::mat4 projection;

@@ -126,7 +126,15 @@ void Scene::render()
 		lem->render();
 	}
 	bb->render();
+
+	simpleTexProgram.use();
+	simpleTexProgram.setUniformMatrix4f("projection", projection);
+	simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+	modelview = glm::mat4(1.0f);
+	simpleTexProgram.setUniformMatrix4f("modelview", modelview);
+
 	mousePointer->render();
+	
 }
 
 void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)

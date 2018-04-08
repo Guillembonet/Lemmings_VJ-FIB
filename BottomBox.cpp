@@ -1,5 +1,7 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
+#include <iostream>
+#include <sstream>
 #include <glm/gtc/matrix_transform.hpp>
 #include "BottomBox.h"
 
@@ -19,19 +21,28 @@ void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram)
 	string habilitiesID[] = { "BASH", "BLOCK", "BUILD", "CLIMB" };
 
 	for (int i = 0; i < HABILITIES_NUMBER; ++i) {
+
 		habilitiesTexs.push_back(new Texture());
 		habilitiesTexs[i]->loadFromFile("images/buttons/" + habilitiesNames[i], TEXTURE_PIXEL_FORMAT_RGBA);
 		habilitiesTexs[i]->setMinFilter(GL_NEAREST);
 		habilitiesTexs[i]->setMagFilter(GL_NEAREST);
-	}
-
-	for (int i = 0; i < HABILITIES_NUMBER; ++i) {
 
 		std::function<void()> selectHabFunc = std::bind(&BottomBox::selectHab, this, habilitiesID[i]);
 
 		glm::vec2 geom[2] = { glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (20.0f*HABILITIES_NUMBER / 2.0f) + i * 20.0f, float(CAMERA_HEIGHT - 1) - 25.0f),
 			glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (20.0f*HABILITIES_NUMBER / 2.0f) + (i + 1)*20.0f, float(CAMERA_HEIGHT - 1)) };
 		habilities.push_back(Button::createButton(geom, texCoords, selectHabFunc, habilitiesTexs[i], overlayProgram));
+
+		//Text text;
+		habsNums.push_back(new Text());
+		for (Text* t : habsNums) {
+			if (!t->init("fonts/OpenSans-Regular.ttf"))
+				//if(!text.init("fonts/OpenSans-Bold.ttf"))
+				//if(!text.init("fonts/DroidSerif.ttf"))
+				cout << "Could not load font!!!" << endl;
+		}
+
+		habilitiesQuant.push_back(i);
 	}
 
 	position[0] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (20.0f*HABILITIES_NUMBER / 2.0f), float(CAMERA_HEIGHT - 1) - 25.0f);
@@ -58,6 +69,19 @@ void BottomBox::render()
 	overlayProgram->setUniformMatrix4f("modelview", modelview);
 	for (Button* b : habilities) {
 		b->render();
+	}
+
+	glm::vec4 color;
+	if (focus)
+		color = glm::vec4(0, 0, 0, 1);
+	else
+		color = glm::vec4(0, 0, 0, 0.5f);
+
+	int i = 0;
+	for (Text* t : habsNums) {
+		t->render(static_cast<ostringstream*>(&(ostringstream() << habilitiesQuant[i]))->str(), 
+			glm::vec2((float(CAMERA_WIDTH - 1) / 2.0f - (20.0f*HABILITIES_NUMBER / 2.0f) + i * 20.0f + 9.0f)*3.0f, (float(CAMERA_HEIGHT - 1) - 18.0f)*3.0f), 15, color);
+		++i;
 	}
 }
 
