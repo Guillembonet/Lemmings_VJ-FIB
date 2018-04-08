@@ -166,12 +166,49 @@ void Lemming::update(int deltaTime)
 		}
 	}
 	else if (state == BASHING_LEFT_STATE) {
-		sprite->position() += glm::vec2(-1, 0);
+		bool shallWeContinue = false;
+		for (int i = 3; i <= 9; i++) {
+			sprite->position() += glm::vec2(i * -1, 0);
+			if (collision()) shallWeContinue = true;
+			sprite->position() -= glm::vec2(i * -1, 0);
+
+			if (shallWeContinue) break;
+		}
+		if (shallWeContinue) {
+			glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
+			posBase += glm::ivec2(7, 16);
+
+			// In some frames we dont have to move our lem
+			if (sprite->getCurrentKeyFrameIndex() < 15 || sprite->getCurrentKeyFrameIndex() > 17) {
+				sprite->position() += glm::vec2(1*-1, 0);
+				for (int j = -10; j <= -1; j++)
+				{
+					if ((sprite->getCurrentKeyFrameIndex() >= 0 && sprite->getCurrentKeyFrameIndex() <= 10) ||
+						(sprite->getCurrentKeyFrameIndex() >= 19 && sprite->getCurrentKeyFrameIndex() <= 27)) {
+						for (int i = 4; i <= 9; i++) {
+							mask->setPixel(posBase.x + i*-1, posBase.y + j, 0);
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			fall = collisionFloor(3);
+			if (fall < 3) {
+				sprite->position() += glm::vec2(0, fall);
+				sprite->changeAnimation(WALKING_LEFT);
+				state = WALKING_LEFT_STATE;
+			}
+			else {
+				sprite->changeAnimation(FALLING_LEFT);
+				state = FALLING_LEFT_STATE;
+			}
+		}
 	}
 	else if (state == BASHING_RIGHT_STATE) {
-		//sprite->position() += glm::vec2(8, 0);
 		bool shallWeContinue = false;
-		for (int i = 5; i <= 8; i++) {
+		for (int i = 3; i <= 9; i++) {
 			sprite->position() += glm::vec2(i, 0);
 			if (collision()) shallWeContinue = true;
 			sprite->position() -= glm::vec2(i, 0);
@@ -179,15 +216,11 @@ void Lemming::update(int deltaTime)
 			if (shallWeContinue) break;
 		}
 		if (shallWeContinue){
-			//sprite->position() -= glm::vec2(8, 0);
 			glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
 			posBase += glm::ivec2(7, 16);
 			
 			// In some frames we dont have to move our lem
-			if (sprite->getCurrentKeyFrameIndex() >= 15 && sprite->getCurrentKeyFrameIndex() <= 17) {
-				sprite->position() += glm::vec2(0, 0);
-			}
-			else {
+			if (sprite->getCurrentKeyFrameIndex() < 15 || sprite->getCurrentKeyFrameIndex() > 17) {
 				sprite->position() += glm::vec2(1, 0);
 				for (int j = -10; j <= -1; j++)
 				{
@@ -202,8 +235,6 @@ void Lemming::update(int deltaTime)
 		}
 		else
 		{
-			//sprite->position() -= glm::vec2(8, 0);
-			std::cout << "NO colision" << std::endl;
 			fall = collisionFloor(3);
 			if (fall < 3) {
 				sprite->position() += glm::vec2(0, fall);
@@ -292,8 +323,8 @@ void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBu
 		sprite->changeAnimation(DIGGING);
 		sprite->position() += glm::vec2(0, 0.5);*/
 		if (state == WALKING_LEFT_STATE) {
-			//state = BASHING_LEFT_STATE;
-			//sprite->changeAnimation(BASHING_LEFT);
+			state = BASHING_LEFT_STATE;
+			sprite->changeAnimation(BASHING_LEFT);
 		}
 		else {
 			state = BASHING_RIGHT_STATE;
