@@ -169,48 +169,40 @@ void Lemming::update(int deltaTime)
 		sprite->position() += glm::vec2(-1, 0);
 	}
 	else if (state == BASHING_RIGHT_STATE) {
-		//sprite->position() += glm::vec2(1, 0);
-		//if (collision())
-		//
-			//sprite->position() -= glm::vec2(1, 0);
+		//sprite->position() += glm::vec2(8, 0);
+		bool shallWeContinue = false;
+		for (int i = 5; i <= 8; i++) {
+			sprite->position() += glm::vec2(i, 0);
+			if (collision()) shallWeContinue = true;
+			sprite->position() -= glm::vec2(i, 0);
+
+			if (shallWeContinue) break;
+		}
+		if (shallWeContinue){
+			//sprite->position() -= glm::vec2(8, 0);
 			glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
 			posBase += glm::ivec2(7, 16);
 			
+			// In some frames we dont have to move our lem
 			if (sprite->getCurrentKeyFrameIndex() >= 15 && sprite->getCurrentKeyFrameIndex() <= 17) {
 				sprite->position() += glm::vec2(0, 0);
 			}
 			else {
 				sprite->position() += glm::vec2(1, 0);
-				for (int j = -10; j <= -2; j++)
+				for (int j = -10; j <= -1; j++)
 				{
-					if (sprite->getCurrentKeyFrameIndex() >= 0 && sprite->getCurrentKeyFrameIndex() <= 10) {
-						/*for (int i = 4; i <= 9; i++) {
+					if ((sprite->getCurrentKeyFrameIndex() >= 0 && sprite->getCurrentKeyFrameIndex() <= 10) || 
+						(sprite->getCurrentKeyFrameIndex() >= 19 && sprite->getCurrentKeyFrameIndex() <= 27)) {
+						for (int i = 4; i <= 9; i++) {
 							mask->setPixel(posBase.x + i, posBase.y + j, 0);
-						}*/
-						mask->setPixel(posBase.x + 4, posBase.y + j, 0);
-						mask->setPixel(posBase.x + 5, posBase.y + j, 0);
-						mask->setPixel(posBase.x + 6, posBase.y + j, 0);
-						mask->setPixel(posBase.x + 7, posBase.y + j, 0);
-						mask->setPixel(posBase.x + 8, posBase.y + j, 0);
-						mask->setPixel(posBase.x + 9, posBase.y + j, 0);
-					}
-					else if (sprite->getCurrentKeyFrameIndex() >= 19 && sprite->getCurrentKeyFrameIndex() <= 27) {
-						/*for (int i = 4; i <= 9; i++) {
-							mask->setPixel(posBase.x + i, posBase.y + j, 0);
-						}*/
-						mask->setPixel(posBase.x + 4, posBase.y + j, 0);
-						mask->setPixel(posBase.x + 5, posBase.y + j, 0);
-						mask->setPixel(posBase.x + 6, posBase.y + j, 0);
-						mask->setPixel(posBase.x + 7, posBase.y + j, 0);
-						mask->setPixel(posBase.x + 8, posBase.y + j, 0);
-						mask->setPixel(posBase.x + 9, posBase.y + j, 0);
+						}
 					}
 				}
-			}
-			
-		/*}
+			}	
+		}
 		else
 		{
+			//sprite->position() -= glm::vec2(8, 0);
 			std::cout << "NO colision" << std::endl;
 			fall = collisionFloor(3);
 			if (fall < 3) {
@@ -222,7 +214,7 @@ void Lemming::update(int deltaTime)
 				sprite->changeAnimation(FALLING_RIGHT);
 				state = FALLING_RIGHT_STATE;
 			}
-		}*/
+		}
 	}
 
 	// Si estamos caminando y nos encontramos en frente de la puerta...
