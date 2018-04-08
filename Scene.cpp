@@ -42,6 +42,11 @@ void Scene::init()
 
 	mousePointer = new MousePointer();
 	mousePointer->init(glm::vec2(80, 25), simpleTexProgram);
+
+	// black background
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	// Hidden cursor
 	glutSetCursor(GLUT_CURSOR_NONE);
 }
 

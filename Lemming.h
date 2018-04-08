@@ -29,6 +29,7 @@ private:
 	int Lemming::collisionFloorWithCoords(int maxFall, int x, int y);
 	bool collision();
 	bool inFrontOfExitDoor(int x, int y);
+	bool shouldIBash();
 	
 private:
 	bool isLemmingSelected(int x, int y, int i, int j);
@@ -36,7 +37,7 @@ private:
 	enum LemmingState
 	{
 		WALKING_LEFT_STATE, WALKING_RIGHT_STATE, FALLING_LEFT_STATE, FALLING_RIGHT_STATE, LEAVING_STATE, OUT_OF_SCENE_STATE,
-		DIGGING_STATE
+		DIGGING_STATE, BASHING_LEFT_STATE, BASHING_RIGHT_STATE
 	};
 
 	enum Side {

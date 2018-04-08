@@ -13,9 +13,8 @@
 
 enum LemmingAnims
 {
-	WALKING_LEFT, WALKING_RIGHT, LEAVING, OUT_OF_SCENE, FALLING_LEFT, FALLING_RIGHT, DIGGING
+	WALKING_LEFT, WALKING_RIGHT, LEAVING, OUT_OF_SCENE, FALLING_LEFT, FALLING_RIGHT, DIGGING, BASHING_LEFT, BASHING_RIGHT
 };
-
 
 void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram)
 {
@@ -24,7 +23,7 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(1/32.0f, 1/34.0f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(7);
+	sprite->setNumberAnimations(9);
 	
 		sprite->setAnimationSpeed(WALKING_RIGHT, 12);
 		for(int i=0; i<8; i++)
@@ -52,6 +51,14 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 		sprite->setAnimationSpeed(DIGGING, 10);
 		for (int i = 0; i<16; i++)
 			sprite->addKeyframe(DIGGING, glm::vec2(float(i) / 32, 11 / 34.0f));
+
+		sprite->setAnimationSpeed(BASHING_LEFT, 8);
+		for (int i = 0; i<32; i++)
+			sprite->addKeyframe(BASHING_LEFT, glm::vec2(float(i) / 32, 9 / 34.0f));
+
+		sprite->setAnimationSpeed(BASHING_RIGHT, 8);
+		for (int i = 0; i<32; i++)
+			sprite->addKeyframe(BASHING_RIGHT, glm::vec2(float(i) / 32, 26 / 34.0f));
 		
 
 	sprite->changeAnimation(FALLING_RIGHT);
@@ -158,6 +165,65 @@ void Lemming::update(int deltaTime)
 			}
 		}
 	}
+	else if (state == BASHING_LEFT_STATE) {
+		sprite->position() += glm::vec2(-1, 0);
+	}
+	else if (state == BASHING_RIGHT_STATE) {
+		//sprite->position() += glm::vec2(1, 0);
+		//if (collision())
+		//
+			//sprite->position() -= glm::vec2(1, 0);
+			glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
+			posBase += glm::ivec2(7, 16);
+			
+			if (sprite->getCurrentKeyFrameIndex() >= 15 && sprite->getCurrentKeyFrameIndex() <= 17) {
+				sprite->position() += glm::vec2(0, 0);
+			}
+			else {
+				sprite->position() += glm::vec2(1, 0);
+				for (int j = -10; j <= -2; j++)
+				{
+					if (sprite->getCurrentKeyFrameIndex() >= 0 && sprite->getCurrentKeyFrameIndex() <= 10) {
+						/*for (int i = 4; i <= 9; i++) {
+							mask->setPixel(posBase.x + i, posBase.y + j, 0);
+						}*/
+						mask->setPixel(posBase.x + 4, posBase.y + j, 0);
+						mask->setPixel(posBase.x + 5, posBase.y + j, 0);
+						mask->setPixel(posBase.x + 6, posBase.y + j, 0);
+						mask->setPixel(posBase.x + 7, posBase.y + j, 0);
+						mask->setPixel(posBase.x + 8, posBase.y + j, 0);
+						mask->setPixel(posBase.x + 9, posBase.y + j, 0);
+					}
+					else if (sprite->getCurrentKeyFrameIndex() >= 19 && sprite->getCurrentKeyFrameIndex() <= 27) {
+						/*for (int i = 4; i <= 9; i++) {
+							mask->setPixel(posBase.x + i, posBase.y + j, 0);
+						}*/
+						mask->setPixel(posBase.x + 4, posBase.y + j, 0);
+						mask->setPixel(posBase.x + 5, posBase.y + j, 0);
+						mask->setPixel(posBase.x + 6, posBase.y + j, 0);
+						mask->setPixel(posBase.x + 7, posBase.y + j, 0);
+						mask->setPixel(posBase.x + 8, posBase.y + j, 0);
+						mask->setPixel(posBase.x + 9, posBase.y + j, 0);
+					}
+				}
+			}
+			
+		/*}
+		else
+		{
+			std::cout << "NO colision" << std::endl;
+			fall = collisionFloor(3);
+			if (fall < 3) {
+				sprite->position() += glm::vec2(0, fall);
+				sprite->changeAnimation(WALKING_RIGHT);
+				state = WALKING_RIGHT_STATE;
+			}
+			else {
+				sprite->changeAnimation(FALLING_RIGHT);
+				state = FALLING_RIGHT_STATE;
+			}
+		}*/
+	}
 
 	// Si estamos caminando y nos encontramos en frente de la puerta...
 	if (state == WALKING_RIGHT_STATE || state == WALKING_LEFT_STATE) {
@@ -177,7 +243,6 @@ void Lemming::render()
 void Lemming::setMapMask(VariableTexture *mapMask)
 {
 	mask = mapMask;
-	std::cout << "otra vez" << std::endl;
 }
 
 void Lemming::setExitDoorCoords(int x, int y, int w, int h) {
@@ -217,7 +282,6 @@ bool Lemming::collision()
 	if((mask->pixel(posBase.x, posBase.y) == 0) && (mask->pixel(posBase.x+1, posBase.y) == 0))
 		return false;
 	
-	std::cout << "Colision" << std::endl;
 	return true;
 }
 
@@ -232,9 +296,17 @@ bool Lemming::hasLeft() {
 void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton) {
 	auto pos = sprite->position();
 	if (isLemmingSelected(pos.x, pos.y, mouseX, mouseY) && bLeftButton &&(state == WALKING_LEFT_STATE || state == WALKING_RIGHT_STATE)) {
-		state = DIGGING_STATE;
+		/*state = DIGGING_STATE;
 		sprite->changeAnimation(DIGGING);
-		sprite->position() += glm::vec2(0, 0.5);
+		sprite->position() += glm::vec2(0, 0.5);*/
+		if (state == WALKING_LEFT_STATE) {
+			//state = BASHING_LEFT_STATE;
+			//sprite->changeAnimation(BASHING_LEFT);
+		}
+		else {
+			state = BASHING_RIGHT_STATE;
+			sprite->changeAnimation(BASHING_RIGHT);
+		}
 	}
 }
 
@@ -253,6 +325,10 @@ bool Lemming::isLemmingSelected(int x, int y, int i, int j) {
 	return i > xx && i < xx + width && j > yy && j < yy + height;
 }
 
+bool Lemming::shouldIBash() {
+	return (sprite->getCurrentKeyFrameIndex() == 0 || sprite->getCurrentKeyFrameIndex() ==16)
+	&& (state == BASHING_LEFT_STATE || state == BASHING_RIGHT_STATE);
+}
 
 
 
