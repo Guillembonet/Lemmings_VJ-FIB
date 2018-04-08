@@ -348,11 +348,6 @@ bool Lemming::isLemmingSelected(int x, int y, int i, int j) {
 	return i > xx && i < xx + width && j > yy && j < yy + height;
 }
 
-bool Lemming::shouldIBash() {
-	return (sprite->getCurrentKeyFrameIndex() == 0 || sprite->getCurrentKeyFrameIndex() ==16)
-	&& (state == BASHING_LEFT_STATE || state == BASHING_RIGHT_STATE);
-}
-
 
 
 
