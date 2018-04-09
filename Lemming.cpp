@@ -2,6 +2,7 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GL/glut.h>
+#include <set>
 #include "Lemming.h"
 #include "Game.h"
 
@@ -13,7 +14,7 @@
 
 enum LemmingAnims
 {
-	WALKING_LEFT, WALKING_RIGHT, LEAVING, OUT_OF_SCENE, FALLING_LEFT, FALLING_RIGHT, DIGGING, BASHING_LEFT, BASHING_RIGHT
+	WALKING_LEFT, WALKING_RIGHT, LEAVING, OUT_OF_SCENE, FALLING_LEFT, FALLING_RIGHT, DIGGING, BASHING_LEFT, BASHING_RIGHT, BLOCKING
 };
 
 void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram)
@@ -23,7 +24,7 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(1/32.0f, 1/34.0f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(9);
+	sprite->setNumberAnimations(10);
 	
 		sprite->setAnimationSpeed(WALKING_RIGHT, 12);
 		for(int i=0; i<8; i++)
@@ -59,14 +60,17 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 		sprite->setAnimationSpeed(BASHING_RIGHT, 8);
 		for (int i = 0; i<32; i++)
 			sprite->addKeyframe(BASHING_RIGHT, glm::vec2(float(i) / 32, 26 / 34.0f));
-		
 
+		sprite->setAnimationSpeed(BLOCKING, 8);
+		for (int i = 0; i<16; i++)
+			sprite->addKeyframe(BLOCKING, glm::vec2(float(i) / 32, 6 / 34.0f));
+		
 	sprite->changeAnimation(FALLING_RIGHT);
 	side = RIGHT;
 	sprite->setPosition(initialPosition);
 }
 
-void Lemming::update(int deltaTime)
+void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 {
 	int fall;
 
@@ -93,7 +97,7 @@ void Lemming::update(int deltaTime)
 	}
 	else if (state == WALKING_LEFT_STATE) {
 		sprite->position() += glm::vec2(-1, -1);
-		if (collision())
+		if (collision() || found(blockers, sprite->position()))
 		{
 			sprite->position() -= glm::vec2(-1, -1);
 			sprite->changeAnimation(WALKING_RIGHT);
@@ -103,11 +107,9 @@ void Lemming::update(int deltaTime)
 		else
 		{
 			fall = collisionFloor(3);
-			if (fall > 0)
-				sprite->position() += glm::vec2(0, 1);
-			if (fall > 1)
-				sprite->position() += glm::vec2(0, 1);
-			if (fall > 2) {
+			if (fall < 3)
+				sprite->position() += glm::vec2(0, fall);
+			else {
 				sprite->changeAnimation(FALLING_LEFT);
 				state = FALLING_LEFT_STATE;
 			}
@@ -116,7 +118,7 @@ void Lemming::update(int deltaTime)
 	}
 	else if (state == WALKING_RIGHT_STATE) {
 		sprite->position() += glm::vec2(1, -1);
-		if (collision())
+		if (collision() || found(blockers, sprite->position()))
 		{
 			sprite->position() -= glm::vec2(1, -1);
 			sprite->changeAnimation(WALKING_LEFT);
@@ -247,6 +249,9 @@ void Lemming::update(int deltaTime)
 			}
 		}
 	}
+	else if (state == BLOCKING_STATE) {
+	
+	}
 
 	// Si estamos caminando y nos encontramos en frente de la puerta...
 	if (state == WALKING_RIGHT_STATE || state == WALKING_LEFT_STATE) {
@@ -266,6 +271,15 @@ void Lemming::render()
 void Lemming::setMapMask(VariableTexture *mapMask)
 {
 	mask = mapMask;
+}
+
+bool Lemming::found(vector<glm::vec2> &vector, glm::vec2 element)
+{
+	for (glm::vec2 item : vector) {
+		if ((item.x == element.x - 5 || item.x == element.x + 5)  && item.y > element.y - 5 && item.y < element.y + 7)
+			return true;
+	}
+	return false;
 }
 
 void Lemming::setExitDoorCoords(int x, int y, int w, int h) {
@@ -316,12 +330,20 @@ bool Lemming::hasLeft() {
 	return state == OUT_OF_SCENE_STATE;
 }
 
+bool Lemming::isBlocker() {
+	return state == BLOCKING_STATE;
+}
+
+glm::vec2 Lemming::getPosition() {
+	return sprite->position();
+}
+
 void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton) {
 	auto pos = sprite->position();
 	if (isLemmingSelected(pos.x, pos.y, mouseX, mouseY) && bLeftButton &&(state == WALKING_LEFT_STATE || state == WALKING_RIGHT_STATE)) {
 		/*state = DIGGING_STATE;
 		sprite->changeAnimation(DIGGING);
-		sprite->position() += glm::vec2(0, 0.5);*/
+		sprite->position() += glm::vec2(0, 0.5);
 		if (state == WALKING_LEFT_STATE) {
 			state = BASHING_LEFT_STATE;
 			sprite->changeAnimation(BASHING_LEFT);
@@ -329,7 +351,9 @@ void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBu
 		else {
 			state = BASHING_RIGHT_STATE;
 			sprite->changeAnimation(BASHING_RIGHT);
-		}
+		}*/
+		state = BLOCKING_STATE;
+		sprite->changeAnimation(BLOCKING);
 	}
 }
 

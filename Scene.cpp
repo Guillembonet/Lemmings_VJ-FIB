@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
+#include <set>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 
@@ -85,8 +86,15 @@ void Scene::update(int deltaTime)
 		lemmingCount++;
 	}
 
+	vector<glm::vec2> blockers;
+
 	for (int i = 0; i < lemmings.size(); i++) {
-		lemmings[i]->update(deltaTime);
+		if (lemmings[i]->isBlocker())
+			blockers.push_back(lemmings[i]->getPosition());
+	}
+
+	for (int i = 0; i < lemmings.size(); i++) {
+		lemmings[i]->update(deltaTime, blockers);
 		if (lemmings[i]->hasLeft()) {
 			lemmings.erase(lemmings.begin() + i);
 			i--;
