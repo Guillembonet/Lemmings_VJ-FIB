@@ -249,8 +249,27 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 			}
 		}
 	}
-	else if (state == BLOCKING_STATE) {
-	
+	else if (state == CLIMBING_RIGHT_STATE) {
+		sprite->position() += glm::vec2(1, -1);
+		if (found(blockers, sprite->position())){
+			sprite->position() -= glm::vec2(1, -1);
+			sprite->changeAnimation(WALKING_LEFT);
+			state = WALKING_LEFT_STATE;
+			side = LEFT;
+		}
+		else if (collision()) {
+			cout << "epa" << endl;
+			sprite->position() -= glm::vec2(1, 1);
+		} 
+		else {
+			fall = collisionFloor(3);
+			if (fall < 3)
+				sprite->position() += glm::vec2(0, fall);
+			else {
+				sprite->changeAnimation(FALLING_RIGHT);
+				state = FALLING_RIGHT_STATE;
+			}
+		}
 	}
 
 	// Si estamos caminando y nos encontramos en frente de la puerta...
@@ -352,7 +371,7 @@ void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBu
 			state = BASHING_RIGHT_STATE;
 			sprite->changeAnimation(BASHING_RIGHT);
 		}*/
-		state = BLOCKING_STATE;
+		state = CLIMBING_RIGHT_STATE;
 		sprite->changeAnimation(BLOCKING);
 	}
 }
