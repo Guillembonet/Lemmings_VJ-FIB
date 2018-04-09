@@ -340,7 +340,7 @@ glm::vec2 Lemming::getPosition() {
 
 void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton) {
 	auto pos = sprite->position();
-	if (isLemmingSelected(pos.x, pos.y, mouseX, mouseY) && bLeftButton &&(state == WALKING_LEFT_STATE || state == WALKING_RIGHT_STATE)) {
+	if (imSelected(pos.x, pos.y, mouseX, mouseY) && bLeftButton &&(state == WALKING_LEFT_STATE || state == WALKING_RIGHT_STATE)) {
 		/*state = DIGGING_STATE;
 		sprite->changeAnimation(DIGGING);
 		sprite->position() += glm::vec2(0, 0.5);
@@ -358,7 +358,7 @@ void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBu
 }
 
 /* x, y are lemming coords and i, j are mouse coords*/
-bool Lemming::isLemmingSelected(int x, int y, int i, int j) {
+bool Lemming::imSelected(int x, int y, int i, int j) {
 	// We normalize mouse coords
 	i = i / 3 - 7;
 	j = j / 3 - 7;
@@ -372,7 +372,10 @@ bool Lemming::isLemmingSelected(int x, int y, int i, int j) {
 	return i > xx && i < xx + width && j > yy && j < yy + height;
 }
 
-
+/* i & j are mouseCoords*/
+bool Lemming::isLemmingSelected(int i, int j) {
+	return imSelected(sprite->position().x, sprite->position().y, i, j);
+}
 
 
 

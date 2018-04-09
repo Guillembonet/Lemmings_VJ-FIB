@@ -14,6 +14,7 @@
 #include "ExitDoor.h"
 #include "BottomBox.h"
 #include "MousePointer.h"
+#include "SquarePointer.h"
 
 
 // Scene contains all the entities of our game.
@@ -58,6 +59,7 @@ private:
 	ExitDoor *exitDoor;
 	BottomBox *bb;
 	MousePointer *mousePointer;
+	SquarePointer *squarePointer;
 };
 
 

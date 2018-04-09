@@ -25,6 +25,8 @@ public:
 	bool isBlocker();
 	glm::vec2 getPosition();
 	void mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton);
+	bool isLemmingSelected(int i, int j);
+	
 	
 private:
 	bool found(vector<glm::vec2> &vector, glm::vec2 element);
@@ -32,9 +34,9 @@ private:
 	int Lemming::collisionFloorWithCoords(int maxFall, int x, int y);
 	bool collision();
 	bool inFrontOfExitDoor(int x, int y);
+	bool imSelected(int x, int y, int i, int j);
 	
 private:
-	bool isLemmingSelected(int x, int y, int i, int j);
 
 	enum LemmingState
 	{

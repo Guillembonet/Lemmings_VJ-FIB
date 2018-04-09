@@ -27,6 +27,7 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="SkyDoor.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SquarePointer.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TexturedQuad.h" />
@@ -48,6 +49,7 @@
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="SkyDoor.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SquarePointer.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturedQuad.cpp" />
