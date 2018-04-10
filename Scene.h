@@ -60,6 +60,7 @@ private:
 	BottomBox *bb;
 	MousePointer *mousePointer;
 	SquarePointer *squarePointer;
+	int mouseX, mouseY; // last mouse coords
 };
 
 

@@ -96,12 +96,21 @@ void Scene::update(int deltaTime)
 			blockers.push_back(lemmings[i]->getPosition());
 	}
 
+	bool isThereALemmSelected = false;
 	for (int i = 0; i < lemmings.size(); i++) {
 		lemmings[i]->update(deltaTime, blockers);
 		if (lemmings[i]->hasLeft()) {
 			lemmings.erase(lemmings.begin() + i);
 			i--;
 		}
+		else if (lemmings[i]->isLemmingSelected(mouseX, mouseY)) {
+			int x = lemmings[i]->getPosition().x;
+			int y = lemmings[i]->getPosition().y;
+			squarePointer->display(glm::vec2(x + 3, y + 5)); // 3 & 5 are just consts for center lem's
+
+			isThereALemmSelected = true;
+		}
+		if (!isThereALemmSelected) squarePointer->hidde();
 	}
 
 	skyDoor->update(deltaTime);
@@ -156,19 +165,18 @@ void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButt
 	else if(bRightButton)
 		applyMask(mouseX, mouseY);
 
+	//bool selection = false;
 	for each (Lemming* lem in lemmings)
 	{
 		lem->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
-
-		if (lem->isLemmingSelected(mouseX, mouseY)) {
-			int x = lem->getPosition().x;
-			int y = lem->getPosition().y;
-			squarePointer->display(glm::vec2(x + 3, y + 5)); // 3 & 5 are just consts for center lem's
-		}
 	}
 
 	mousePointer->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 	bb->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+
+	// We update mouse coords
+	this->mouseX = mouseX;
+	this->mouseY = mouseY;
 }
 
 void Scene::eraseMask(int mouseX, int mouseY)
