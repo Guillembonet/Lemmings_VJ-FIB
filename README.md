@@ -1,4 +1,4 @@
-[G] CLIMBER 
+[G] CLIMBER ✔
 
 [G] EXPLOSIONES
 
