@@ -1,3 +1,31 @@
+[G] CLIMBER 
+
+[G] EXPLOSIONES
+
+[O] BUILDER
+
+[G] BARRA ABAJO COMPLETA (CON TIEMPO)
+
+[O] MOVER MAPA 
+
+[G] MAPAS CON MÁSCARAS
+
+[O] ACABAR MENÚ (fondo)
+
+<hr>
+
+[G] PAUSA
+
+[G] VELOCIDADES
+
+[G] CAMBIAR VELOCIDAD GENERACIÓN LEMS
+
+[O] TIEMPO
+
+[O] MUSICA (con botón)
+
+---
+
 **Semana 26** -> Menu, habilidades(box), portes, generacion lemmings
 
 **Semana 2** -> Asignar habilidades y usarlas
@@ -24,3 +52,5 @@ http://funhtml5games.com/jslems/img/control_pause.gif
 http://funhtml5games.com/jslems/img/control_speed.gif
 http://funhtml5games.com/jslems/img/control_nuke.gif
 http://funhtml5games.com/jslems/img/control_sound.gif
+
+
