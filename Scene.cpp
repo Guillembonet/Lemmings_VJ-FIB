@@ -44,6 +44,9 @@ void Scene::init()
 	mousePointer = new MousePointer();
 	mousePointer->init(glm::vec2(80, 25), simpleTexProgram);
 
+	squarePointer = new SquarePointer();
+	squarePointer->init(glm::vec2(80, 25), simpleTexProgram);
+
 	// black background
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -93,17 +96,27 @@ void Scene::update(int deltaTime)
 			blockers.push_back(lemmings[i]->getPosition());
 	}
 
+	bool isThereALemmSelected = false;
 	for (int i = 0; i < lemmings.size(); i++) {
 		lemmings[i]->update(deltaTime, blockers);
 		if (lemmings[i]->hasLeft()) {
 			lemmings.erase(lemmings.begin() + i);
 			i--;
 		}
+		else if (lemmings[i]->isLemmingSelected(mouseX, mouseY)) {
+			int x = lemmings[i]->getPosition().x;
+			int y = lemmings[i]->getPosition().y;
+			squarePointer->display(glm::vec2(x + 3, y + 5)); // 3 & 5 are just consts for center lem's
+
+			isThereALemmSelected = true;
+		}
+		if (!isThereALemmSelected) squarePointer->hidde();
 	}
 
 	skyDoor->update(deltaTime);
 	exitDoor->update(deltaTime);
 	mousePointer->update(deltaTime);
+	squarePointer->update(deltaTime);
 
 	if (lemmings.size() == 0 && (currentTime/1000 > 5)) {
 		std::cout << "Fin de la escena" << std::endl;
@@ -142,7 +155,7 @@ void Scene::render()
 	simpleTexProgram.setUniformMatrix4f("modelview", modelview);
 
 	mousePointer->render();
-	
+	squarePointer->render();
 }
 
 void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
@@ -152,6 +165,7 @@ void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButt
 	else if(bRightButton)
 		applyMask(mouseX, mouseY);
 
+	//bool selection = false;
 	for each (Lemming* lem in lemmings)
 	{
 		lem->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
@@ -159,6 +173,10 @@ void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButt
 
 	mousePointer->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 	bb->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+
+	// We update mouse coords
+	this->mouseX = mouseX;
+	this->mouseY = mouseY;
 }
 
 void Scene::eraseMask(int mouseX, int mouseY)
