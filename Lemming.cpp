@@ -14,7 +14,7 @@
 
 enum LemmingAnims
 {
-	WALKING_LEFT, WALKING_RIGHT, LEAVING, OUT_OF_SCENE, FALLING_LEFT, FALLING_RIGHT, DIGGING, BASHING_LEFT, BASHING_RIGHT, BLOCKING
+	WALKING_LEFT, WALKING_RIGHT, LEAVING, OUT_OF_SCENE, FALLING_LEFT, FALLING_RIGHT, DIGGING, BASHING_LEFT, BASHING_RIGHT, BLOCKING, CLIMBING_RIGHT, CLIMBING_END_RIGHT, CLIMBING_LEFT, CLIMBING_END_LEFT
 };
 
 void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram)
@@ -24,7 +24,7 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(1/32.0f, 1/34.0f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(10);
+	sprite->setNumberAnimations(14);
 	
 		sprite->setAnimationSpeed(WALKING_RIGHT, 12);
 		for(int i=0; i<8; i++)
@@ -64,6 +64,22 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 		sprite->setAnimationSpeed(BLOCKING, 8);
 		for (int i = 0; i<16; i++)
 			sprite->addKeyframe(BLOCKING, glm::vec2(float(i) / 32, 6 / 34.0f));
+
+		sprite->setAnimationSpeed(CLIMBING_RIGHT, 10);
+		for (int i = 0; i<8; i++)
+			sprite->addKeyframe(CLIMBING_RIGHT, glm::vec2(float(i) / 32, 19 / 34.0f));
+
+		sprite->setAnimationSpeed(CLIMBING_END_RIGHT, 12);
+		for (int i = 0; i<8; i++)
+			sprite->addKeyframe(CLIMBING_END_RIGHT, glm::vec2(float(i) / 32, 20 / 34.0f));
+
+		sprite->setAnimationSpeed(CLIMBING_LEFT, 10);
+		for (int i = 0; i<8; i++)
+			sprite->addKeyframe(CLIMBING_LEFT, glm::vec2(float(i) / 32, 2 / 34.0f));
+
+		sprite->setAnimationSpeed(CLIMBING_END_LEFT, 12);
+		for (int i = 0; i<8; i++)
+			sprite->addKeyframe(CLIMBING_END_LEFT, glm::vec2(float(i) / 32, 3 / 34.0f));
 		
 	sprite->changeAnimation(FALLING_RIGHT);
 	side = RIGHT;
@@ -252,22 +268,67 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 	else if (state == CLIMBING_RIGHT_STATE) {
 		sprite->position() += glm::vec2(1, -1);
 		if (found(blockers, sprite->position())){
-			sprite->position() -= glm::vec2(1, -1);
 			sprite->changeAnimation(WALKING_LEFT);
 			state = WALKING_LEFT_STATE;
 			side = LEFT;
 		}
-		else if (collision()) {
-			cout << "epa" << endl;
-			sprite->position() -= glm::vec2(1, 1);
+		else if (wall()) {
+			if (!climbing) {
+				sprite->changeAnimation(CLIMBING_RIGHT);
+				climbing = true;
+			} else if (wallIsEnding() && !endingclimb) {
+				sprite->changeAnimation(CLIMBING_END_RIGHT);
+				endingclimb = true;
+			}
+			sprite->position() -= glm::vec2(1, 0);
 		} 
 		else {
 			fall = collisionFloor(3);
-			if (fall < 3)
+			if (endingclimb) {
+				if (fall < 3) {
+					sprite->changeAnimation(WALKING_RIGHT);
+					state = WALKING_RIGHT_STATE;
+				}
+			} else if (fall < 3)
 				sprite->position() += glm::vec2(0, fall);
 			else {
 				sprite->changeAnimation(FALLING_RIGHT);
 				state = FALLING_RIGHT_STATE;
+			}
+		}
+	}
+	else if (state == CLIMBING_LEFT_STATE) {
+		sprite->position() += glm::vec2(-1, -1);
+		if (found(blockers, sprite->position())) {
+			sprite->changeAnimation(WALKING_RIGHT);
+			state = CLIMBING_RIGHT_STATE;
+			side = RIGHT;
+		}
+		else if (wall()) {
+			if (!climbing) {
+				sprite->changeAnimation(CLIMBING_LEFT);
+				climbing = true;
+			}
+			else if (wallIsEnding() && !endingclimb) {
+				sprite->changeAnimation(CLIMBING_END_LEFT);
+				endingclimb = true;
+			}
+			sprite->position() += glm::vec2(1, 0);
+		}
+		else {
+			fall = collisionFloor(3);
+			if (endingclimb) {
+				if (fall < 3) {
+					sprite->changeAnimation(WALKING_LEFT);
+					state = WALKING_LEFT_STATE;
+					side = LEFT;
+				}
+			}
+			else if (fall < 3)
+				sprite->position() += glm::vec2(0, fall);
+			else {
+				sprite->changeAnimation(FALLING_LEFT);
+				state = FALLING_LEFT_STATE;
 			}
 		}
 	}
@@ -341,6 +402,39 @@ bool Lemming::collision()
 	return true;
 }
 
+bool Lemming::wall()
+{
+	glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
+
+	posBase += glm::ivec2(7, 15);
+	if (side == RIGHT) {
+		if ((mask->pixel(posBase.x + 3, posBase.y) != 0) && (mask->pixel(posBase.x + 3, posBase.y - 1) != 0) && (mask->pixel(posBase.x + 3, posBase.y - 2) != 0))
+			return true;
+	} else {
+		if ((mask->pixel(posBase.x - 1, posBase.y) != 0) && (mask->pixel(posBase.x - 1, posBase.y - 1) != 0) && (mask->pixel(posBase.x - 1, posBase.y - 2) != 0))
+			return true;
+	}
+
+	return false;
+}
+
+bool Lemming::wallIsEnding()
+{
+	glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
+
+	posBase += glm::ivec2(7, 15);
+	if (side == RIGHT) {
+		if (mask->pixel(posBase.x + 3, posBase.y - 8) == 0)
+			return true;
+	}
+	else {
+		if (mask->pixel(posBase.x - 1, posBase.y - 8) == 0)
+			return true;
+	}
+
+	return false;
+}
+
 bool Lemming::inFrontOfExitDoor(int x, int y) {
 	return x > exitDoor.x && x < exitDoor.x + exitDoor.width && y < exitDoor.y && y > exitDoor.y - exitDoor.height;
 }
@@ -371,8 +465,11 @@ void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBu
 			state = BASHING_RIGHT_STATE;
 			sprite->changeAnimation(BASHING_RIGHT);
 		}*/
-		state = CLIMBING_RIGHT_STATE;
-		sprite->changeAnimation(BLOCKING);
+		state = CLIMBING_LEFT_STATE;
+		side = LEFT;
+		climbing = false;
+		endingclimb = false;
+		sprite->changeAnimation(WALKING_LEFT);
 	}
 }
 

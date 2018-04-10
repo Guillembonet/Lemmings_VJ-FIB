@@ -30,6 +30,8 @@ public:
 	
 private:
 	bool found(vector<glm::vec2> &vector, glm::vec2 element);
+	bool wall();
+	bool wallIsEnding();
 	int collisionFloor(int maxFall);
 	int Lemming::collisionFloorWithCoords(int maxFall, int x, int y);
 	bool collision();
@@ -41,7 +43,7 @@ private:
 	enum LemmingState
 	{
 		WALKING_LEFT_STATE, WALKING_RIGHT_STATE, FALLING_LEFT_STATE, FALLING_RIGHT_STATE, LEAVING_STATE, OUT_OF_SCENE_STATE,
-		DIGGING_STATE, BASHING_LEFT_STATE, BASHING_RIGHT_STATE, BLOCKING_STATE, CLIMBING_RIGHT_STATE
+		DIGGING_STATE, BASHING_LEFT_STATE, BASHING_RIGHT_STATE, BLOCKING_STATE, CLIMBING_RIGHT_STATE, CLIMBING_LEFT_STATE
 	};
 
 	enum Side {
@@ -55,6 +57,7 @@ private:
 		int height;
 	};
 
+	bool climbing, endingclimb;
 	LemmingState state;
 	Texture spritesheet;
 	Sprite *sprite;
