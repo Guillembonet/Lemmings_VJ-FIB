@@ -1,8 +1,9 @@
 #ifndef _LEMMING_INCLUDE
 #define _LEMMING_INCLUDE
-
+class Scene;
 #include <set>
 #include "Sprite.h"
+#include "Text.h"
 #include "VariableTexture.h"
 
 
@@ -14,7 +15,7 @@ class Lemming
 {
 
 public:
-	void init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram);
+	void init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram, Scene *currentScene);
 	void update(int deltaTime, vector<glm::vec2> &blockers);
 	void render();
 	
@@ -43,7 +44,7 @@ private:
 	enum LemmingState
 	{
 		WALKING_LEFT_STATE, WALKING_RIGHT_STATE, FALLING_LEFT_STATE, FALLING_RIGHT_STATE, LEAVING_STATE, OUT_OF_SCENE_STATE,
-		DIGGING_STATE, BASHING_LEFT_STATE, BASHING_RIGHT_STATE, BLOCKING_STATE, CLIMBING_RIGHT_STATE, CLIMBING_LEFT_STATE
+		DIGGING_STATE, BASHING_LEFT_STATE, BASHING_RIGHT_STATE, BLOCKING_STATE, CLIMBING_RIGHT_STATE, CLIMBING_LEFT_STATE, EXPLODING_STATE
 	};
 
 	enum Side {
@@ -57,12 +58,15 @@ private:
 		int height;
 	};
 
-	bool climbing, endingclimb;
+	bool climbing, endingclimb, exploding, exploded;
 	LemmingState state;
 	Texture spritesheet;
 	Sprite *sprite;
 	VariableTexture *mask;
 	Box exitDoor;
+	Scene *scene;
+	Text explodingNumber;
+	long explodeTime;
 
 	Side side;
 };

@@ -34,10 +34,10 @@ public:
 	void render();
 	
 	void mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton);
+	void eraseMask(int mouseX, int mouseY);
 
 private:
 	void initShaders();
-	void eraseMask(int mouseX, int mouseY);
 	void applyMask(int mouseX, int mouseY);
 	void initLemmings();
 	void initDoors();

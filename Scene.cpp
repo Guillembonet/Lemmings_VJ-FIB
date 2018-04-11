@@ -80,7 +80,7 @@ void Scene::update(int deltaTime)
 	if (skyDoor->isDoorOpen() && (currentTimeSec % 3 == 0) && currentTimeSec != lastLemmingGenTime && lemmingCount < MAX_LEMMINGS) {
 		lastLemmingGenTime = currentTimeSec;
 		Lemming *newLemming = new Lemming();
-		newLemming->init(glm::vec2(90, 27), simpleTexProgram);
+		newLemming->init(glm::vec2(90, 27), simpleTexProgram, this);
 		newLemming->setMapMask(&maskTexture);
 		newLemming->setExitDoorCoords(233, 117, 4, 5);
 
@@ -144,6 +144,11 @@ void Scene::render()
 	skyDoor->render();
 	for each (Lemming *lem in lemmings)
 	{
+		simpleTexProgram.use();
+		simpleTexProgram.setUniformMatrix4f("projection", projection);
+		simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		simpleTexProgram.setUniformMatrix4f("modelview", modelview);
 		lem->render();
 	}
 	bb->render();
@@ -181,6 +186,7 @@ void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButt
 
 void Scene::eraseMask(int mouseX, int mouseY)
 {
+	cout << mouseX << " " << mouseY << endl;
 	int posX, posY;
 	
 	// Transform from mouse coordinates to map coordinates
