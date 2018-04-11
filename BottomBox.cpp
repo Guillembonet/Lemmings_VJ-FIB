@@ -5,7 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "BottomBox.h"
 
-#define HABILITIES_NUMBER 4
+#define HABILITIES_NUMBER 7
 
 BottomBox::BottomBox() {}
 
@@ -17,8 +17,8 @@ void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram)
 
 	glm::vec2 texCoords[2] = { glm::vec2(0.0f, 0.f), glm::vec2(1.0f, 1.0f) }; //creo que si pones 1 en los dos coge todo
 
-	string habilitiesNames[] = { "control_bash.png", "control_block.png", "control_build.png", "control_climb.png" };
-	string habilitiesID[] = { "BASH", "BLOCK", "BUILD", "CLIMB" };
+	string habilitiesNames[] = { "control_bash.png", "control_block.png", "control_build.png", "control_climb.png", "control_dig.png", "control_float.png", "control_mine.png" };
+	string habilitiesID[] = { "BASHER", "BLOCKER", "BUILDER", "CLIMBER", "DIGGER", "FLOATER", "MINER"};
 
 	for (int i = 0; i < HABILITIES_NUMBER; ++i) {
 
@@ -29,8 +29,8 @@ void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram)
 
 		std::function<void()> selectHabFunc = std::bind(&BottomBox::selectHab, this, habilitiesID[i]);
 
-		glm::vec2 geom[2] = { glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (20.0f*HABILITIES_NUMBER / 2.0f) + i * 20.0f, float(CAMERA_HEIGHT - 1) - 25.0f),
-			glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (20.0f*HABILITIES_NUMBER / 2.0f) + (i + 1)*20.0f, float(CAMERA_HEIGHT - 1)) };
+		glm::vec2 geom[2] = { glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*HABILITIES_NUMBER / 2.0f) + i * 14.0f, float(CAMERA_HEIGHT - 1) - 25.0f),
+			glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*HABILITIES_NUMBER / 2.0f) + (i + 1)*14.0f, float(CAMERA_HEIGHT - 1)) };
 		habilities.push_back(Button::createButton(geom, texCoords, selectHabFunc, habilitiesTexs[i], overlayProgram));
 
 		//Text text;
@@ -45,8 +45,8 @@ void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram)
 		habilitiesQuant.push_back(i);
 	}
 
-	position[0] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (20.0f*HABILITIES_NUMBER / 2.0f), float(CAMERA_HEIGHT - 1) - 25.0f);
-	position[1] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (20.0f*HABILITIES_NUMBER / 2.0f) + ((HABILITIES_NUMBER-1) + 1)*20.0f, float(CAMERA_HEIGHT - 1));
+	position[0] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*HABILITIES_NUMBER / 2.0f), float(CAMERA_HEIGHT - 1) - 25.0f);
+	position[1] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*HABILITIES_NUMBER / 2.0f) + ((HABILITIES_NUMBER-1) + 1)*14.0f, float(CAMERA_HEIGHT - 1));
 
 	this->overlayProgram = overlayProgram;
 	this->selectedHab = selectedHab;
@@ -80,7 +80,7 @@ void BottomBox::render()
 	int i = 0;
 	for (Text* t : habsNums) {
 		t->render(static_cast<ostringstream*>(&(ostringstream() << habilitiesQuant[i]))->str(), 
-			glm::vec2((float(CAMERA_WIDTH - 1) / 2.0f - (20.0f*HABILITIES_NUMBER / 2.0f) + i * 20.0f + 9.0f)*3.0f, (float(CAMERA_HEIGHT - 1) - 18.0f)*3.0f), 15, color);
+			glm::vec2((float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*HABILITIES_NUMBER / 2.0f) + i * 14.0f + 6.0f)*3.0f, (float(CAMERA_HEIGHT - 1) - 18.0f)*3.0f), 15, color);
 		++i;
 	}
 }
