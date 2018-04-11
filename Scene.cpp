@@ -186,7 +186,6 @@ void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButt
 
 void Scene::eraseMask(int mouseX, int mouseY)
 {
-	cout << mouseX << " " << mouseY << endl;
 	int posX, posY;
 	
 	// Transform from mouse coordinates to map coordinates

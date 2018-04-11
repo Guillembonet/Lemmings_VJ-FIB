@@ -352,6 +352,19 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 		if (!exploded && explodeTime - glutGet(GLUT_ELAPSED_TIME) < -1600) {
 			cout << sprite->position().x*3.0f + 20.0f << " " << sprite->position().y*3.0f + 60.0f << endl;
 			scene->eraseMask(sprite->position().x*3.0f + 25.0f, sprite->position().y*3.0f + 50.0f);
+			float x, y2;
+			for (float i = -338.0f; i < 338.0f; i += 4.0f) {
+				y2 = i * i;
+				x = sqrt(676.0f - y2);
+				scene->eraseMask(sprite->position().x*3.0f + 25.0f - x, sprite->position().y*3.0f + 50.0f + i);
+				scene->eraseMask(sprite->position().x*3.0f + 25.0f + x, sprite->position().y*3.0f + 50.0f + i);
+			}
+			for (float i = -128.0f; i < 128.0f; i += 4.0f) {
+				y2 = i * i;
+				x = sqrt(256.0f - y2);
+				scene->eraseMask(sprite->position().x*3.0f + 25.0f - x, sprite->position().y*3.0f + 50.0f + i);
+				scene->eraseMask(sprite->position().x*3.0f + 25.0f + x, sprite->position().y*3.0f + 50.0f + i);
+			}
 			exploded = true;
 		}
 	}
