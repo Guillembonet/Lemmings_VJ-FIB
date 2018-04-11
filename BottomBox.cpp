@@ -59,27 +59,25 @@ void BottomBox::selectHab(string hab)
 
 void BottomBox::render()
 {
-	overlayProgram->use();
-	overlayProgram->setUniformMatrix4f("projection", projection);
-	if (focus)
-		overlayProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	else
-		overlayProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 0.5f);
-	glm::mat4 modelview = glm::mat4(1.0f);
-	overlayProgram->setUniformMatrix4f("modelview", modelview);
-	for (Button* b : habilities) {
-		b->render();
-	}
-
 	glm::vec4 color;
-	if (focus)
-		color = glm::vec4(0, 0, 0, 1);
-	else
-		color = glm::vec4(0, 0, 0, 0.5f);
-
 	int i = 0;
-	for (Text* t : habsNums) {
-		t->render(static_cast<ostringstream*>(&(ostringstream() << habilitiesQuant[i]))->str(), 
+	for (Button* b : habilities) {
+		overlayProgram->use();
+		overlayProgram->setUniformMatrix4f("projection", projection);
+		if (b->isMouseOver()) {
+			overlayProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 0.9f);
+			color = glm::vec4(0, 0, 0, 0.9f);
+		} else if (focus) {
+			overlayProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+			color = glm::vec4(0, 0, 0, 1);
+		} else {
+			overlayProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 0.5f);
+			color = glm::vec4(0, 0, 0, 0.5f);
+		}
+		glm::mat4 modelview = glm::mat4(1.0f);
+		overlayProgram->setUniformMatrix4f("modelview", modelview);
+		b->render();
+		habsNums[i]->render(static_cast<ostringstream*>(&(ostringstream() << habilitiesQuant[i]))->str(),
 			glm::vec2((float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*HABILITIES_NUMBER / 2.0f) + i * 14.0f + 6.0f)*3.0f, (float(CAMERA_HEIGHT - 1) - 18.0f)*3.0f), 15, color);
 		++i;
 	}

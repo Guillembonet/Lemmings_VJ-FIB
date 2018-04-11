@@ -16,6 +16,7 @@ public:
 
 	void render() const;
 	void free();
+	bool isMouseOver();
 
 	void mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton);
 
@@ -27,6 +28,7 @@ private:
 	GLint posLocation, texCoordLocation;
 	std::function<void()> callback;
 	float x, y, width, height;
+	bool mouseOver;
 
 };
 
