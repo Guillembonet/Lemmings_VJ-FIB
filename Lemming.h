@@ -4,6 +4,7 @@ class Scene;
 #include <set>
 #include "Sprite.h"
 #include "Text.h"
+#include "Explosion.h"
 #include "VariableTexture.h"
 
 
@@ -67,7 +68,7 @@ private:
 	Scene *scene;
 	Text explodingNumber;
 	long explodeTime;
-
+	Explosion explosion;
 	Side side;
 };
 

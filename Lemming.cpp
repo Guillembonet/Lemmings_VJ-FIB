@@ -22,6 +22,9 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 {
 	exploding = false;
 	exploded = false;
+
+	explosion.init(&shaderProgram);
+
 	this->scene = currentScene;
 	if (!explodingNumber.init("fonts/OpenSans-Regular.ttf"))
 		//if(!text.init("fonts/OpenSans-Bold.ttf"))
@@ -350,7 +353,7 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 			sprite->position() += glm::vec2(0, fall);
 		}
 		if (!exploded && explodeTime - glutGet(GLUT_ELAPSED_TIME) < -1600) {
-			cout << sprite->position().x*3.0f + 20.0f << " " << sprite->position().y*3.0f + 60.0f << endl;
+			explosion.start(glm::vec2(sprite->position().x + 3.0f, sprite->position().y + 16.0f));
 			scene->eraseMask(sprite->position().x*3.0f + 25.0f, sprite->position().y*3.0f + 50.0f);
 			float x, y2;
 			for (float i = -338.0f; i < 338.0f; i += 4.0f) {
@@ -366,6 +369,9 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 				scene->eraseMask(sprite->position().x*3.0f + 25.0f + x, sprite->position().y*3.0f + 50.0f + i);
 			}
 			exploded = true;
+		}
+		else if (exploded) {
+			explosion.update(deltaTime);
 		}
 	}
 
@@ -387,8 +393,12 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 
 void Lemming::render()
 {
-	if (!(state == EXPLODING_STATE && explodeTime - glutGet(GLUT_ELAPSED_TIME) < -1600))
+	if (exploded) {
+		explosion.render();
+	}
+	else {
 		sprite->render();
+	}
 
 	if (exploding) {
 		explodingNumber.render(static_cast<ostringstream*>(&(ostringstream() << (explodeTime - glutGet(GLUT_ELAPSED_TIME))/1000))->str(),
