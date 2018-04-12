@@ -28,6 +28,7 @@ public:
 	glm::vec2 getPosition();
 	void mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton);
 	bool isLemmingSelected(int i, int j);
+	void nuke();
 	
 	
 private:
@@ -70,6 +71,7 @@ private:
 	long explodeTime;
 	Explosion explosion;
 	Side side;
+	float currentTime;
 };
 
 

@@ -100,10 +100,13 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 	sprite->changeAnimation(FALLING_RIGHT);
 	side = RIGHT;
 	sprite->setPosition(initialPosition);
+
+	currentTime = 0.0f;
 }
 
 void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 {
+	currentTime += deltaTime;
 	int fall;
 
 	if(sprite->update(deltaTime) == 0)
@@ -181,7 +184,6 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 		posBase += glm::ivec2(7, 16);
 
 		fall = collisionFloorWithCoords(4, posBase.x, posBase.y-2.2);
-		//std::cout << fall << std::endl;
 		if (fall < 4) {
 			for (int i = -5; i <= 5; i++)
 			{
@@ -352,7 +354,7 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 		if (fall > 0) {
 			sprite->position() += glm::vec2(0, fall);
 		}
-		if (!exploded && explodeTime - glutGet(GLUT_ELAPSED_TIME) < -1600) {
+		if (!exploded && explodeTime - currentTime < -1600) {
 			explosion.start(glm::vec2(sprite->position().x + 3.0f, sprite->position().y + 16.0f));
 			scene->eraseMask(sprite->position().x*3.0f + 25.0f, sprite->position().y*3.0f + 50.0f);
 			float x, y2;
@@ -375,7 +377,7 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 		}
 	}
 
-	if (exploding && explodeTime - glutGet(GLUT_ELAPSED_TIME) < 0) {
+	if (exploding && explodeTime - currentTime < 0) {
 		exploding = false;
 		state = EXPLODING_STATE;
 		sprite->changeAnimation(EXPLODING);
@@ -401,7 +403,7 @@ void Lemming::render()
 	}
 
 	if (exploding) {
-		explodingNumber.render(static_cast<ostringstream*>(&(ostringstream() << (explodeTime - glutGet(GLUT_ELAPSED_TIME))/1000))->str(),
+		explodingNumber.render(static_cast<ostringstream*>(&(ostringstream() << (int)(explodeTime - currentTime)/1000))->str(),
 			sprite->position()*3.0f + glm::vec2(20.0f, 10.0f) , 15, glm::vec4(1, 1, 1, 1));
 	}
 }
@@ -529,8 +531,13 @@ void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBu
 		//endingclimb = false;
 		//sprite->changeAnimation(WALKING_LEFT);
 		exploding = true;
-		explodeTime = glutGet(GLUT_ELAPSED_TIME) + 5500;
+		explodeTime = currentTime + 5500;
 	}
+}
+
+void Lemming::nuke() {
+	exploding = true;
+	explodeTime = currentTime + 5500;
 }
 
 /* x, y are lemming coords and i, j are mouse coords*/

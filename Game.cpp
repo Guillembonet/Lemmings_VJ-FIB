@@ -4,7 +4,7 @@
 
 
 void Game::callback(){ // En caso de que esta función sea llamada, se iniciará la escena del juego y se cambiará el estado
-	scene.init();
+	scene.init(&paused);
 	state = PLAYING;
 }
 
@@ -15,6 +15,7 @@ void Game::end_game() {
 void Game::init()
 {
 	bPlay = true;
+	paused = false;
 	bLeftMouse = bRightMouse = false;
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
@@ -33,7 +34,8 @@ bool Game::update(int deltaTime)
 			menu.update(deltaTime);
 			break;
 		case PLAYING:
-			scene.update(deltaTime);
+			if (!paused)
+				scene.update(deltaTime);
 			break;
 		default:
 			break;

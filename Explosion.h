@@ -20,7 +20,7 @@ private:
 	std::vector<float> speeds;
 	Texture spritesheet;
 	glm::vec2 pos0;
-	long explosionStartTime;
+	float explosionStartTime;
 };
 
 

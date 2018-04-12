@@ -28,11 +28,13 @@ public:
 	Scene();
 	~Scene();
 
-	void init();
+	void init(bool *paused);
 	void initHabilities();
 	void update(int deltaTime);
 	void render();
-	
+	void nuke();
+	void pause();
+
 	void mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton);
 	void eraseMask(int mouseX, int mouseY);
 
@@ -54,7 +56,7 @@ private:
 	int lemmingCount = 0;
 	std::vector<Lemming*> lemmings;
 	string selectedHab;
-
+	bool *paused, nuked;
 	SkyDoor *skyDoor;
 	ExitDoor *exitDoor;
 	BottomBox *bb;

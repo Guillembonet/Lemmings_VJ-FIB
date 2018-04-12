@@ -6,12 +6,13 @@
 #include "BottomBox.h"
 
 #define HABILITIES_NUMBER 7
+#define TOTAL_BUTTONS 9
 
 BottomBox::BottomBox() {}
 
 BottomBox::~BottomBox() {}
 
-void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram)
+void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause)
 {
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 
@@ -29,8 +30,8 @@ void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram)
 
 		std::function<void()> selectHabFunc = std::bind(&BottomBox::selectHab, this, habilitiesID[i]);
 
-		glm::vec2 geom[2] = { glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*HABILITIES_NUMBER / 2.0f) + i * 14.0f, float(CAMERA_HEIGHT - 1) - 25.0f),
-			glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*HABILITIES_NUMBER / 2.0f) + (i + 1)*14.0f, float(CAMERA_HEIGHT - 1)) };
+		glm::vec2 geom[2] = { glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + i * 14.0f, float(CAMERA_HEIGHT - 1) - 25.0f),
+			glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + (i + 1)*14.0f, float(CAMERA_HEIGHT - 1)) };
 		habilities.push_back(Button::createButton(geom, texCoords, selectHabFunc, habilitiesTexs[i], overlayProgram));
 
 		//Text text;
@@ -45,11 +46,39 @@ void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram)
 		habilitiesQuant.push_back(i);
 	}
 
-	position[0] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*HABILITIES_NUMBER / 2.0f), float(CAMERA_HEIGHT - 1) - 25.0f);
-	position[1] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*HABILITIES_NUMBER / 2.0f) + ((HABILITIES_NUMBER-1) + 1)*14.0f, float(CAMERA_HEIGHT - 1));
+	habilitiesTexs.push_back(new Texture());
+	habilitiesTexs[HABILITIES_NUMBER]->loadFromFile("images/buttons/control_nuke.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	habilitiesTexs[HABILITIES_NUMBER]->setMinFilter(GL_NEAREST);
+	habilitiesTexs[HABILITIES_NUMBER]->setMagFilter(GL_NEAREST);
+
+	std::function<void()> nukeButton = std::bind(&BottomBox::callAndSetHab, this, nuke, "NUKE");
+
+	glm::vec2 geom[2] = { glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + (float)HABILITIES_NUMBER * 14.0f, float(CAMERA_HEIGHT - 1) - 25.0f),
+		glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + ((float)HABILITIES_NUMBER + 1)*14.0f, float(CAMERA_HEIGHT - 1)) };
+	habilities.push_back(Button::createButton(geom, texCoords, nuke, habilitiesTexs[HABILITIES_NUMBER], overlayProgram));
+
+	habilitiesTexs.push_back(new Texture());
+	habilitiesTexs[HABILITIES_NUMBER+1]->loadFromFile("images/buttons/control_pause.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	habilitiesTexs[HABILITIES_NUMBER+1]->setMinFilter(GL_NEAREST);
+	habilitiesTexs[HABILITIES_NUMBER+1]->setMagFilter(GL_NEAREST);
+
+	std::function<void()> pauseButton = std::bind(&BottomBox::callAndSetHab, this, pause, "PAUSE");
+
+	geom[0] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + ((float)HABILITIES_NUMBER + 1.0f) * 14.0f, float(CAMERA_HEIGHT - 1) - 25.0f);
+	geom[1] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + (((float)HABILITIES_NUMBER + 1.0f) + 1)*14.0f, float(CAMERA_HEIGHT - 1));
+	habilities.push_back(Button::createButton(geom, texCoords, pauseButton, habilitiesTexs[HABILITIES_NUMBER+1], overlayProgram));
+
+	position[0] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f), float(CAMERA_HEIGHT - 1) - 25.0f);
+	position[1] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + (((float)TOTAL_BUTTONS -1) + 1)*14.0f, float(CAMERA_HEIGHT - 1));
 
 	this->overlayProgram = overlayProgram;
 	this->selectedHab = selectedHab;
+}
+
+void BottomBox::callAndSetHab(std::function<void()> call, string hab)
+{
+	call();
+	*selectedHab = hab;
 }
 
 void BottomBox::selectHab(string hab)
@@ -59,27 +88,23 @@ void BottomBox::selectHab(string hab)
 
 void BottomBox::render()
 {
-	glm::vec4 color;
-	int i = 0;
 	for (Button* b : habilities) {
 		overlayProgram->use();
 		overlayProgram->setUniformMatrix4f("projection", projection);
 		if (b->isMouseOver()) {
 			overlayProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 0.9f);
-			color = glm::vec4(0, 0, 0, 0.9f);
 		} else if (focus) {
 			overlayProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-			color = glm::vec4(0, 0, 0, 1);
 		} else {
 			overlayProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 0.5f);
-			color = glm::vec4(0, 0, 0, 0.5f);
 		}
 		glm::mat4 modelview = glm::mat4(1.0f);
 		overlayProgram->setUniformMatrix4f("modelview", modelview);
 		b->render();
+	}
+	for (int i = 0; i < HABILITIES_NUMBER; ++i) {
 		habsNums[i]->render(static_cast<ostringstream*>(&(ostringstream() << habilitiesQuant[i]))->str(),
-			glm::vec2((float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*HABILITIES_NUMBER / 2.0f) + i * 14.0f + 6.0f)*3.0f, (float(CAMERA_HEIGHT - 1) - 18.0f)*3.0f), 15, color);
-		++i;
+			glm::vec2((float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*TOTAL_BUTTONS / 2.0f) + i * 14.0f + 6.0f)*3.0f, (float(CAMERA_HEIGHT - 1) - 18.0f)*3.0f), 15, glm::vec4(0, 0, 0, 1));
 	}
 }
 

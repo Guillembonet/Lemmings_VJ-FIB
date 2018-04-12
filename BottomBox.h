@@ -15,13 +15,14 @@ public:
 	BottomBox();
 	~BottomBox();
 
-	void init(string *selectedHab, ShaderProgram *overlayProgram);
+	void init(string *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause);
 
 	void render();
 
 	void mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton);
 
 	void selectHab(string hab);
+	void callAndSetHab(std::function<void()> call, string hab);
 
 private:
 	std::vector<Button*> habilities;

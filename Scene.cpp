@@ -9,7 +9,9 @@
 
 Scene::Scene()
 {
+	paused = false;
 	map = NULL;
+	nuked = false;
 	selectedHab = "NONE";
 }
 
@@ -20,8 +22,9 @@ Scene::~Scene()
 }
 
 
-void Scene::init()
+void Scene::init(bool *paused)
 {
+	this->paused = paused;
 	glm::vec2 geom[2] = {glm::vec2(0.f, 0.f), glm::vec2(float(CAMERA_WIDTH), float(CAMERA_HEIGHT))};
 	glm::vec2 texCoords[2] = {glm::vec2(120.f / 512.0, 0.f), glm::vec2((120.f + 320.f) / 512.0f, 160.f / 256.0f)};
 
@@ -69,7 +72,19 @@ void Scene::initHabilities()
 	std::function<void()> callback;
 
 	bb = new BottomBox();
-	bb->init(&selectedHab, &overlayProgram);
+	bb->init(&selectedHab, &overlayProgram, std::bind(&Scene::nuke, this), std::bind(&Scene::pause, this));
+}
+
+void Scene::nuke() {
+	for each (Lemming *lem in lemmings)
+	{
+		lem->nuke();
+	}
+	nuked = true;
+}
+
+void Scene::pause() {
+	*paused = !*paused;
 }
 
 void Scene::update(int deltaTime)
@@ -77,7 +92,7 @@ void Scene::update(int deltaTime)
 	currentTime += deltaTime;
 
 	int currentTimeSec = currentTime / 1000;
-	if (skyDoor->isDoorOpen() && (currentTimeSec % 3 == 0) && currentTimeSec != lastLemmingGenTime && lemmingCount < MAX_LEMMINGS) {
+	if (skyDoor->isDoorOpen() && (currentTimeSec % 3 == 0) && currentTimeSec != lastLemmingGenTime && lemmingCount < MAX_LEMMINGS && !nuked) {
 		lastLemmingGenTime = currentTimeSec;
 		Lemming *newLemming = new Lemming();
 		newLemming->init(glm::vec2(90, 27), simpleTexProgram, this);
@@ -165,7 +180,7 @@ void Scene::render()
 
 void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
 {
-	if(bLeftButton)
+	if (bLeftButton)
 		eraseMask(mouseX, mouseY);
 	else if(bRightButton)
 		applyMask(mouseX, mouseY);
