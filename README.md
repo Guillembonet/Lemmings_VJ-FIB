@@ -14,7 +14,7 @@
 
 <hr>
 
-[G] PAUSA
+[G] PAUSA ✔
 
 [G] VELOCIDADES
 
