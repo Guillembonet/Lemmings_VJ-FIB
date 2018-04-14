@@ -22,8 +22,8 @@ Scene::~Scene()
 
 void Scene::init()
 {
-	glm::vec2 geom[2] = {glm::vec2(0.f, 0.f), glm::vec2(float(CAMERA_WIDTH), float(CAMERA_HEIGHT))};
-	glm::vec2 texCoords[2] = {glm::vec2(120.f / 512.0, 0.f), glm::vec2((120.f + 320.f) / 512.0f, 160.f / 256.0f)};
+	glm::vec2 geom[2] = {glm::vec2(0.f, 0.f), glm::vec2(float(WIDTH), float(HEIGHT))};
+	glm::vec2 texCoords[2] = {glm::vec2(120.f / 512.0, 0.f), glm::vec2((120.f + 320.f) / 512.0f, 190.f / 256.0f)};
 
 	initShaders();
 
@@ -35,7 +35,7 @@ void Scene::init()
 	maskTexture.setMinFilter(GL_NEAREST);
 	maskTexture.setMagFilter(GL_NEAREST);
 
-	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
+	projection = glm::ortho(0.f, float(WIDTH - 1), float(HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 
 	initDoors();
