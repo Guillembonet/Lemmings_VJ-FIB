@@ -23,6 +23,7 @@ public:
 	
 	void setMapMask(VariableTexture *mapMask);
 	void setExitDoorCoords(int x, int y, int w, int h);
+	void setLadderHandler(LadderHandler *ladderHandler);
 
 	bool hasLeft();
 	bool isBlocker();
@@ -75,7 +76,7 @@ private:
 	Side side;
 	float currentTime;
 
-	LadderHandler ladderHandler;
+	LadderHandler *ladderHandler;
 	int ladderCount = 0;
 };
 

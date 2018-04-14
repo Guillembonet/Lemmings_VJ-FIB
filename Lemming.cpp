@@ -25,7 +25,6 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 	exploded = false;
 
 	explosion.init(&shaderProgram);
-	ladderHandler.init(&shaderProgram);
 
 	this->scene = currentScene;
 	if (!explodingNumber.init("fonts/OpenSans-Regular.ttf"))
@@ -398,7 +397,7 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 		else if (sprite->getCurrentKeyFrameIndex() == 15) {
 			glm::vec2 posBase = sprite->position() + glm::vec2(3, 15); // Add the map displacement
 
-			ladderHandler.addLadder(posBase); //Just for draw
+			ladderHandler->addLadder(posBase); //Just for draw
 
 			posBase += glm::vec2(120 + 5, 0);
 			for (int i = 0; i < 6; i++) { // 6 is the width of the ladder
@@ -420,7 +419,7 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 		else if (sprite->getCurrentKeyFrameIndex() == 15) {
 			glm::vec2 posBase = sprite->position() + glm::vec2(7, 15); // Add the map displacement
 
-			ladderHandler.addLadder(posBase); //Just for draw
+			ladderHandler->addLadder(posBase); //Just for draw
 
 			posBase+=glm::vec2(120, 0);
 			for (int i = 0; i < 6; i++){ // 6 is the width of the ladder
@@ -459,7 +458,7 @@ void Lemming::render()
 			sprite->position()*3.0f + glm::vec2(20.0f, 10.0f) , 15, glm::vec4(1, 1, 1, 1));
 	}
 
-	ladderHandler.render();
+	//ladderHandler.render();
 }
 
 void Lemming::setMapMask(VariableTexture *mapMask)
@@ -508,18 +507,21 @@ int Lemming::collisionFloorWithCoords(int maxFall, int x, int y) {
 bool Lemming::collision()
 {
 	glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
-	
+		
 	posBase += glm::ivec2(7, 15);
+	//std::cout << mask->pixel(posBase.x, posBase.y) << std::endl;
+	char a = mask->pixel(posBase.x, posBase.y);
+	char b = mask->pixel(posBase.x + 1, posBase.y);
+	char c = mask->pixel(posBase.x - 1, posBase.y);
 	if ((mask->pixel(posBase.x, posBase.y) == 0) && (mask->pixel(posBase.x + 1, posBase.y) == 0)) {
 		return false;
 	}
-	if (side==LEFT && ((mask->pixel(posBase.x, posBase.y) == 10) && (mask->pixel(posBase.x + 1, posBase.y) == 10))) {
+	if (mask->pixel(posBase.x - 1, posBase.y) == 20 || mask->pixel(posBase.x - 1, posBase.y) == 10) {
 		return false;
 	}
-	else if ((mask->pixel(posBase.x, posBase.y) == 20) && (mask->pixel(posBase.x + 1, posBase.y) == 20)) {
+	if (mask->pixel(posBase.x + 1, posBase.y) == 10 || mask->pixel(posBase.x + 1, posBase.y) == 20) {
 		return false;
 	}
-	
 	return true;
 }
 
@@ -635,5 +637,7 @@ bool Lemming::isLemmingSelected(int i, int j) {
 	return imSelected(sprite->position().x, sprite->position().y, i, j);
 }
 
-
+void Lemming::setLadderHandler(LadderHandler *ladderHandler) {
+	this->ladderHandler = ladderHandler;
+}
 

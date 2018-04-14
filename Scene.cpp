@@ -52,6 +52,9 @@ void Scene::init(bool *paused, std::function<void()> faster, std::function<void(
 	squarePointer = new SquarePointer();
 	squarePointer->init(glm::vec2(80, 25), simpleTexProgram);
 
+	ladderHandler = new LadderHandler();
+	ladderHandler->init(&simpleTexProgram);
+
 	// black background
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -108,6 +111,7 @@ void Scene::update(int deltaTime)
 		lastLemmingGenTime = currentTimeSec;
 		Lemming *newLemming = new Lemming();
 		newLemming->init(glm::vec2(90, 27), simpleTexProgram, this);
+		newLemming->setLadderHandler(ladderHandler);
 		newLemming->setMapMask(&maskTexture);
 		newLemming->setExitDoorCoords(233, 117, 4, 5);
 
@@ -169,6 +173,7 @@ void Scene::render()
 
 	exitDoor->render();
 	skyDoor->render();
+	ladderHandler->render();
 	for each (Lemming *lem in lemmings)
 	{
 		simpleTexProgram.use();
@@ -192,10 +197,10 @@ void Scene::render()
 
 void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
 {
-	if (bLeftButton)
+	/*if (bLeftButton)
 		eraseMask(mouseX, mouseY);
 	else if(bRightButton)
-		applyMask(mouseX, mouseY);
+		applyMask(mouseX, mouseY);*/
 
 	//bool selection = false;
 	for each (Lemming* lem in lemmings)
