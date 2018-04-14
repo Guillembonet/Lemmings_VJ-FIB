@@ -6,13 +6,13 @@
 #include "BottomBox.h"
 
 #define HABILITIES_NUMBER 7
-#define TOTAL_BUTTONS 11
+#define TOTAL_BUTTONS 13
 
 BottomBox::BottomBox() {}
 
 BottomBox::~BottomBox() {}
 
-void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower)
+void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen)
 {
 	projection = glm::ortho(0.f, float(WIDTH - 1), float(HEIGHT - 1), 0.f);
 
@@ -89,6 +89,28 @@ void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram, std::fu
 	geom[0] = glm::vec2(float(WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + ((float)HABILITIES_NUMBER + 3.0f) * 14.0f, float(HEIGHT - 1) - 25.0f);
 	geom[1] = glm::vec2(float(WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + (((float)HABILITIES_NUMBER + 3.0f) + 1)*14.0f, float(HEIGHT - 1));
 	habilities.push_back(Button::createButton(geom, texCoords, decreaseSpeedButton, habilitiesTexs[HABILITIES_NUMBER + 3], overlayProgram));
+
+	habilitiesTexs.push_back(new Texture());
+	habilitiesTexs[HABILITIES_NUMBER + 4]->loadFromFile("images/buttons/control_more.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	habilitiesTexs[HABILITIES_NUMBER + 4]->setMinFilter(GL_NEAREST);
+	habilitiesTexs[HABILITIES_NUMBER + 4]->setMagFilter(GL_NEAREST);
+
+	std::function<void()> moreButton = std::bind(&BottomBox::callAndSetHab, this, fasterGen, "MORE");
+
+	geom[0] = glm::vec2(float(WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + ((float)HABILITIES_NUMBER + 4.0f) * 14.0f, float(HEIGHT - 1) - 25.0f);
+	geom[1] = glm::vec2(float(WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + (((float)HABILITIES_NUMBER + 4.0f) + 1)*14.0f, float(HEIGHT - 1));
+	habilities.push_back(Button::createButton(geom, texCoords, moreButton, habilitiesTexs[HABILITIES_NUMBER + 4], overlayProgram));
+
+	habilitiesTexs.push_back(new Texture());
+	habilitiesTexs[HABILITIES_NUMBER + 5]->loadFromFile("images/buttons/control_less.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	habilitiesTexs[HABILITIES_NUMBER + 5]->setMinFilter(GL_NEAREST);
+	habilitiesTexs[HABILITIES_NUMBER + 5]->setMagFilter(GL_NEAREST);
+
+	std::function<void()> lessButton = std::bind(&BottomBox::callAndSetHab, this, slowerGen, "LESS");
+
+	geom[0] = glm::vec2(float(WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + ((float)HABILITIES_NUMBER + 5.0f) * 14.0f, float(HEIGHT - 1) - 25.0f);
+	geom[1] = glm::vec2(float(WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + (((float)HABILITIES_NUMBER + 5.0f) + 1)*14.0f, float(HEIGHT - 1));
+	habilities.push_back(Button::createButton(geom, texCoords, lessButton, habilitiesTexs[HABILITIES_NUMBER + 5], overlayProgram));
 
 	position[0] = glm::vec2(float(WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f), float(HEIGHT - 1) - 25.0f);
 	position[1] = glm::vec2(float(WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + (((float)TOTAL_BUTTONS -1) + 1)*14.0f, float(HEIGHT - 1));

@@ -28,6 +28,8 @@ void Scene::init(bool *paused, std::function<void()> faster, std::function<void(
 	glm::vec2 geom[2] = {glm::vec2(0.f, 0.f), glm::vec2(float(WIDTH), float(HEIGHT))};
 	glm::vec2 texCoords[2] = {glm::vec2(120.f / 512.0, 0.f), glm::vec2((120.f + 320.f) / 512.0f, 190.f / 256.0f)};
 
+	lemXsecs = 3;
+
 	initShaders();
 
 	map = MaskedTexturedQuad::createTexturedQuad(geom, texCoords, maskedTexProgram);
@@ -72,7 +74,7 @@ void Scene::initHabilities(std::function<void()> faster, std::function<void()> s
 	std::function<void()> callback;
 
 	bb = new BottomBox();
-	bb->init(&selectedHab, &overlayProgram, std::bind(&Scene::nuke, this), std::bind(&Scene::pause, this), faster, slower);
+	bb->init(&selectedHab, &overlayProgram, std::bind(&Scene::nuke, this), std::bind(&Scene::pause, this), faster, slower, std::bind(&Scene::fasterGen, this), std::bind(&Scene::slowerGen, this));
 }
 
 void Scene::nuke() {
@@ -87,12 +89,22 @@ void Scene::pause() {
 	*paused = !*paused;
 }
 
+void Scene::fasterGen() {
+	if (lemXsecs > 1)
+		--lemXsecs;
+}
+
+void Scene::slowerGen() {
+	if (lemXsecs < 6)
+		++lemXsecs;
+}
+
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 
 	int currentTimeSec = currentTime / 1000;
-	if (skyDoor->isDoorOpen() && (currentTimeSec % 3 == 0) && currentTimeSec != lastLemmingGenTime && lemmingCount < MAX_LEMMINGS && !nuked) {
+	if (skyDoor->isDoorOpen() && (currentTimeSec % lemXsecs == 0) && currentTimeSec != lastLemmingGenTime && lemmingCount < MAX_LEMMINGS && !nuked) {
 		lastLemmingGenTime = currentTimeSec;
 		Lemming *newLemming = new Lemming();
 		newLemming->init(glm::vec2(90, 27), simpleTexProgram, this);

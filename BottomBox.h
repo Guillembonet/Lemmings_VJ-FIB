@@ -18,7 +18,7 @@ public:
 	BottomBox();
 	~BottomBox();
 
-	void init(string *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower);
+	void init(string *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen);
 
 	void render();
 

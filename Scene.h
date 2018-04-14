@@ -37,6 +37,8 @@ public:
 	void render();
 	void nuke();
 	void pause();
+	void fasterGen();
+	void slowerGen();
 
 	void mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton);
 	void eraseMask(int mouseX, int mouseY);
@@ -57,6 +59,7 @@ private:
 	int lastLemmingGenTime;
 	int const MAX_LEMMINGS = 10;
 	int lemmingCount = 0;
+	int lemXsecs;
 	std::vector<Lemming*> lemmings;
 	string selectedHab;
 	bool *paused, nuked;
