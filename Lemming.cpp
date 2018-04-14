@@ -15,7 +15,8 @@
 
 enum LemmingAnims
 {
-	WALKING_LEFT, WALKING_RIGHT, LEAVING, OUT_OF_SCENE, FALLING_LEFT, FALLING_RIGHT, DIGGING, BASHING_LEFT, BASHING_RIGHT, BLOCKING, CLIMBING_RIGHT, CLIMBING_END_RIGHT, CLIMBING_LEFT, CLIMBING_END_LEFT, EXPLODING
+	WALKING_LEFT, WALKING_RIGHT, LEAVING, OUT_OF_SCENE, FALLING_LEFT, FALLING_RIGHT, DIGGING, BASHING_LEFT, BASHING_RIGHT, BLOCKING, 
+	BUILDING_LEFT, BUILDING_RIGHT, CLIMBING_RIGHT, CLIMBING_END_RIGHT, CLIMBING_LEFT, CLIMBING_END_LEFT, EXPLODING
 };
 
 void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram, Scene *currentScene)
@@ -36,7 +37,7 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(1/32.0f, 1/34.0f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(15);
+	sprite->setNumberAnimations(17);
 	
 		sprite->setAnimationSpeed(WALKING_RIGHT, 12);
 		for(int i=0; i<8; i++)
@@ -96,6 +97,13 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 		sprite->setAnimationSpeed(EXPLODING, 10);
 		for (int i = 0; i<16; i++)
 			sprite->addKeyframe(EXPLODING, glm::vec2(float(i) / 32, 12 / 34.0f));
+		sprite->setAnimationSpeed(BUILDING_LEFT, 8);
+		for (int i = 0; i<16; i++)
+			sprite->addKeyframe(BUILDING_LEFT, glm::vec2(float(i) / 32, 7 / 34.0f));
+
+		sprite->setAnimationSpeed(BUILDING_RIGHT, 8);
+		for (int i = 0; i<16; i++)
+			sprite->addKeyframe(BUILDING_RIGHT, glm::vec2(float(i) / 32, 24 / 34.0f));
 		
 	sprite->changeAnimation(FALLING_RIGHT);
 	side = RIGHT;
@@ -382,6 +390,12 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 		state = EXPLODING_STATE;
 		sprite->changeAnimation(EXPLODING);
 	}
+	else if (state == BUILDING_LEFT_STATE) {
+
+	}
+	else if (state == BUILDING_RIGHT_STATE) {
+		sprite->position() += glm::vec2(0.5, -0.5);
+	}
 
 	// Si estamos caminando y nos encontramos en frente de la puerta...
 	if (state == WALKING_RIGHT_STATE || state == WALKING_LEFT_STATE) {
@@ -530,6 +544,20 @@ void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBu
 		//climbing = false;
 		//endingclimb = false;
 		//sprite->changeAnimation(WALKING_LEFT);
+		/*
+		state = BLOCKING_STATE;
+		sprite->changeAnimation(BLOCKING);
+		*/
+
+		/*if (state == WALKING_LEFT_STATE) {
+			state = BUILDING_LEFT_STATE;
+			sprite->changeAnimation(BUILDING_LEFT);
+		}
+		else {
+			state = BUILDING_RIGHT_STATE;
+			sprite->changeAnimation(BUILDING_RIGHT);
+		}*/
+
 		exploding = true;
 		explodeTime = currentTime + 5500;
 	}
