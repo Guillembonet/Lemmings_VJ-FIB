@@ -28,8 +28,8 @@ public:
 	Scene();
 	~Scene();
 
-	void init(bool *paused);
-	void initHabilities();
+	void init(bool *paused, std::function<void()> faster, std::function<void()> slower);
+	void initHabilities(std::function<void()> faster, std::function<void()> slower);
 	void update(int deltaTime);
 	void render();
 	void nuke();

@@ -4,7 +4,9 @@
 
 
 void Game::callback(){ // En caso de que esta función sea llamada, se iniciará la escena del juego y se cambiará el estado
-	scene.init(&paused);
+	std::function<void()> faster = std::bind(&Game::faster, this);
+	std::function<void()> slower = std::bind(&Game::slower, this);
+	scene.init(&paused, faster, slower);
 	state = PLAYING;
 }
 
@@ -12,9 +14,10 @@ void Game::end_game() {
 	bPlay = false;
 }
 
-void Game::init()
+void Game::init(float *speed)
 {
 	bPlay = true;
+	this->speed = speed;
 	paused = false;
 	bLeftMouse = bRightMouse = false;
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -58,6 +61,20 @@ void Game::render()
 	default:
 		break;
 	}
+}
+
+void Game::slower() {
+	if (*speed > 1.0f)
+		*speed -= 0.2f;
+	else if (*speed > 0.5f)
+		*speed -= 0.1f;
+}
+
+void Game::faster() {
+	if (*speed < 1.0f)
+		*speed += 0.1f;
+	else if (*speed < 2.6f)
+		*speed += 0.2f;
 }
 
 void Game::keyPressed(int key)

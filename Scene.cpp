@@ -22,7 +22,7 @@ Scene::~Scene()
 }
 
 
-void Scene::init(bool *paused)
+void Scene::init(bool *paused, std::function<void()> faster, std::function<void()> slower)
 {
 	this->paused = paused;
 	glm::vec2 geom[2] = {glm::vec2(0.f, 0.f), glm::vec2(float(CAMERA_WIDTH), float(CAMERA_HEIGHT))};
@@ -42,7 +42,7 @@ void Scene::init(bool *paused)
 	currentTime = 0.0f;
 
 	initDoors();
-	initHabilities();
+	initHabilities(faster, slower);
 
 	mousePointer = new MousePointer();
 	mousePointer->init(glm::vec2(80, 25), simpleTexProgram);
@@ -67,12 +67,12 @@ void Scene::initDoors() {
 	exitDoor->init(glm::vec2(225, 106), simpleTexProgram);
 }
 
-void Scene::initHabilities()
+void Scene::initHabilities(std::function<void()> faster, std::function<void()> slower)
 {
 	std::function<void()> callback;
 
 	bb = new BottomBox();
-	bb->init(&selectedHab, &overlayProgram, std::bind(&Scene::nuke, this), std::bind(&Scene::pause, this));
+	bb->init(&selectedHab, &overlayProgram, std::bind(&Scene::nuke, this), std::bind(&Scene::pause, this), faster, slower);
 }
 
 void Scene::nuke() {

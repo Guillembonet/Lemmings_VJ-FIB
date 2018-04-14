@@ -12,6 +12,7 @@
 
 static int prevTime;
 static Game game; // This object represents our whole game
+float speed = 1.0f;
 
 
 // If a key is pressed this callback is called
@@ -73,7 +74,7 @@ static void idleCallback()
 	if(deltaTime > TIME_PER_FRAME)
 	{
 		// Every time we enter here is equivalent to a game loop execution
-		if(!Game::instance().update(deltaTime))
+		if(!Game::instance().update(deltaTime*speed))
 			exit(0);
 		prevTime = currentTime;
 		glutPostRedisplay();
@@ -105,7 +106,7 @@ int main(int argc, char **argv)
 	glewInit();
 	
 	// Game instance initialization
-	Game::instance().init();
+	Game::instance().init(&speed);
 	prevTime = glutGet(GLUT_ELAPSED_TIME);
 	// GLUT gains control of the application
 	glutMainLoop();

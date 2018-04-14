@@ -25,7 +25,7 @@ public:
 		return G;
 	}
 	
-	void init();
+	void init(float *speed);
 	bool update(int deltaTime);
 	void render();
 	
@@ -40,6 +40,9 @@ public:
 
 	void callback();
 	void end_game();
+
+	void faster();
+	void slower();
 	
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
@@ -58,6 +61,7 @@ private:
 
 	STATE state;
 	Menu menu;
+	float *speed;
 };
 
 

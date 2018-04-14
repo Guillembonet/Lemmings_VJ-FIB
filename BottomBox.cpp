@@ -6,13 +6,13 @@
 #include "BottomBox.h"
 
 #define HABILITIES_NUMBER 7
-#define TOTAL_BUTTONS 9
+#define TOTAL_BUTTONS 11
 
 BottomBox::BottomBox() {}
 
 BottomBox::~BottomBox() {}
 
-void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause)
+void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower)
 {
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 
@@ -55,7 +55,7 @@ void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram, std::fu
 
 	glm::vec2 geom[2] = { glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + (float)HABILITIES_NUMBER * 14.0f, float(CAMERA_HEIGHT - 1) - 25.0f),
 		glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + ((float)HABILITIES_NUMBER + 1)*14.0f, float(CAMERA_HEIGHT - 1)) };
-	habilities.push_back(Button::createButton(geom, texCoords, nuke, habilitiesTexs[HABILITIES_NUMBER], overlayProgram));
+	habilities.push_back(Button::createButton(geom, texCoords, nukeButton, habilitiesTexs[HABILITIES_NUMBER], overlayProgram));
 
 	habilitiesTexs.push_back(new Texture());
 	habilitiesTexs[HABILITIES_NUMBER+1]->loadFromFile("images/buttons/control_pause.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -67,6 +67,28 @@ void BottomBox::init(string *selectedHab, ShaderProgram *overlayProgram, std::fu
 	geom[0] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + ((float)HABILITIES_NUMBER + 1.0f) * 14.0f, float(CAMERA_HEIGHT - 1) - 25.0f);
 	geom[1] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + (((float)HABILITIES_NUMBER + 1.0f) + 1)*14.0f, float(CAMERA_HEIGHT - 1));
 	habilities.push_back(Button::createButton(geom, texCoords, pauseButton, habilitiesTexs[HABILITIES_NUMBER+1], overlayProgram));
+
+	habilitiesTexs.push_back(new Texture());
+	habilitiesTexs[HABILITIES_NUMBER + 2]->loadFromFile("images/buttons/control_addspeed.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	habilitiesTexs[HABILITIES_NUMBER + 2]->setMinFilter(GL_NEAREST);
+	habilitiesTexs[HABILITIES_NUMBER + 2]->setMagFilter(GL_NEAREST);
+
+	std::function<void()> addSpeedButton = std::bind(&BottomBox::callAndSetHab, this, faster, "FASTER");
+
+	geom[0] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + ((float)HABILITIES_NUMBER + 2.0f) * 14.0f, float(CAMERA_HEIGHT - 1) - 25.0f);
+	geom[1] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + (((float)HABILITIES_NUMBER + 2.0f) + 1)*14.0f, float(CAMERA_HEIGHT - 1));
+	habilities.push_back(Button::createButton(geom, texCoords, addSpeedButton, habilitiesTexs[HABILITIES_NUMBER + 2], overlayProgram));
+
+	habilitiesTexs.push_back(new Texture());
+	habilitiesTexs[HABILITIES_NUMBER + 3]->loadFromFile("images/buttons/control_decreasespeed.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	habilitiesTexs[HABILITIES_NUMBER + 3]->setMinFilter(GL_NEAREST);
+	habilitiesTexs[HABILITIES_NUMBER + 3]->setMagFilter(GL_NEAREST);
+
+	std::function<void()> decreaseSpeedButton = std::bind(&BottomBox::callAndSetHab, this, slower, "SLOWER");
+
+	geom[0] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + ((float)HABILITIES_NUMBER + 3.0f) * 14.0f, float(CAMERA_HEIGHT - 1) - 25.0f);
+	geom[1] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + (((float)HABILITIES_NUMBER + 3.0f) + 1)*14.0f, float(CAMERA_HEIGHT - 1));
+	habilities.push_back(Button::createButton(geom, texCoords, decreaseSpeedButton, habilitiesTexs[HABILITIES_NUMBER + 3], overlayProgram));
 
 	position[0] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f), float(CAMERA_HEIGHT - 1) - 25.0f);
 	position[1] = glm::vec2(float(CAMERA_WIDTH - 1) / 2.0f - (14.0f*(float)TOTAL_BUTTONS / 2.0f) + (((float)TOTAL_BUTTONS -1) + 1)*14.0f, float(CAMERA_HEIGHT - 1));
