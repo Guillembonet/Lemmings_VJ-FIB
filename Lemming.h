@@ -6,6 +6,7 @@ class Scene;
 #include "Text.h"
 #include "Explosion.h"
 #include "VariableTexture.h"
+#include "LadderHandler.h"
 
 
 // Lemming is basically a Sprite that represents one lemming. As such it has
@@ -22,6 +23,7 @@ public:
 	
 	void setMapMask(VariableTexture *mapMask);
 	void setExitDoorCoords(int x, int y, int w, int h);
+	void setLadderHandler(LadderHandler *ladderHandler);
 
 	bool hasLeft();
 	bool isBlocker();
@@ -73,6 +75,9 @@ private:
 	Explosion explosion;
 	Side side;
 	float currentTime;
+
+	LadderHandler *ladderHandler;
+	int ladderCount = 0;
 };
 
 

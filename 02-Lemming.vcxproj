@@ -18,6 +18,7 @@
     <ClInclude Include="ExitDoor.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="LadderHandler.h" />
     <ClInclude Include="Lemming.h" />
     <ClInclude Include="MaskedTexturedQuad.h" />
     <ClInclude Include="Menu.h" />
@@ -40,6 +41,7 @@
     <ClCompile Include="ExitDoor.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="LadderHandler.cpp" />
     <ClCompile Include="Lemming.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MaskedTexturedQuad.cpp" />

@@ -69,6 +69,7 @@ private:
 	MousePointer *mousePointer;
 	SquarePointer *squarePointer;
 	int mouseX, mouseY; // last mouse coords
+	LadderHandler *ladderHandler;
 };
 
 

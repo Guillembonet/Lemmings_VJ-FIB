@@ -101,7 +101,7 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 		for (int i = 0; i<16; i++)
 			sprite->addKeyframe(BUILDING_LEFT, glm::vec2(float(i) / 32, 7 / 34.0f));
 
-		sprite->setAnimationSpeed(BUILDING_RIGHT, 8);
+		sprite->setAnimationSpeed(BUILDING_RIGHT, 12);
 		for (int i = 0; i<16; i++)
 			sprite->addKeyframe(BUILDING_RIGHT, glm::vec2(float(i) / 32, 24 / 34.0f));
 		
@@ -391,10 +391,47 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 		sprite->changeAnimation(EXPLODING);
 	}
 	else if (state == BUILDING_LEFT_STATE) {
+		if (sprite->getCurrentKeyFrameIndex() == 0) {
+			sprite->position() += glm::vec2(-2, -1);
+		}
+		else if (sprite->getCurrentKeyFrameIndex() == 15) {
+			glm::vec2 posBase = sprite->position() + glm::vec2(3, 15); // Add the map displacement
 
+			ladderHandler->addLadder(posBase); //Just for draw
+
+			posBase += glm::vec2(120 + 5, 0);
+			for (int i = 0; i < 6; i++) { // 6 is the width of the ladder
+				mask->setPixel(posBase.x - i, posBase.y, 20);
+			}
+
+			if (ladderCount == 11) {
+				sprite->changeAnimation(WALKING_LEFT);
+				state = WALKING_LEFT_STATE;
+				ladderCount = 0;
+			}
+			else ladderCount++;
+		}
 	}
 	else if (state == BUILDING_RIGHT_STATE) {
-		sprite->position() += glm::vec2(0.5, -0.5);
+		if (sprite->getCurrentKeyFrameIndex() == 0) {
+			sprite->position() += glm::vec2(2, -1);
+		}
+		else if (sprite->getCurrentKeyFrameIndex() == 15) {
+			glm::vec2 posBase = sprite->position() + glm::vec2(7, 15); // Add the map displacement
+
+			ladderHandler->addLadder(posBase); //Just for draw
+
+			posBase+=glm::vec2(120, 0);
+			for (int i = 0; i < 6; i++){ // 6 is the width of the ladder
+				mask->setPixel(posBase.x + i, posBase.y, 10);
+			}
+
+			if (ladderCount == 11) {
+				sprite->changeAnimation(WALKING_RIGHT);
+				state = WALKING_RIGHT_STATE;
+			}
+			else ladderCount++;
+		}
 	}
 
 	// Si estamos caminando y nos encontramos en frente de la puerta...
@@ -420,6 +457,8 @@ void Lemming::render()
 		explodingNumber.render(static_cast<ostringstream*>(&(ostringstream() << (int)(explodeTime - currentTime)/1000))->str(),
 			sprite->position()*3.0f + glm::vec2(20.0f, 10.0f) , 15, glm::vec4(1, 1, 1, 1));
 	}
+
+	//ladderHandler.render();
 }
 
 void Lemming::setMapMask(VariableTexture *mapMask)
@@ -468,11 +507,21 @@ int Lemming::collisionFloorWithCoords(int maxFall, int x, int y) {
 bool Lemming::collision()
 {
 	glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
-	
+		
 	posBase += glm::ivec2(7, 15);
-	if((mask->pixel(posBase.x, posBase.y) == 0) && (mask->pixel(posBase.x+1, posBase.y) == 0))
+	//std::cout << mask->pixel(posBase.x, posBase.y) << std::endl;
+	char a = mask->pixel(posBase.x, posBase.y);
+	char b = mask->pixel(posBase.x + 1, posBase.y);
+	char c = mask->pixel(posBase.x - 1, posBase.y);
+	if ((mask->pixel(posBase.x, posBase.y) == 0) && (mask->pixel(posBase.x + 1, posBase.y) == 0)) {
 		return false;
-	
+	}
+	if (mask->pixel(posBase.x - 1, posBase.y) == 20 || mask->pixel(posBase.x - 1, posBase.y) == 10) {
+		return false;
+	}
+	if (mask->pixel(posBase.x + 1, posBase.y) == 10 || mask->pixel(posBase.x + 1, posBase.y) == 20) {
+		return false;
+	}
 	return true;
 }
 
@@ -549,17 +598,17 @@ void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBu
 		sprite->changeAnimation(BLOCKING);
 		*/
 
-		/*if (state == WALKING_LEFT_STATE) {
+		if (state == WALKING_LEFT_STATE) {
 			state = BUILDING_LEFT_STATE;
 			sprite->changeAnimation(BUILDING_LEFT);
 		}
 		else {
 			state = BUILDING_RIGHT_STATE;
 			sprite->changeAnimation(BUILDING_RIGHT);
-		}*/
+		}
 
-		exploding = true;
-		explodeTime = currentTime + 5500;
+		//exploding = true;
+		//explodeTime = currentTime + 5500;
 	}
 }
 
@@ -588,5 +637,7 @@ bool Lemming::isLemmingSelected(int i, int j) {
 	return imSelected(sprite->position().x, sprite->position().y, i, j);
 }
 
-
+void Lemming::setLadderHandler(LadderHandler *ladderHandler) {
+	this->ladderHandler = ladderHandler;
+}
 
