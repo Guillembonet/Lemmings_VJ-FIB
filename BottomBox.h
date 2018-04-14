@@ -8,6 +8,9 @@
 #include <functional>
 #include <vector>
 
+#define HEIGHT 190
+#define WIDTH 320
+
 class BottomBox {
 
 public:
