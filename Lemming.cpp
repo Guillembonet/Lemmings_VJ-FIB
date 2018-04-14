@@ -392,10 +392,28 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 		sprite->changeAnimation(EXPLODING);
 	}
 	else if (state == BUILDING_LEFT_STATE) {
+		if (sprite->getCurrentKeyFrameIndex() == 0) {
+			sprite->position() += glm::vec2(-2, -1);
+		}
+		else if (sprite->getCurrentKeyFrameIndex() == 15) {
+			glm::vec2 posBase = sprite->position() + glm::vec2(3, 15); // Add the map displacement
 
+			ladderHandler.addLadder(posBase); //Just for draw
+
+			posBase += glm::vec2(120 + 5, 0);
+			for (int i = 0; i < 6; i++) { // 6 is the width of the ladder
+				mask->setPixel(posBase.x - i, posBase.y, 20);
+			}
+
+			if (ladderCount == 11) {
+				sprite->changeAnimation(WALKING_LEFT);
+				state = WALKING_LEFT_STATE;
+				ladderCount = 0;
+			}
+			else ladderCount++;
+		}
 	}
 	else if (state == BUILDING_RIGHT_STATE) {
-
 		if (sprite->getCurrentKeyFrameIndex() == 0) {
 			sprite->position() += glm::vec2(2, -1);
 		}
@@ -408,6 +426,12 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 			for (int i = 0; i < 6; i++){ // 6 is the width of the ladder
 				mask->setPixel(posBase.x + i, posBase.y, 10);
 			}
+
+			if (ladderCount == 11) {
+				sprite->changeAnimation(WALKING_RIGHT);
+				state = WALKING_RIGHT_STATE;
+			}
+			else ladderCount++;
 		}
 	}
 
@@ -489,7 +513,10 @@ bool Lemming::collision()
 	if ((mask->pixel(posBase.x, posBase.y) == 0) && (mask->pixel(posBase.x + 1, posBase.y) == 0)) {
 		return false;
 	}
-	if ((mask->pixel(posBase.x, posBase.y) == 10) && (mask->pixel(posBase.x + 1, posBase.y) == 10)) {
+	if (side==LEFT && ((mask->pixel(posBase.x, posBase.y) == 10) && (mask->pixel(posBase.x + 1, posBase.y) == 10))) {
+		return false;
+	}
+	else if ((mask->pixel(posBase.x, posBase.y) == 20) && (mask->pixel(posBase.x + 1, posBase.y) == 20)) {
 		return false;
 	}
 	

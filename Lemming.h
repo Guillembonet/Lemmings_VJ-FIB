@@ -74,7 +74,9 @@ private:
 	Explosion explosion;
 	Side side;
 	float currentTime;
+
 	LadderHandler ladderHandler;
+	int ladderCount = 0;
 };
 
 
