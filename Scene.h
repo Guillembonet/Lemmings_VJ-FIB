@@ -16,6 +16,9 @@
 #include "MousePointer.h"
 #include "SquarePointer.h"
 
+#define HEIGHT 190
+#define WIDTH 320
+
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
