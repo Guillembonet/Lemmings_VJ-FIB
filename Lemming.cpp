@@ -102,7 +102,7 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 		for (int i = 0; i<16; i++)
 			sprite->addKeyframe(BUILDING_LEFT, glm::vec2(float(i) / 32, 7 / 34.0f));
 
-		sprite->setAnimationSpeed(BUILDING_RIGHT, 8);
+		sprite->setAnimationSpeed(BUILDING_RIGHT, 12);
 		for (int i = 0; i<16; i++)
 			sprite->addKeyframe(BUILDING_RIGHT, glm::vec2(float(i) / 32, 24 / 34.0f));
 		
@@ -402,7 +402,12 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 		else if (sprite->getCurrentKeyFrameIndex() == 15) {
 			glm::vec2 posBase = sprite->position() + glm::vec2(7, 15); // Add the map displacement
 
-			ladderHandler.addLadder(posBase);
+			ladderHandler.addLadder(posBase); //Just for draw
+
+			posBase+=glm::vec2(120, 0);
+			for (int i = 0; i < 6; i++){ // 6 is the width of the ladder
+				mask->setPixel(posBase.x + i, posBase.y, 10);
+			}
 		}
 	}
 
@@ -481,8 +486,12 @@ bool Lemming::collision()
 	glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
 	
 	posBase += glm::ivec2(7, 15);
-	if((mask->pixel(posBase.x, posBase.y) == 0) && (mask->pixel(posBase.x+1, posBase.y) == 0))
+	if ((mask->pixel(posBase.x, posBase.y) == 0) && (mask->pixel(posBase.x + 1, posBase.y) == 0)) {
 		return false;
+	}
+	if ((mask->pixel(posBase.x, posBase.y) == 10) && (mask->pixel(posBase.x + 1, posBase.y) == 10)) {
+		return false;
+	}
 	
 	return true;
 }
