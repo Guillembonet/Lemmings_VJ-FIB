@@ -22,6 +22,7 @@
     <ClCompile Include="TexturedQuad.cpp" />
     <ClCompile Include="SquarePointer.cpp" />
     <ClCompile Include="Explosion.cpp" />
+    <ClCompile Include="LadderHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h" />
@@ -46,5 +47,6 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="SquarePointer.h" />
     <ClInclude Include="Explosion.h" />
+    <ClInclude Include="LadderHandler.h" />
   </ItemGroup>
 </Project>

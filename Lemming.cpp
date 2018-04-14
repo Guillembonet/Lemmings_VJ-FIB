@@ -25,6 +25,7 @@ void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgra
 	exploded = false;
 
 	explosion.init(&shaderProgram);
+	ladderHandler.init(&shaderProgram);
 
 	this->scene = currentScene;
 	if (!explodingNumber.init("fonts/OpenSans-Regular.ttf"))
@@ -394,7 +395,15 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 
 	}
 	else if (state == BUILDING_RIGHT_STATE) {
-		sprite->position() += glm::vec2(0.5, -0.5);
+
+		if (sprite->getCurrentKeyFrameIndex() == 0) {
+			sprite->position() += glm::vec2(2, -1);
+		}
+		else if (sprite->getCurrentKeyFrameIndex() == 15) {
+			glm::vec2 posBase = sprite->position() + glm::vec2(7, 15); // Add the map displacement
+
+			ladderHandler.addLadder(posBase);
+		}
 	}
 
 	// Si estamos caminando y nos encontramos en frente de la puerta...
@@ -420,6 +429,8 @@ void Lemming::render()
 		explodingNumber.render(static_cast<ostringstream*>(&(ostringstream() << (int)(explodeTime - currentTime)/1000))->str(),
 			sprite->position()*3.0f + glm::vec2(20.0f, 10.0f) , 15, glm::vec4(1, 1, 1, 1));
 	}
+
+	ladderHandler.render();
 }
 
 void Lemming::setMapMask(VariableTexture *mapMask)
@@ -549,17 +560,17 @@ void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBu
 		sprite->changeAnimation(BLOCKING);
 		*/
 
-		/*if (state == WALKING_LEFT_STATE) {
+		if (state == WALKING_LEFT_STATE) {
 			state = BUILDING_LEFT_STATE;
 			sprite->changeAnimation(BUILDING_LEFT);
 		}
 		else {
 			state = BUILDING_RIGHT_STATE;
 			sprite->changeAnimation(BUILDING_RIGHT);
-		}*/
+		}
 
-		exploding = true;
-		explodeTime = currentTime + 5500;
+		//exploding = true;
+		//explodeTime = currentTime + 5500;
 	}
 }
 
