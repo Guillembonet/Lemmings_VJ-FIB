@@ -399,7 +399,7 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 
 			ladderHandler->addLadder(posBase); //Just for draw
 
-			posBase += glm::vec2(120 + 5, 0);
+			//posBase += glm::vec2(120 + 5, 0);
 			for (int i = 0; i < 6; i++) { // 6 is the width of the ladder
 				mask->setPixel(posBase.x - i, posBase.y, 20);
 			}
@@ -421,7 +421,7 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 
 			ladderHandler->addLadder(posBase); //Just for draw
 
-			posBase+=glm::vec2(120, 0);
+			//posBase+=glm::vec2(120, 0);
 			for (int i = 0; i < 6; i++){ // 6 is the width of the ladder
 				mask->setPixel(posBase.x + i, posBase.y, 10);
 			}
@@ -620,8 +620,8 @@ void Lemming::nuke() {
 /* x, y are lemming coords and i, j are mouse coords*/
 bool Lemming::imSelected(int x, int y, int i, int j) {
 	// We normalize mouse coords
-	i = i / 3 - 7;
-	j = j / 3 - 7;
+	i = i - 7;
+	j = j - 7;
 
 	int constN = 6;
 

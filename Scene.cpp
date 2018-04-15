@@ -221,13 +221,13 @@ void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButt
 	else if(bRightButton)
 		applyMask(mouseX, mouseY);*/
 
-	//bool selection = false;
+	mousePointer->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+	auto pos = mousePointer->getPosition();
 	for each (Lemming* lem in lemmings)
 	{
-		lem->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+		lem->mouseMoved(pos.x, pos.y, bLeftButton, bRightButton);
 	}
 
-	mousePointer->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 	bb->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 
 	// We update mouse coords
