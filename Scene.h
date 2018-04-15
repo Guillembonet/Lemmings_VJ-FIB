@@ -70,6 +70,12 @@ private:
 	SquarePointer *squarePointer;
 	int mouseX, mouseY; // last mouse coords
 	LadderHandler *ladderHandler;
+
+	float offset = 5;
+	float leftPos = 0.f;
+	float rightPos = WIDTH - 1;
+	float MAX_LEFT_POS;
+	float MAX_RIGHT_POS;
 };
 
 

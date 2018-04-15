@@ -104,6 +104,22 @@ void Scene::slowerGen() {
 
 void Scene::update(int deltaTime)
 {
+	/* Move scene */
+	//std::cout << mouseX << std::endl;
+	if (mouseX >= 0 && mouseX<= 30) {
+		std::cout << "left" << std::endl;
+		leftPos = leftPos - offset;
+		rightPos = rightPos - offset;
+		projection = glm::ortho(leftPos, rightPos, float(HEIGHT - 1), 0.f);
+	}
+	else if (mouseX >= 950 && mouseX <= 980) {
+		std::cout << "right" << std::endl;
+		leftPos = leftPos + offset;
+		rightPos = rightPos + offset;
+		projection = glm::ortho(leftPos, rightPos, float(HEIGHT - 1), 0.f);
+	}
+
+	/*             */
 	currentTime += deltaTime;
 
 	int currentTimeSec = currentTime / 1000;
