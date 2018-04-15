@@ -103,7 +103,7 @@ void Game::mouseMove(int x, int y)
 {
 	mouseX = x;
 	mouseY = y;
-	
+	//std::cout << mouseX << std::endl;
 	switch (state)
 	{
 	case MENU:

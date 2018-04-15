@@ -484,7 +484,7 @@ void Lemming::setExitDoorCoords(int x, int y, int w, int h) {
 
 int Lemming::collisionFloor(int maxFall)
 {
-	glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
+	glm::ivec2 posBase = sprite->position() + glm::vec2(0, 0); // Add the map displacement
 	posBase += glm::ivec2(7, 16);
 	return collisionFloorWithCoords(maxFall, posBase.x, posBase.y);
 }
@@ -506,7 +506,7 @@ int Lemming::collisionFloorWithCoords(int maxFall, int x, int y) {
 
 bool Lemming::collision()
 {
-	glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
+	glm::ivec2 posBase = sprite->position() + glm::vec2(0, 0); // Add the map displacement
 		
 	posBase += glm::ivec2(7, 15);
 	//std::cout << mask->pixel(posBase.x, posBase.y) << std::endl;

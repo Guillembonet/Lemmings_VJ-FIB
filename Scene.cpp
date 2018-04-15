@@ -26,7 +26,7 @@ void Scene::init(bool *paused, std::function<void()> faster, std::function<void(
 {
 	this->paused = paused;
 	glm::vec2 geom[2] = {glm::vec2(0.f, 0.f), glm::vec2(float(WIDTH), float(HEIGHT))};
-	glm::vec2 texCoords[2] = {glm::vec2(120.f / 512.0, 0.f), glm::vec2((120.f + 320.f) / 512.0f, 190.f / 256.0f)};
+	glm::vec2 texCoords[2] = {glm::vec2(0.f / 512.0, 0.f), glm::vec2(512.f / 512.0f, 190.f / 256.0f)};
 
 	lemXsecs = 3;
 
@@ -40,14 +40,14 @@ void Scene::init(bool *paused, std::function<void()> faster, std::function<void(
 	maskTexture.setMinFilter(GL_NEAREST);
 	maskTexture.setMagFilter(GL_NEAREST);
 
-	projection = glm::ortho(0.f, float(WIDTH - 1), float(HEIGHT - 1), 0.f);
+	projection = glm::ortho(120.f, 320.f + 120.f, float(HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 
 	initDoors();
 	initHabilities(faster, slower);
 
 	mousePointer = new MousePointer();
-	mousePointer->init(glm::vec2(80, 25), simpleTexProgram);
+	mousePointer->init(glm::vec2(200, 25), simpleTexProgram, &leftPos, &rightPos);
 
 	squarePointer = new SquarePointer();
 	squarePointer->init(glm::vec2(80, 25), simpleTexProgram);
@@ -66,10 +66,10 @@ unsigned int x = 0;
 
 void Scene::initDoors() {
 	skyDoor = new SkyDoor();
-	skyDoor->init(glm::vec2(80, 25), simpleTexProgram);
+	skyDoor->init(glm::vec2(80 + 120.f, 25), simpleTexProgram);
 
 	exitDoor = new ExitDoor();
-	exitDoor->init(glm::vec2(225, 106), simpleTexProgram);
+	exitDoor->init(glm::vec2(225 + 120.f, 106), simpleTexProgram);
 }
 
 void Scene::initHabilities(std::function<void()> faster, std::function<void()> slower)
@@ -106,17 +106,21 @@ void Scene::update(int deltaTime)
 {
 	/* Move scene */
 	//std::cout << mouseX << std::endl;
-	if (mouseX >= 0 && mouseX<= 30) {
-		std::cout << "left" << std::endl;
+	if (mouseX <= 30 && leftPos > 0) {
+		//std::cout << "left" << std::endl;
 		leftPos = leftPos - offset;
+		if (leftPos < 0) leftPos = 0;
 		rightPos = rightPos - offset;
-		projection = glm::ortho(leftPos, rightPos, float(HEIGHT - 1), 0.f);
+		projection = glm::ortho(float(leftPos), float(rightPos), float(HEIGHT - 1), 0.f);
+		mousePointer->update(deltaTime);
 	}
-	else if (mouseX >= 950 && mouseX <= 980) {
-		std::cout << "right" << std::endl;
+	else if (mouseX >= 960 - 30 && rightPos < 512) {
+		//std::cout << "right" << std::endl;
 		leftPos = leftPos + offset;
 		rightPos = rightPos + offset;
-		projection = glm::ortho(leftPos, rightPos, float(HEIGHT - 1), 0.f);
+		if (rightPos > 512) rightPos = 512;
+		projection = glm::ortho(float(leftPos), float(rightPos), float(HEIGHT - 1), 0.f);
+		mousePointer->update(deltaTime);
 	}
 
 	/*             */
@@ -126,10 +130,10 @@ void Scene::update(int deltaTime)
 	if (skyDoor->isDoorOpen() && (currentTimeSec % lemXsecs == 0) && currentTimeSec != lastLemmingGenTime && lemmingCount < MAX_LEMMINGS && !nuked) {
 		lastLemmingGenTime = currentTimeSec;
 		Lemming *newLemming = new Lemming();
-		newLemming->init(glm::vec2(90, 27), simpleTexProgram, this);
+		newLemming->init(glm::vec2(90 + 120.f, 27), simpleTexProgram, this);
 		newLemming->setLadderHandler(ladderHandler);
 		newLemming->setMapMask(&maskTexture);
-		newLemming->setExitDoorCoords(233, 117, 4, 5);
+		newLemming->setExitDoorCoords(233 + 120.f, 117, 4, 5);
 
 		lemmings.push_back(newLemming);
 
@@ -150,7 +154,7 @@ void Scene::update(int deltaTime)
 			lemmings.erase(lemmings.begin() + i);
 			i--;
 		}
-		else if (lemmings[i]->isLemmingSelected(mouseX, mouseY)) {
+		else if (lemmings[i]->isLemmingSelected(mousePointer->getPosition().x, mousePointer->getPosition().y)) {
 			int x = lemmings[i]->getPosition().x;
 			int y = lemmings[i]->getPosition().y;
 			squarePointer->display(glm::vec2(x + 3, y + 5)); // 3 & 5 are just consts for center lem's
@@ -162,7 +166,6 @@ void Scene::update(int deltaTime)
 
 	skyDoor->update(deltaTime);
 	exitDoor->update(deltaTime);
-	mousePointer->update(deltaTime);
 	squarePointer->update(deltaTime);
 
 	if (lemmings.size() == 0 && (currentTime/1000 > 5)) {

@@ -5,7 +5,7 @@ enum MousePointerAnims
 	DEFAULT
 };
 
-void MousePointer::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram)
+void MousePointer::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram, int *leftPos, int *rightPos)
 {
 	spritesheet.loadFromFile("images/cursor2.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMinFilter(GL_NEAREST);
@@ -20,11 +20,15 @@ void MousePointer::init(const glm::vec2 &initialPosition, ShaderProgram &shaderP
 
 	sprite->changeAnimation(DEFAULT);
 	sprite->setPosition(initialPosition);
+
+	this->leftPos = leftPos;
+	this->rightPos = rightPos;
 }
 
 void MousePointer::update(int deltaTime) {
 	if (sprite->update(deltaTime) == 0)
 		return;
+	sprite->setPosition(glm::vec2(mouseX / 3 + (*leftPos) - 7, mouseY / 3 - 7));
 }
 
 void MousePointer::render()
@@ -34,5 +38,11 @@ void MousePointer::render()
 
 void MousePointer::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
 {
-	sprite->setPosition(glm::vec2(mouseX/3 - 7, mouseY/3 - 7));
+	sprite->setPosition(glm::vec2(mouseX / 3 + (*leftPos) - 7, mouseY / 3 - 7));
+	this->mouseX = mouseX;
+	this->mouseY = mouseY;
+}
+
+glm::vec2 MousePointer::getPosition() {
+	return sprite->position();
 }

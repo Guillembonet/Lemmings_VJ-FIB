@@ -17,7 +17,7 @@
 #include "SquarePointer.h"
 
 #define HEIGHT 190
-#define WIDTH 320
+#define WIDTH 512
 
 
 // Scene contains all the entities of our game.
@@ -71,9 +71,9 @@ private:
 	int mouseX, mouseY; // last mouse coords
 	LadderHandler *ladderHandler;
 
-	float offset = 5;
-	float leftPos = 0.f;
-	float rightPos = WIDTH - 1;
+	int offset = 3;
+	int leftPos = 120.f;
+	int rightPos = 120.f + 320.f;
 	float MAX_LEFT_POS;
 	float MAX_RIGHT_POS;
 };
