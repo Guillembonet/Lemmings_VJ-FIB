@@ -12,7 +12,7 @@ Scene::Scene()
 	paused = false;
 	map = NULL;
 	nuked = false;
-	selectedHab = "NONE";
+	selectedHab = NONE;
 }
 
 Scene::~Scene()
@@ -90,6 +90,8 @@ void Scene::nuke() {
 
 void Scene::pause() {
 	*paused = !*paused;
+	if (!*paused)
+		selectedHab = NONE;
 }
 
 void Scene::fasterGen() {
@@ -167,6 +169,7 @@ void Scene::update(int deltaTime)
 	skyDoor->update(deltaTime);
 	exitDoor->update(deltaTime);
 	squarePointer->update(deltaTime);
+	bb->update(deltaTime);
 
 	if (lemmings.size() == 0 && (currentTime/1000 > 5)) {
 		std::cout << "Fin de la escena" << std::endl;

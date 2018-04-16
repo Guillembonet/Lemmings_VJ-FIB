@@ -14,20 +14,21 @@
 class BottomBox {
 
 public:
-
 	BottomBox();
 	~BottomBox();
 
-	void init(string *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen);
+	void init(int *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen);
 
 	void render();
+	void update(int deltaTime);
 
 	void mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton);
 
-	void selectHab(string hab);
-	void callAndSetHab(std::function<void()> call, string hab);
+	void selectHab(int hab);
+	void callAndSetHab(std::function<void()> call, int hab);
 
 private:
+
 	std::vector<Button*> habilities;
 	std::vector<int> habilitiesQuant;
 	std::vector<Text*> habsNums;
@@ -36,7 +37,9 @@ private:
 	glm::mat4 projection;
 	glm::vec2 position[2];
 	bool focus;
-	string *selectedHab;
+	int *selectedHab;
+	float currentTime;
+	Text time, in, out;
 };
 
 #endif //_BOTTOMBOX_INCLUDE

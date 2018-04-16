@@ -28,6 +28,12 @@ class Scene
 {
 
 public:
+
+	enum selectedHab
+	{
+		BASHER, BLOCKER, BUILDER, CLIMBER, DIGGER, FLOATER, MINER, PAUSED, NONE
+	};
+
 	Scene();
 	~Scene();
 
@@ -61,7 +67,7 @@ private:
 	int lemmingCount = 0;
 	int lemXsecs;
 	std::vector<Lemming*> lemmings;
-	string selectedHab;
+	int selectedHab;
 	bool *paused, nuked;
 	SkyDoor *skyDoor;
 	ExitDoor *exitDoor;
