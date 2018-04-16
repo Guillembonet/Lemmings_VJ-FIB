@@ -15,9 +15,11 @@ BottomBox::BottomBox() {}
 
 BottomBox::~BottomBox() {}
 
-void BottomBox::init(int *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen)
+void BottomBox::init(vector<int> *habs, int *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen)
 {
 	currentTime = 0.0f;
+
+	this->habsQuant = habs;
 
 	projection = glm::ortho(0.f, float(WIDTH - 1), float(HEIGHT - 1), 0.f);
 
@@ -44,8 +46,6 @@ void BottomBox::init(int *selectedHab, ShaderProgram *overlayProgram, std::funct
 				//if(!text.init("fonts/DroidSerif.ttf"))
 				cout << "Could not load font!!!" << endl;
 		}
-
-		habilitiesQuant.push_back(i);
 	}
 
 	//PAUSE
@@ -139,7 +139,12 @@ void BottomBox::callAndSetHab(std::function<void()> call, int hab)
 
 void BottomBox::selectHab(int hab)
 {
-	*selectedHab = hab;
+	if (hab < 7 && (*habsQuant)[hab] > 0)
+		*selectedHab = hab;
+	else if (hab >= 6)
+		*selectedHab = hab;
+	else
+		*selectedHab = 8;
 }
 
 void BottomBox::update(int deltaTime) {
@@ -152,7 +157,7 @@ void BottomBox::render()
 	for (Button* b : habilities) {
 		overlayProgram->use();
 		overlayProgram->setUniformMatrix4f("projection", projection);
-		if (*selectedHab == i && i < 8) {
+		if (*selectedHab == i && i < 8 && (*habsQuant)[i] > 0) {
 			overlayProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 0.8f);
 		}
 		else if (b->isMouseOver()) {
@@ -166,7 +171,7 @@ void BottomBox::render()
 		++i;
 	}
 	for (int i = 0; i < HABILITIES_NUMBER; ++i) {
-		habsNums[i]->render(static_cast<ostringstream*>(&(ostringstream() << habilitiesQuant[i]))->str(),
+		habsNums[i]->render(static_cast<ostringstream*>(&(ostringstream() << (*habsQuant)[i]))->str(),
 			glm::vec2((i * buttonsWidth + buttonsWidth/2.0f - 1.0f)*3.0f, (float(HEIGHT) - 2.0f)*3.0f), 15, glm::vec4(0, 0, 0, 1));
 	}
 

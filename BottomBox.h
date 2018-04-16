@@ -17,7 +17,7 @@ public:
 	BottomBox();
 	~BottomBox();
 
-	void init(int *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen);
+	void init(vector<int> *habs, int *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen);
 
 	void render();
 	void update(int deltaTime);
@@ -30,7 +30,6 @@ public:
 private:
 
 	std::vector<Button*> habilities;
-	std::vector<int> habilitiesQuant;
 	std::vector<Text*> habsNums;
 	std::vector<Texture*> habilitiesTexs;
 	ShaderProgram *overlayProgram;
@@ -38,6 +37,7 @@ private:
 	glm::vec2 position[2];
 	bool focus;
 	int *selectedHab;
+	vector<int> *habsQuant;
 	float currentTime;
 	Text time, in, out;
 };

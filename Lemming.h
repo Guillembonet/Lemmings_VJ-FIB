@@ -23,7 +23,7 @@ public:
 		BASHER, BLOCKER, BUILDER, CLIMBER, DIGGER, FLOATER, MINER, PAUSED, NONE
 	};
 
-	void init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram, Scene *currentScene);
+	void init(vector<int> *habs, const glm::vec2 &initialPosition, ShaderProgram &shaderProgram, Scene *currentScene);
 	void update(int deltaTime, vector<glm::vec2> &blockers);
 	void render();
 	
@@ -80,6 +80,7 @@ private:
 	Explosion explosion;
 	Side side;
 	float currentTime;
+	vector<int> *habsQuant;
 
 	LadderHandler *ladderHandler;
 	int ladderCount = 0;

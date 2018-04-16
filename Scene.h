@@ -77,6 +77,7 @@ private:
 	SquarePointer *squarePointer;
 	int mouseX, mouseY; // last mouse coords
 	LadderHandler *ladderHandler;
+	vector<int> habsQuant;
 
 	int offset = 3;
 	int leftPos = 120.f;

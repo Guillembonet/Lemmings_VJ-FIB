@@ -19,8 +19,10 @@ enum LemmingAnims
 	BUILDING_LEFT, BUILDING_RIGHT, CLIMBING_RIGHT, CLIMBING_END_RIGHT, CLIMBING_LEFT, CLIMBING_END_LEFT, EXPLODING
 };
 
-void Lemming::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram, Scene *currentScene)
+void Lemming::init(vector<int> *habs, const glm::vec2 &initialPosition, ShaderProgram &shaderProgram, Scene *currentScene)
 {
+	this->habsQuant = habs;
+
 	exploding = false;
 	exploded = false;
 
@@ -589,8 +591,10 @@ glm::vec2 Lemming::getPosition() {
 
 void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton, int habID) {
 	auto pos = sprite->position();
-	if (imSelected(pos.x, pos.y, mouseX, mouseY) && bLeftButton &&(state == WALKING_LEFT_STATE || state == WALKING_RIGHT_STATE)) {
-		switch ((selectedHab)habID) {
+	if (imSelected(pos.x, pos.y, mouseX, mouseY) && bLeftButton && (state == WALKING_LEFT_STATE || state == WALKING_RIGHT_STATE)) {
+		if (habID < 7 && (*habsQuant)[habID] > 0){
+			--(*habsQuant)[habID];
+			switch ((selectedHab)habID) {
 			case BASHER:
 
 				break;
@@ -631,6 +635,7 @@ void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBu
 			case MINER:
 
 				break;
+			}
 		}
 		/*state = DIGGING_STATE;
 		sprite->changeAnimation(DIGGING);
