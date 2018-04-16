@@ -556,7 +556,7 @@ bool Lemming::wall()
 
 bool Lemming::wallIsEnding()
 {
-	glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
+	glm::ivec2 posBase = sprite->position() + glm::vec2(0, 0); // Add the map displacement
 
 	posBase += glm::ivec2(7, 15);
 	if (side == RIGHT) {
