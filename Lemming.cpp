@@ -294,6 +294,7 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 	else if (state == CLIMBING_RIGHT_STATE) {
 		sprite->position() += glm::vec2(1, -1);
 		if (found(blockers, sprite->position())){
+			sprite->position() -= glm::vec2(1, -1);
 			sprite->changeAnimation(WALKING_LEFT);
 			state = WALKING_LEFT_STATE;
 			side = LEFT;
@@ -307,7 +308,13 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 				endingclimb = true;
 			}
 			sprite->position() -= glm::vec2(1, 0);
-		} 
+		}
+		else if (collision()) {
+			sprite->position() -= glm::vec2(1, -1);
+			sprite->changeAnimation(WALKING_LEFT);
+			state = WALKING_LEFT_STATE;
+			side = LEFT;
+		}
 		else {
 			fall = collisionFloor(3);
 			if (endingclimb) {
@@ -340,6 +347,12 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 				endingclimb = true;
 			}
 			sprite->position() += glm::vec2(1, 0);
+		}
+		else if (collision()) {
+			sprite->position() -= glm::vec2(-1, -1);
+			sprite->changeAnimation(WALKING_RIGHT);
+			state = WALKING_RIGHT_STATE;
+			side = RIGHT;
 		}
 		else {
 			fall = collisionFloor(3);
@@ -384,12 +397,6 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 			explosion.update(deltaTime);
 		}
 	}
-
-	if (exploding && explodeTime - currentTime < 0) {
-		exploding = false;
-		state = EXPLODING_STATE;
-		sprite->changeAnimation(EXPLODING);
-	}
 	else if (state == BUILDING_LEFT_STATE) {
 		if (sprite->getCurrentKeyFrameIndex() == 0) {
 			sprite->position() += glm::vec2(-2, -1);
@@ -432,6 +439,12 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 			}
 			else ladderCount++;
 		}
+	}
+
+	if (exploding && explodeTime - currentTime < 0) {
+		exploding = false;
+		state = EXPLODING_STATE;
+		sprite->changeAnimation(EXPLODING);
 	}
 
 	// Si estamos caminando y nos encontramos en frente de la puerta...
@@ -527,7 +540,7 @@ bool Lemming::collision()
 
 bool Lemming::wall()
 {
-	glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
+	glm::ivec2 posBase = sprite->position() + glm::vec2(0, 0); // Add the map displacement
 
 	posBase += glm::ivec2(7, 15);
 	if (side == RIGHT) {
@@ -574,9 +587,51 @@ glm::vec2 Lemming::getPosition() {
 	return sprite->position();
 }
 
-void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton) {
+void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton, int habID) {
 	auto pos = sprite->position();
 	if (imSelected(pos.x, pos.y, mouseX, mouseY) && bLeftButton &&(state == WALKING_LEFT_STATE || state == WALKING_RIGHT_STATE)) {
+		switch ((selectedHab)habID) {
+			case BASHER:
+
+				break;
+			case BLOCKER:
+				state = BLOCKING_STATE;
+				sprite->changeAnimation(BLOCKING);
+				break;
+			case BUILDER:
+				if (state == WALKING_LEFT_STATE) {
+					state = BUILDING_LEFT_STATE;
+					sprite->changeAnimation(BUILDING_LEFT);
+				}
+				else {
+					state = BUILDING_RIGHT_STATE;
+					sprite->changeAnimation(BUILDING_RIGHT);
+				}
+				break;
+			case CLIMBER:
+				if (state == WALKING_LEFT_STATE) {
+					state = CLIMBING_LEFT_STATE;
+					side = LEFT;
+					climbing = false;
+					endingclimb = false;
+				}
+				else {
+					state = CLIMBING_RIGHT_STATE;
+					side = RIGHT;
+					climbing = false;
+					endingclimb = false;
+				}
+				break;
+			case DIGGER:
+
+				break;
+			case FLOATER:
+
+				break;
+			case MINER:
+
+				break;
+		}
 		/*state = DIGGING_STATE;
 		sprite->changeAnimation(DIGGING);
 		sprite->position() += glm::vec2(0, 0.5);
@@ -588,27 +643,6 @@ void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBu
 			state = BASHING_RIGHT_STATE;
 			sprite->changeAnimation(BASHING_RIGHT);
 		}*/
-		//state = CLIMBING_LEFT_STATE;
-		//side = LEFT;
-		//climbing = false;
-		//endingclimb = false;
-		//sprite->changeAnimation(WALKING_LEFT);
-		/*
-		state = BLOCKING_STATE;
-		sprite->changeAnimation(BLOCKING);
-		*/
-
-		if (state == WALKING_LEFT_STATE) {
-			state = BUILDING_LEFT_STATE;
-			sprite->changeAnimation(BUILDING_LEFT);
-		}
-		else {
-			state = BUILDING_RIGHT_STATE;
-			sprite->changeAnimation(BUILDING_RIGHT);
-		}
-
-		//exploding = true;
-		//explodeTime = currentTime + 5500;
 	}
 }
 

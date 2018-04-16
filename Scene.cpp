@@ -228,7 +228,7 @@ void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButt
 	auto pos = mousePointer->getPosition();
 	for each (Lemming* lem in lemmings)
 	{
-		lem->mouseMoved(pos.x, pos.y, bLeftButton, bRightButton);
+		lem->mouseMoved(pos.x, pos.y, bLeftButton, bRightButton, selectedHab);
 	}
 
 	bb->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);

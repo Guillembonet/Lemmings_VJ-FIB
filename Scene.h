@@ -41,6 +41,7 @@ public:
 	void initHabilities(std::function<void()> faster, std::function<void()> slower);
 	void update(int deltaTime);
 	void render();
+
 	void nuke();
 	void pause();
 	void fasterGen();

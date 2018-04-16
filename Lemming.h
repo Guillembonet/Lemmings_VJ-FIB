@@ -17,6 +17,12 @@ class Lemming
 {
 
 public:
+
+	enum selectedHab
+	{
+		BASHER, BLOCKER, BUILDER, CLIMBER, DIGGER, FLOATER, MINER, PAUSED, NONE
+	};
+
 	void init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram, Scene *currentScene);
 	void update(int deltaTime, vector<glm::vec2> &blockers);
 	void render();
@@ -28,10 +34,9 @@ public:
 	bool hasLeft();
 	bool isBlocker();
 	glm::vec2 getPosition();
-	void mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton);
+	void mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton, int habID);
 	bool isLemmingSelected(int i, int j);
 	void nuke();
-	
 	
 private:
 	bool found(vector<glm::vec2> &vector, glm::vec2 element);
