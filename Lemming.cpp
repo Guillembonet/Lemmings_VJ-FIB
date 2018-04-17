@@ -189,7 +189,7 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 	}
 	else if (state == DIGGING_STATE) {
 		sprite->position() += glm::vec2(0, 0.2);
-		glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
+		glm::ivec2 posBase = sprite->position(); // Add the map displacement
 		posBase += glm::ivec2(7, 16);
 
 		fall = collisionFloorWithCoords(4, posBase.x, posBase.y-2.2);
@@ -220,7 +220,7 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 			if (shallWeContinue) break;
 		}
 		if (shallWeContinue) {
-			glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
+			glm::ivec2 posBase = sprite->position(); // Add the map displacement
 			posBase += glm::ivec2(7, 16);
 
 			// In some frames we dont have to move our lem
@@ -261,7 +261,7 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 			if (shallWeContinue) break;
 		}
 		if (shallWeContinue){
-			glm::ivec2 posBase = sprite->position() + glm::vec2(120, 0); // Add the map displacement
+			glm::ivec2 posBase = sprite->position(); // Add the map displacement
 			posBase += glm::ivec2(7, 16);
 			
 			// In some frames we dont have to move our lem
@@ -595,7 +595,14 @@ void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBu
 			--(*habsQuant)[habID];
 			switch ((selectedHab)habID) {
 			case BASHER:
-
+				if (state == WALKING_LEFT_STATE) {
+					state = BASHING_LEFT_STATE;
+					sprite->changeAnimation(BASHING_LEFT);
+				}
+				else {
+					state = BASHING_RIGHT_STATE;
+					sprite->changeAnimation(BASHING_RIGHT);
+				}
 				break;
 			case BLOCKER:
 				state = BLOCKING_STATE;
@@ -626,7 +633,8 @@ void Lemming::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBu
 				}
 				break;
 			case DIGGER:
-
+				state = DIGGING_STATE;
+				sprite->changeAnimation(DIGGING);
 				break;
 			case FLOATER:
 
