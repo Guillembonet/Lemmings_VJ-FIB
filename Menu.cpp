@@ -20,14 +20,21 @@ void Menu::init(std::function<void()> callback, std::function<void()> exit)
 
 	initShaders();
 
-	glm::vec2 geomPlay[2] = { glm::vec2(float(CAMERA_WIDTH) / 3.0f, float(CAMERA_HEIGHT) / 10.0f), glm::vec2(float(CAMERA_WIDTH) * 2.0f / 3.0f, float(CAMERA_HEIGHT)*3.0f / 10.0f) };
+	glm::vec2 geomBg[2] = { glm::vec2(0,0), glm::vec2(float(WIDTH), float(HEIGHT)) };
+
+	texBg.loadFromFile("images/menubg.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texBg.setMinFilter(GL_NEAREST);
+	texBg.setMagFilter(GL_NEAREST);
+	bg = TexturedQuad::createTexturedQuad(geomBg, texCoords, program);
+
+	glm::vec2 geomPlay[2] = { glm::vec2(float(WIDTH) / 3.0f, float(HEIGHT) / 10.0f), glm::vec2(float(WIDTH) * 2.0f / 3.0f, float(HEIGHT)*3.0f / 10.0f) };
 
 	texPlay.loadFromFile("images/play_button.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texPlay.setMinFilter(GL_NEAREST);
 	texPlay.setMagFilter(GL_NEAREST);
 	playButton = Button::createButton(geomPlay, texCoords, callback, &texPlay, &program);
 
-	glm::vec2 geomIns[2] = { glm::vec2(float(CAMERA_WIDTH) / 3.0f, float(CAMERA_HEIGHT)*4.0 / 10.0f), glm::vec2(float(CAMERA_WIDTH) * 2.0f / 3.0f, float(CAMERA_HEIGHT)*6.0f / 10.0f) };
+	glm::vec2 geomIns[2] = { glm::vec2(float(WIDTH) / 3.0f, float(HEIGHT)*4.0 / 10.0f), glm::vec2(float(WIDTH) * 2.0f / 3.0f, float(HEIGHT)*6.0f / 10.0f) };
 
 	std::function<void()> none;
 
@@ -37,14 +44,14 @@ void Menu::init(std::function<void()> callback, std::function<void()> exit)
 	
 	insButton = Button::createButton(geomIns, texCoords, none, &texIns, &program);
 
-	glm::vec2 geomExit[2] = { glm::vec2(float(CAMERA_WIDTH) / 3.0f, float(CAMERA_HEIGHT)*7.0 / 10.0f), glm::vec2(float(CAMERA_WIDTH) * 2.0f / 3.0f, float(CAMERA_HEIGHT)*9.0f / 10.0f) };
+	glm::vec2 geomExit[2] = { glm::vec2(float(WIDTH) / 3.0f, float(HEIGHT)*7.0 / 10.0f), glm::vec2(float(WIDTH) * 2.0f / 3.0f, float(HEIGHT)*9.0f / 10.0f) };
 
 	texExit.loadFromFile("images/exit_button.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texExit.setMinFilter(GL_NEAREST);
 	texExit.setMagFilter(GL_NEAREST);
 	exitButton = Button::createButton(geomExit, texCoords, exit, &texExit, &program);
 
-	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
+	projection = glm::ortho(0.f, float(WIDTH - 1), float(HEIGHT - 1), 0.f);
 
 }
 
@@ -62,8 +69,23 @@ void Menu::render()
 	program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	modelview = glm::mat4(1.0f);
 	program.setUniformMatrix4f("modelview", modelview);
+	bg->render(texBg);
+	if (playButton->isMouseOver()) {
+		program.setUniform4f("color", 0.0f, 1.0f, 1.0f, 1.0f);
+		cout << "play" << endl;
+	}
+	else
+		program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	playButton->render();
+	if (insButton->isMouseOver())
+		program.setUniform4f("color", 0.0f, 1.0f, 1.0f, 1.0f);
+	else
+		program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	insButton->render();
+	if (exitButton->isMouseOver())
+		program.setUniform4f("color", 0.5f, 1.0f, 0.5f, 1.0f);
+	else
+		program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	exitButton->render();
 }
 

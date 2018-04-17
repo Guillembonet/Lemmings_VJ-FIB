@@ -134,15 +134,16 @@ void BottomBox::init(vector<int> *habs, int *selectedHab, ShaderProgram *overlay
 
 void BottomBox::callAndSetHab(std::function<void()> call, int hab)
 {
-	*selectedHab = hab;
+	if (hab == 7)
+		*selectedHab = hab;
+	else
+		*selectedHab = 8;
 	call();
 }
 
 void BottomBox::selectHab(int hab)
 {
 	if (hab < 7 && (*habsQuant)[hab] > 0)
-		*selectedHab = hab;
-	else if (hab >= 6)
 		*selectedHab = hab;
 	else
 		*selectedHab = 8;
@@ -158,7 +159,7 @@ void BottomBox::render()
 	for (Button* b : habilities) {
 		overlayProgram->use();
 		overlayProgram->setUniformMatrix4f("projection", projection);
-		if (*selectedHab == i && i < 8 && (*habsQuant)[i] > 0) {
+		if (*selectedHab == i && i < 8 && (i == 7 || (*habsQuant)[i] > 0)) {
 			overlayProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 0.8f);
 		}
 		else if (b->isMouseOver()) {
