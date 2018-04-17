@@ -3,6 +3,7 @@
 
 
 #include "Scene.h"
+#include "Scene2.h"
 #include "Menu.h"
 #include <functional>
 #include <iostream>
@@ -49,7 +50,7 @@ public:
 
 private:
 	bool bPlay;                       // Continue to play game?
-	Scene scene;                      // Scene to render
+	Scene2 scene;                      // Scene to render
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
 	int mouseX, mouseY;               // Mouse position

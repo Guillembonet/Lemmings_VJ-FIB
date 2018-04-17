@@ -23,8 +23,10 @@
     <ClInclude Include="MaskedTexturedQuad.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MousePointer.h" />
+    <ClInclude Include="Poison.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Scene2.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="SkyDoor.h" />
@@ -47,8 +49,10 @@
     <ClCompile Include="MaskedTexturedQuad.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MousePointer.cpp" />
+    <ClCompile Include="Poison.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Scene2.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="SkyDoor.cpp" />

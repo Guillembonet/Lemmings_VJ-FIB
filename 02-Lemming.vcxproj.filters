@@ -23,6 +23,8 @@
     <ClCompile Include="SquarePointer.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="LadderHandler.cpp" />
+    <ClCompile Include="Scene2.cpp" />
+    <ClCompile Include="Poison.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h" />
@@ -48,5 +50,7 @@
     <ClInclude Include="SquarePointer.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="LadderHandler.h" />
+    <ClInclude Include="Scene2.h" />
+    <ClInclude Include="Poison.h" />
   </ItemGroup>
 </Project>

@@ -3,11 +3,11 @@
 #include <algorithm>
 #include <set>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Scene.h"
+#include "Scene2.h"
 
 #define HABILITIES_NUMBER 4
 
-Scene::Scene()
+Scene2::Scene2()
 {
 	paused = false;
 	map = NULL;
@@ -15,28 +15,28 @@ Scene::Scene()
 	selectedHab = NONE;
 }
 
-Scene::~Scene()
+Scene2::~Scene2()
 {
-	if(map != NULL)
+	if (map != NULL)
 		delete map;
 }
 
 
-void Scene::init(bool *paused, std::function<void()> faster, std::function<void()> slower)
+void Scene2::init(bool *paused, std::function<void()> faster, std::function<void()> slower)
 {
 	this->paused = paused;
-	glm::vec2 geom[2] = {glm::vec2(0.f, 0.f), glm::vec2(float(WIDTH), float(HEIGHT))};
-	glm::vec2 texCoords[2] = {glm::vec2(0.f / 512.0, 0.f), glm::vec2(512.f / 512.0f, 190.f / 256.0f)};
+	glm::vec2 geom[2] = { glm::vec2(0.f, 0.f), glm::vec2(float(WIDTH), float(HEIGHT)) };
+	glm::vec2 texCoords[2] = { glm::vec2(0.f / 512.0, 0.f), glm::vec2(512.f / 512.0f, 190.f / 256.0f) };
 
 	lemXsecs = 3;
 
 	initShaders();
 
 	map = MaskedTexturedQuad::createTexturedQuad(geom, texCoords, maskedTexProgram);
-	colorTexture.loadFromFile("images/fun1.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	colorTexture.loadFromFile("images/fun4.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	colorTexture.setMinFilter(GL_NEAREST);
 	colorTexture.setMagFilter(GL_NEAREST);
-	maskTexture.loadFromFile("images/fun1_mask.png", TEXTURE_PIXEL_FORMAT_L);
+	maskTexture.loadFromFile("images/fun4_mask.png", TEXTURE_PIXEL_FORMAT_L);
 	maskTexture.setMinFilter(GL_NEAREST);
 	maskTexture.setMagFilter(GL_NEAREST);
 
@@ -45,6 +45,7 @@ void Scene::init(bool *paused, std::function<void()> faster, std::function<void(
 
 	initDoors();
 	initHabilities(faster, slower);
+	initPoisons();
 
 	mousePointer = new MousePointer();
 	mousePointer->init(glm::vec2(200, 25), simpleTexProgram, &leftPos, &rightPos);
@@ -62,27 +63,33 @@ void Scene::init(bool *paused, std::function<void()> faster, std::function<void(
 	glutSetCursor(GLUT_CURSOR_NONE);
 }
 
-unsigned int x = 0;
+void Scene2::initPoisons(){
+	for (int i = 0; i < 7; i++) {
+		Poison *p = new Poison();
+		p->init(glm::vec2(8 + 120.f + i*42, 140), simpleTexProgram);
+		poisons.push_back(p);
+	}
+}
 
-void Scene::initDoors() {
+void Scene2::initDoors() {
 	skyDoor = new SkyDoor();
 	skyDoor->init(glm::vec2(80 + 120.f, 25), simpleTexProgram);
 
 	exitDoor = new ExitDoor();
-	exitDoor->init(glm::vec2(225 + 120.f, 106), simpleTexProgram, "images/exitDoor.png");
+	exitDoor->init(glm::vec2(245 + 120.f, 23), simpleTexProgram, "images/exitDoor2.png");
 }
 
-void Scene::initHabilities(std::function<void()> faster, std::function<void()> slower)
+void Scene2::initHabilities(std::function<void()> faster, std::function<void()> slower)
 {
 	std::function<void()> callback;
 
 	habsQuant = { 5, 0, 6, 7, 6, 4, 5 };
 
 	bb = new BottomBox();
-	bb->init(&habsQuant, &selectedHab, &overlayProgram, std::bind(&Scene::nuke, this), std::bind(&Scene::pause, this), faster, slower, std::bind(&Scene::fasterGen, this), std::bind(&Scene::slowerGen, this));
+	bb->init(&habsQuant, &selectedHab, &overlayProgram, std::bind(&Scene2::nuke, this), std::bind(&Scene2::pause, this), faster, slower, std::bind(&Scene2::fasterGen, this), std::bind(&Scene2::slowerGen, this));
 }
 
-void Scene::nuke() {
+void Scene2::nuke() {
 	for each (Lemming *lem in lemmings)
 	{
 		lem->nuke();
@@ -90,26 +97,29 @@ void Scene::nuke() {
 	nuked = true;
 }
 
-void Scene::pause() {
+void Scene2::pause() {
 	*paused = !*paused;
 	if (!*paused)
 		selectedHab = NONE;
 }
 
-void Scene::fasterGen() {
+void Scene2::fasterGen() {
 	if (lemXsecs > 1)
 		--lemXsecs;
 }
 
-void Scene::slowerGen() {
+void Scene2::slowerGen() {
 	if (lemXsecs < 6)
 		++lemXsecs;
 }
 
-void Scene::update(int deltaTime)
+void Scene2::update(int deltaTime)
 {
-	/* Move scene */
-	//std::cout << mouseX << std::endl;
+	for each (Poison *p in poisons)
+	{
+		p->update(deltaTime);
+	}
+
 	if (mouseX <= 30 && leftPos > 0) {
 		//std::cout << "left" << std::endl;
 		leftPos = leftPos - offset;
@@ -137,7 +147,7 @@ void Scene::update(int deltaTime)
 		newLemming->init(&habsQuant, glm::vec2(90 + 120.f, 27), simpleTexProgram);
 		newLemming->setLadderHandler(ladderHandler);
 		newLemming->setMapMask(&maskTexture);
-		newLemming->setExitDoorCoords(233 + 120.f, 117, 4, 5);
+		newLemming->setExitDoorCoords(245 + 120.f, 23, 4, 5);
 
 		lemmings.push_back(newLemming);
 
@@ -173,12 +183,12 @@ void Scene::update(int deltaTime)
 	squarePointer->update(deltaTime);
 	bb->update(deltaTime);
 
-	if (lemmings.size() == 0 && (currentTime/1000 > 5)) {
+	if (lemmings.size() == 0 && (currentTime / 1000 > 5)) {
 		std::cout << "Fin de la escena" << std::endl;
 	}
 }
 
-void Scene::render()
+void Scene2::render()
 {
 	glm::mat4 modelview;
 
@@ -188,7 +198,7 @@ void Scene::render()
 	modelview = glm::mat4(1.0f);
 	maskedTexProgram.setUniformMatrix4f("modelview", modelview);
 	map->render(maskedTexProgram, colorTexture, maskTexture);
-	
+
 	simpleTexProgram.use();
 	simpleTexProgram.setUniformMatrix4f("projection", projection);
 	simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
@@ -207,6 +217,9 @@ void Scene::render()
 		simpleTexProgram.setUniformMatrix4f("modelview", modelview);
 		lem->render();
 	}
+	for each(Poison *po in poisons) {
+		po->render();
+	}
 	bb->render();
 
 	simpleTexProgram.use();
@@ -219,12 +232,12 @@ void Scene::render()
 	squarePointer->render();
 }
 
-void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
+void Scene2::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
 {
 	/*if (bLeftButton)
-		eraseMask(mouseX, mouseY);
+	eraseMask(mouseX, mouseY);
 	else if(bRightButton)
-		applyMask(mouseX, mouseY);*/
+	applyMask(mouseX, mouseY);*/
 
 	mousePointer->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 	auto pos = mousePointer->getPosition();
@@ -240,28 +253,28 @@ void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButt
 	this->mouseY = mouseY;
 }
 
-void Scene::eraseMask(int mouseX, int mouseY)
+void Scene2::eraseMask(int mouseX, int mouseY)
 {
 	maskTexture.eraseMask(mouseX, mouseY);
 }
 
-void Scene::applyMask(int mouseX, int mouseY)
+void Scene2::applyMask(int mouseX, int mouseY)
 {
 	maskTexture.applyMask(mouseX, mouseY);
 }
 
-void Scene::initShaders()
+void Scene2::initShaders()
 {
 	Shader vShader, fShader;
 
 	vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
-	if(!vShader.isCompiled())
+	if (!vShader.isCompiled())
 	{
 		cout << "Vertex Shader Error" << endl;
 		cout << "" << vShader.log() << endl << endl;
 	}
 	fShader.initFromFile(FRAGMENT_SHADER, "shaders/texture.frag");
-	if(!fShader.isCompiled())
+	if (!fShader.isCompiled())
 	{
 		cout << "Fragment Shader Error" << endl;
 		cout << "" << fShader.log() << endl << endl;
@@ -270,7 +283,7 @@ void Scene::initShaders()
 	simpleTexProgram.addShader(vShader);
 	simpleTexProgram.addShader(fShader);
 	simpleTexProgram.link();
-	if(!simpleTexProgram.isLinked())
+	if (!simpleTexProgram.isLinked())
 	{
 		cout << "Shader Linking Error" << endl;
 		cout << "" << simpleTexProgram.log() << endl << endl;
@@ -292,13 +305,13 @@ void Scene::initShaders()
 	fShader.free();
 
 	vShader.initFromFile(VERTEX_SHADER, "shaders/maskedTexture.vert");
-	if(!vShader.isCompiled())
+	if (!vShader.isCompiled())
 	{
 		cout << "Vertex Shader Error" << endl;
 		cout << "" << vShader.log() << endl << endl;
 	}
 	fShader.initFromFile(FRAGMENT_SHADER, "shaders/maskedTexture.frag");
-	if(!fShader.isCompiled())
+	if (!fShader.isCompiled())
 	{
 		cout << "Fragment Shader Error" << endl;
 		cout << "" << fShader.log() << endl << endl;
@@ -307,7 +320,7 @@ void Scene::initShaders()
 	maskedTexProgram.addShader(vShader);
 	maskedTexProgram.addShader(fShader);
 	maskedTexProgram.link();
-	if(!maskedTexProgram.isLinked())
+	if (!maskedTexProgram.isLinked())
 	{
 		cout << "Shader Linking Error" << endl;
 		cout << "" << maskedTexProgram.log() << endl << endl;
@@ -316,6 +329,3 @@ void Scene::initShaders()
 	vShader.free();
 	fShader.free();
 }
-
-
-
