@@ -3,9 +3,12 @@
 
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
+#include "TexturedQuad.h"
 #include "Button.h"
 #include <functional>
 
+#define HEIGHT 190
+#define WIDTH 512
 
 class Menu
 {
@@ -27,9 +30,10 @@ private:
 	float currentTime;
 
 	ShaderProgram program;
-	Texture texPlay, texIns, texExit;
+	Texture texPlay, texIns, texExit, texBg;
 	Button *playButton, *insButton, *exitButton;
 	glm::mat4 projection;
+	TexturedQuad *bg;
 };
 
 
