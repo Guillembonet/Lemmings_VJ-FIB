@@ -134,7 +134,7 @@ void Scene::update(int deltaTime)
 	if (skyDoor->isDoorOpen() && (currentTimeSec % lemXsecs == 0) && currentTimeSec != lastLemmingGenTime && lemmingCount < MAX_LEMMINGS && !nuked) {
 		lastLemmingGenTime = currentTimeSec;
 		Lemming *newLemming = new Lemming();
-		newLemming->init(&habsQuant, glm::vec2(90 + 120.f, 27), simpleTexProgram, this);
+		newLemming->init(&habsQuant, glm::vec2(90 + 120.f, 27), simpleTexProgram);
 		newLemming->setLadderHandler(ladderHandler);
 		newLemming->setMapMask(&maskTexture);
 		newLemming->setExitDoorCoords(233 + 120.f, 117, 4, 5);

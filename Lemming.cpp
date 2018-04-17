@@ -19,7 +19,7 @@ enum LemmingAnims
 	BUILDING_LEFT, BUILDING_RIGHT, CLIMBING_RIGHT, CLIMBING_END_RIGHT, CLIMBING_LEFT, CLIMBING_END_LEFT, EXPLODING
 };
 
-void Lemming::init(vector<int> *habs, const glm::vec2 &initialPosition, ShaderProgram &shaderProgram, Scene *currentScene)
+void Lemming::init(vector<int> *habs, const glm::vec2 &initialPosition, ShaderProgram &shaderProgram)
 {
 	this->habsQuant = habs;
 
@@ -28,7 +28,6 @@ void Lemming::init(vector<int> *habs, const glm::vec2 &initialPosition, ShaderPr
 
 	explosion.init(&shaderProgram);
 
-	this->scene = currentScene;
 	if (!explodingNumber.init("fonts/OpenSans-Regular.ttf"))
 		//if(!text.init("fonts/OpenSans-Bold.ttf"))
 		//if(!text.init("fonts/DroidSerif.ttf"))
@@ -379,19 +378,19 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 		}
 		if (!exploded && explodeTime - currentTime < -1600) {
 			explosion.start(glm::vec2(sprite->position().x + 3.0f, sprite->position().y + 16.0f));
-			scene->eraseMask(sprite->position().x*3.0f + 25.0f, sprite->position().y*3.0f + 50.0f);
+			mask->eraseMask(sprite->position().x*3.0f + 25.0f, sprite->position().y*3.0f + 50.0f);
 			float x, y2;
 			for (float i = -338.0f; i < 338.0f; i += 4.0f) {
 				y2 = i * i;
 				x = sqrt(676.0f - y2);
-				scene->eraseMask(sprite->position().x*3.0f + 25.0f - x, sprite->position().y*3.0f + 50.0f + i);
-				scene->eraseMask(sprite->position().x*3.0f + 25.0f + x, sprite->position().y*3.0f + 50.0f + i);
+				mask->eraseMask(sprite->position().x*3.0f + 25.0f - x, sprite->position().y*3.0f + 50.0f + i);
+				mask->eraseMask(sprite->position().x*3.0f + 25.0f + x, sprite->position().y*3.0f + 50.0f + i);
 			}
 			for (float i = -128.0f; i < 128.0f; i += 4.0f) {
 				y2 = i * i;
 				x = sqrt(256.0f - y2);
-				scene->eraseMask(sprite->position().x*3.0f + 25.0f - x, sprite->position().y*3.0f + 50.0f + i);
-				scene->eraseMask(sprite->position().x*3.0f + 25.0f + x, sprite->position().y*3.0f + 50.0f + i);
+				mask->eraseMask(sprite->position().x*3.0f + 25.0f - x, sprite->position().y*3.0f + 50.0f + i);
+				mask->eraseMask(sprite->position().x*3.0f + 25.0f + x, sprite->position().y*3.0f + 50.0f + i);
 			}
 			exploded = true;
 		}
