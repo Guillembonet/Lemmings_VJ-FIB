@@ -23,7 +23,7 @@ public:
 		BASHER, BLOCKER, BUILDER, CLIMBER, DIGGER, FLOATER, MINER, PAUSED, NONE
 	};
 
-	void init(vector<int> *habs, const glm::vec2 &initialPosition, ShaderProgram &shaderProgram, Scene *currentScene);
+	void init(vector<int> *habs, const glm::vec2 &initialPosition, ShaderProgram &shaderProgram);
 	void update(int deltaTime, vector<glm::vec2> &blockers);
 	void render();
 	
@@ -74,7 +74,6 @@ private:
 	Sprite *sprite;
 	VariableTexture *mask;
 	Box exitDoor;
-	Scene *scene;
 	Text explodingNumber;
 	long explodeTime;
 	Explosion explosion;

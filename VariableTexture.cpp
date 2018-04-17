@@ -182,7 +182,33 @@ void VariableTexture::saveBMP(const string &filename)
 		SOIL_save_image(filename.c_str(), SOIL_SAVE_TYPE_BMP, widthTex, heightTex, 4, image);
 }
 
+void VariableTexture::eraseMask(int mouseX, int mouseY)
+{
+	int posX, posY;
 
+	// Transform from mouse coordinates to map coordinates
+	//   The map is enlarged 3 times and displaced 120 pixels
+	posX = mouseX / 3 + 120;
+	posY = mouseY / 3;
+
+	for (int y = max(0, posY - 3); y <= min(this->height() - 1, posY + 3); y++)
+		for (int x = max(0, posX - 3); x <= min(this->width() - 1, posX + 3); x++)
+			this->setPixel(x, y, 0);
+}
+
+void VariableTexture::applyMask(int mouseX, int mouseY)
+{
+	int posX, posY;
+
+	// Transform from mouse coordinates to map coordinates
+	//   The map is enlarged 3 times and displaced 120 pixels
+	posX = mouseX / 3 + 120;
+	posY = mouseY / 3;
+
+	for (int y = max(0, posY - 3); y <= min(this->height() - 1, posY + 3); y++)
+		for (int x = max(0, posX - 3); x <= min(this->width() - 1, posX + 3); x++)
+			this->setPixel(x, y, 255);
+}
 
 
 

@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include "common_defs.h"
+#include <algorithm> 
 
 
 using namespace std;
@@ -44,6 +45,9 @@ public:
 	void setPixel(unsigned int x, unsigned int y, const glm::ivec3 & value);
 	void setPixel(unsigned int x, unsigned int y, const glm::ivec4 & value);
 	void saveBMP(const string &filename);
+
+	void eraseMask(int mouseX, int mouseY);
+	void applyMask(int mouseX, int mouseY);
 
 private:
 	PixelFormat format;
