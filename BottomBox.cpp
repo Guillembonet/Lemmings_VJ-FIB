@@ -10,6 +10,7 @@
 
 static float buttonsWidth = 17.0f;
 static float buttonsHeight = 30.0f;
+static float totalTime = 300.0f;
 
 BottomBox::BottomBox() {}
 
@@ -175,7 +176,9 @@ void BottomBox::render()
 			glm::vec2((i * buttonsWidth + buttonsWidth/2.0f - 1.0f)*3.0f, (float(HEIGHT) - 2.0f)*3.0f), 15, glm::vec4(0, 0, 0, 1));
 	}
 
-	time.render("Time left: " + static_cast<ostringstream*>(&(ostringstream() << currentTime))->str(),
+	int mins = (totalTime - currentTime / 1000.0f) / 60.0f;
+
+	time.render("Time left: " + static_cast<ostringstream*>(&(ostringstream() << mins << ":" << (int)(totalTime - currentTime / 1000.0f - 60.0f*mins)))->str(),
 		glm::vec2((TOTAL_BUTTONS * buttonsWidth + buttonsWidth / 2.0f - 1.0f)*3.0f, (float(HEIGHT) - 2.0f)*3.0f), 20, glm::vec4(1, 1, 1, 1));
 
 	in.render("In: " + static_cast<ostringstream*>(&(ostringstream() << 23))->str() + "%",

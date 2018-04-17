@@ -470,7 +470,7 @@ void Lemming::render()
 
 	if (exploding) {
 		explodingNumber.render(static_cast<ostringstream*>(&(ostringstream() << (int)(explodeTime - currentTime)/1000))->str(),
-			sprite->position()*3.0f + glm::vec2(20.0f, 10.0f) , 15, glm::vec4(1, 1, 1, 1));
+			sprite->position()*3.0f + glm::vec2(-330.0f, 30.0f) , 15, glm::vec4(1, 1, 1, 1));
 	}
 
 	//ladderHandler.render();
