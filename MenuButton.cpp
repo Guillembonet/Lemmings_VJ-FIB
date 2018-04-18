@@ -38,9 +38,14 @@ bool MenuButton::isMouseOver() {
 
 void MenuButton::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton) {
 	auto pos = sprite->position();
-	//std::cout << pos.x << std::endl;
-	if (mouseX > pos.x && mouseX < pos.x + width) {
+	if (mouseX > pos.x && mouseX < pos.x + width && mouseY > pos.y && mouseY < pos.y + height) {
 		mouseOver = true;
+		if (bLeftButton && callback != NULL)
+			this->callback();
 	}
 	else mouseOver = false;
+}
+
+void MenuButton::attachCallback(std::function<void()> callback) {
+	this->callback = callback;
 }

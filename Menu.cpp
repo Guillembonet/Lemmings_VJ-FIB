@@ -20,7 +20,7 @@ void Menu::init(std::function<void()> callback, std::function<void()> exit)
 
 	initShaders();
 
-	glm::vec2 geomBg[2] = { glm::vec2(0,0), glm::vec2(float(WIDTH), float(HEIGHT)) };
+	glm::vec2 geomBg[2] = { glm::vec2(0,0), glm::vec2(float(960), float(642)) };
 
 	texBg.loadFromFile("images/menubg.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texBg.setMinFilter(GL_NEAREST);
@@ -28,15 +28,17 @@ void Menu::init(std::function<void()> callback, std::function<void()> exit)
 	bg = TexturedQuad::createTexturedQuad(geomBg, texCoords, program);
 
 	playButton = new MenuButton();
-	playButton->init(glm::vec2(195, 25), program, "images/play_button.png");
+	playButton->init(glm::vec2(960/2 - 100, 80), program, "images/play_button.png");
+	playButton->attachCallback(callback);
 
 	insButton = new MenuButton();
-	insButton->init(glm::vec2(195, 77), program, "images/instructions_button.png");
+	insButton->init(glm::vec2(960 / 2 - 100, 250), program, "images/instructions_button.png");
 
 	exitButton = new MenuButton();
-	exitButton->init(glm::vec2(195, 130), program, "images/exit_button.png");
+	exitButton->init(glm::vec2(960 / 2 - 100, 420), program, "images/exit_button.png");
+	exitButton->attachCallback(exit);
 
-	projection = glm::ortho(0.f, float(960 - 1), float(HEIGHT - 1), 0.f);
+	projection = glm::ortho(0.f, float(960 - 1), float(642 - 1), 0.f);
 
 }
 
