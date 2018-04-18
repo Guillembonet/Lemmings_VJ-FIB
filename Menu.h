@@ -7,6 +7,7 @@
 #include "Button.h"
 #include "MenuButton.h"
 #include <functional>
+#include "MusicHandler.h"
 
 #define HEIGHT 190
 #define WIDTH 512

@@ -40,6 +40,7 @@ void Menu::init(std::function<void()> callback, std::function<void()> exit)
 
 	projection = glm::ortho(0.f, float(960 - 1), float(642 - 1), 0.f);
 
+	MusicHandler::play("songs/background.mp3", true);
 }
 
 void Menu::update(int deltaTime)

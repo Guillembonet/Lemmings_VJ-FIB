@@ -24,6 +24,7 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MenuButton.h" />
     <ClInclude Include="MousePointer.h" />
+    <ClInclude Include="MusicHandler.h" />
     <ClInclude Include="Poison.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="Scene.h" />
@@ -51,6 +52,7 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MenuButton.cpp" />
     <ClCompile Include="MousePointer.cpp" />
+    <ClCompile Include="MusicHandler.cpp" />
     <ClCompile Include="Poison.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="Scene.cpp" />
