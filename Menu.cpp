@@ -27,31 +27,16 @@ void Menu::init(std::function<void()> callback, std::function<void()> exit)
 	texBg.setMagFilter(GL_NEAREST);
 	bg = TexturedQuad::createTexturedQuad(geomBg, texCoords, program);
 
-	glm::vec2 geomPlay[2] = { glm::vec2(float(WIDTH) / 3.0f, float(HEIGHT) / 10.0f), glm::vec2(float(WIDTH) * 2.0f / 3.0f, float(HEIGHT)*3.0f / 10.0f) };
+	playButton = new MenuButton();
+	playButton->init(glm::vec2(195, 25), program, "images/play_button.png");
 
-	texPlay.loadFromFile("images/play_button.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	texPlay.setMinFilter(GL_NEAREST);
-	texPlay.setMagFilter(GL_NEAREST);
-	playButton = Button::createButton(geomPlay, texCoords, callback, &texPlay, &program);
+	insButton = new MenuButton();
+	insButton->init(glm::vec2(195, 77), program, "images/instructions_button.png");
 
-	glm::vec2 geomIns[2] = { glm::vec2(float(WIDTH) / 3.0f, float(HEIGHT)*4.0 / 10.0f), glm::vec2(float(WIDTH) * 2.0f / 3.0f, float(HEIGHT)*6.0f / 10.0f) };
+	exitButton = new MenuButton();
+	exitButton->init(glm::vec2(195, 130), program, "images/exit_button.png");
 
-	std::function<void()> none;
-
-	texIns.loadFromFile("images/instructions_button.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	texIns.setMinFilter(GL_NEAREST);
-	texIns.setMagFilter(GL_NEAREST);
-	
-	insButton = Button::createButton(geomIns, texCoords, none, &texIns, &program);
-
-	glm::vec2 geomExit[2] = { glm::vec2(float(WIDTH) / 3.0f, float(HEIGHT)*7.0 / 10.0f), glm::vec2(float(WIDTH) * 2.0f / 3.0f, float(HEIGHT)*9.0f / 10.0f) };
-
-	texExit.loadFromFile("images/exit_button.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	texExit.setMinFilter(GL_NEAREST);
-	texExit.setMagFilter(GL_NEAREST);
-	exitButton = Button::createButton(geomExit, texCoords, exit, &texExit, &program);
-
-	projection = glm::ortho(0.f, float(WIDTH - 1), float(HEIGHT - 1), 0.f);
+	projection = glm::ortho(0.f, float(960 - 1), float(HEIGHT - 1), 0.f);
 
 }
 
@@ -72,7 +57,7 @@ void Menu::render()
 	bg->render(texBg);
 	if (playButton->isMouseOver()) {
 		program.setUniform4f("color", 0.0f, 1.0f, 1.0f, 1.0f);
-		cout << "play" << endl;
+		//cout << "play" << endl;
 	}
 	else
 		program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
@@ -91,6 +76,7 @@ void Menu::render()
 
 void Menu::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
 { 
+	std::cout << mouseX << std::endl;
 	playButton->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 	insButton->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 	exitButton->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);

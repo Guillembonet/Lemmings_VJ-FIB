@@ -22,6 +22,7 @@
     <ClInclude Include="Lemming.h" />
     <ClInclude Include="MaskedTexturedQuad.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="MenuButton.h" />
     <ClInclude Include="MousePointer.h" />
     <ClInclude Include="Poison.h" />
     <ClInclude Include="Quad.h" />
@@ -48,6 +49,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MaskedTexturedQuad.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MenuButton.cpp" />
     <ClCompile Include="MousePointer.cpp" />
     <ClCompile Include="Poison.cpp" />
     <ClCompile Include="Quad.cpp" />

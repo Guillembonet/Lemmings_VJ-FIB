@@ -5,6 +5,7 @@
 #include "ShaderProgram.h"
 #include "TexturedQuad.h"
 #include "Button.h"
+#include "MenuButton.h"
 #include <functional>
 
 #define HEIGHT 190
@@ -31,7 +32,8 @@ private:
 
 	ShaderProgram program;
 	Texture texPlay, texIns, texExit, texBg;
-	Button *playButton, *insButton, *exitButton;
+	//Button *playButton, *insButton, *exitButton;
+	MenuButton  *playButton, *insButton, *exitButton;
 	glm::mat4 projection;
 	TexturedQuad *bg;
 };

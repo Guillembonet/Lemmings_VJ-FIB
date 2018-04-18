@@ -25,6 +25,7 @@
     <ClCompile Include="LadderHandler.cpp" />
     <ClCompile Include="Scene2.cpp" />
     <ClCompile Include="Poison.cpp" />
+    <ClCompile Include="MenuButton.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h" />
@@ -52,5 +53,6 @@
     <ClInclude Include="LadderHandler.h" />
     <ClInclude Include="Scene2.h" />
     <ClInclude Include="Poison.h" />
+    <ClInclude Include="MenuButton.h" />
   </ItemGroup>
 </Project>
