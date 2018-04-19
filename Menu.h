@@ -16,7 +16,7 @@ class Menu
 {
 
 public:
-	enum state { BASIC, LEVELS };
+	enum state { BASIC, LEVELS, INSTRUCTIONS };
 
 	Menu();
 	~Menu();
@@ -36,9 +36,9 @@ private:
 	float currentTime;
 
 	ShaderProgram program;
-	Texture texPlay, texIns, texExit, texBg;
+	Texture texPlay, texIns, texExit, texBg, texInsBg;
 	//Button *playButton, *insButton, *exitButton;
-	MenuButton  *playButton, *insButton, *exitButton, *level1, *level2, *level3;
+	MenuButton  *playButton, *insButton, *exitButton, *level1, *level2, *level3, *back;
 	glm::mat4 projection;
 	TexturedQuad *bg;
 	state currentState = BASIC;

@@ -31,12 +31,17 @@ void Menu::init(vector<std::function<void()>> callbacks, std::function<void()> e
 	texBg.setMagFilter(GL_NEAREST);
 	bg = TexturedQuad::createTexturedQuad(geomBg, texCoords, program);
 
+	texInsBg.loadFromFile("images/instructions.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	texInsBg.setMinFilter(GL_NEAREST);
+	texInsBg.setMagFilter(GL_NEAREST);
+
 	playButton = new MenuButton();
 	playButton->init(glm::vec2(960/2 - 100, 80), program, "images/play_button.png");
 	playButton->attachCallback(std::bind(&Menu::setState, this, LEVELS));
 
 	insButton = new MenuButton();
 	insButton->init(glm::vec2(960 / 2 - 100, 250), program, "images/instructions_button.png");
+	insButton->attachCallback(std::bind(&Menu::setState, this, INSTRUCTIONS));
 
 	exitButton = new MenuButton();
 	exitButton->init(glm::vec2(960 / 2 - 100, 420), program, "images/exit_button.png");
@@ -53,6 +58,10 @@ void Menu::init(vector<std::function<void()>> callbacks, std::function<void()> e
 	level3 = new MenuButton();
 	level3->init(glm::vec2(960 / 2 - 100, 420), program, "images/hard_button.png");
 	level3->attachCallback(callbacks[2]);
+
+	back = new MenuButton();
+	back->init(glm::vec2(960*2 / 3 - 100, 460), program, "images/back_button.png");
+	back->attachCallback(std::bind(&Menu::setState, this, BASIC));
 
 	projection = glm::ortho(0.f, float(960 - 1), float(642 - 1), 0.f);
 
@@ -74,7 +83,10 @@ void Menu::render()
 	program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	modelview = glm::mat4(1.0f);
 	program.setUniformMatrix4f("modelview", modelview);
-	bg->render(texBg);
+	if (currentState == INSTRUCTIONS)
+		bg->render(texInsBg);
+	else
+		bg->render(texBg);
 	if (currentState == BASIC) {
 		if (playButton->isMouseOver())
 			program.setUniform4f("color", 0.0f, 1.0f, 1.0f, 1.0f);
@@ -108,6 +120,18 @@ void Menu::render()
 		else
 			program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 		level3->render();
+		if (back->isMouseOver())
+			program.setUniform4f("color", 0.5f, 1.0f, 0.5f, 1.0f);
+		else
+			program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		back->render();
+	}
+	else if (currentState == INSTRUCTIONS) {
+		if (back->isMouseOver())
+			program.setUniform4f("color", 0.5f, 1.0f, 0.5f, 1.0f);
+		else
+			program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		back->render();
 	}
 }
 
@@ -122,6 +146,10 @@ void Menu::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButto
 		level1->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 		level2->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 		level3->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+		back->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+	}
+	else if (currentState == INSTRUCTIONS) {
+		back->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 	}
 }
 
