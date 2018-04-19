@@ -5,9 +5,9 @@ enum PoisonAnims
 	MOVEMENT
 };
 
-void Poison::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram)
+void Poison::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram, string imageUrl)
 {
-	spritesheet.loadFromFile("images/poison.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.loadFromFile(imageUrl, TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
 

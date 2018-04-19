@@ -5,9 +5,9 @@ enum SkyDoorAnims
 	CLOSED, MOVEMENT, OPEN
 };
 
-void SkyDoor::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram)
+void SkyDoor::init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram, string imageUrl)
 {
-	spritesheet.loadFromFile("images/skyDoor.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.loadFromFile(imageUrl, TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
 

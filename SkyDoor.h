@@ -7,7 +7,7 @@
 class SkyDoor
 {
 public:
-	void init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram);
+	void init(const glm::vec2 &initialPosition, ShaderProgram &shaderProgram, string imageUrl);
 	void update(int deltaTime);
 	void render();
 	bool isDoorOpen();

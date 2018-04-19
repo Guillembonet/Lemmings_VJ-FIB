@@ -64,19 +64,19 @@ void Scene3::init(bool *paused, std::function<void()> faster, std::function<void
 }
 
 void Scene3::initPoisons() {
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 4; i++) {
 		Poison *p = new Poison();
-		p->init(glm::vec2(8 + 120.f + i * 42, 140), simpleTexProgram);
+		p->init(glm::vec2(19 + 120.f + i * 40, 140), simpleTexProgram, "images/icePoison.png");
 		poisons.push_back(p);
 	}
 }
 
 void Scene3::initDoors() {
 	skyDoor = new SkyDoor();
-	skyDoor->init(glm::vec2(20 + 120.f, 25), simpleTexProgram);
+	skyDoor->init(glm::vec2(20 + 120.f, 25), simpleTexProgram, "images/skyDoor3.png");
 
 	exitDoor = new ExitDoor();
-	exitDoor->init(glm::vec2(550 + 130.f, 105), simpleTexProgram, "images/exitDoor2.png");
+	exitDoor->init(glm::vec2(550 + 130.f, 106), simpleTexProgram, "images/exitDoor3.png");
 }
 
 void Scene3::initHabilities(std::function<void()> faster, std::function<void()> slower)

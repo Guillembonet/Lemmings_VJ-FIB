@@ -66,14 +66,14 @@ void Scene2::init(bool *paused, std::function<void()> faster, std::function<void
 void Scene2::initPoisons(){
 	for (int i = 0; i < 7; i++) {
 		Poison *p = new Poison();
-		p->init(glm::vec2(8 + 120.f + i*42, 140), simpleTexProgram);
+		p->init(glm::vec2(8 + 120.f + i*42, 140), simpleTexProgram, "images/poison.png");
 		poisons.push_back(p);
 	}
 }
 
 void Scene2::initDoors() {
 	skyDoor = new SkyDoor();
-	skyDoor->init(glm::vec2(80 + 120.f, 25), simpleTexProgram);
+	skyDoor->init(glm::vec2(80 + 120.f, 25), simpleTexProgram, "images/skyDoor.png");
 
 	exitDoor = new ExitDoor();
 	exitDoor->init(glm::vec2(245 + 120.f, 23), simpleTexProgram, "images/exitDoor2.png");

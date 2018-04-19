@@ -66,7 +66,7 @@ unsigned int x = 0;
 
 void Scene::initDoors() {
 	skyDoor = new SkyDoor();
-	skyDoor->init(glm::vec2(80 + 120.f, 25), simpleTexProgram);
+	skyDoor->init(glm::vec2(80 + 120.f, 25), simpleTexProgram, "images/skyDoor.png");
 
 	exitDoor = new ExitDoor();
 	exitDoor->init(glm::vec2(225 + 120.f, 106), simpleTexProgram, "images/exitDoor.png");
