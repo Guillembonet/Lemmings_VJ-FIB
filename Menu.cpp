@@ -13,7 +13,7 @@ void Menu::setState(state newState){
 	currentState = newState;
 }
 
-void Menu::init(std::function<void()> callback, std::function<void()> exit)
+void Menu::init(vector<std::function<void()>> callbacks, std::function<void()> exit)
 {
 
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -44,11 +44,11 @@ void Menu::init(std::function<void()> callback, std::function<void()> exit)
 
 	level1 = new MenuButton();
 	level1->init(glm::vec2(960 / 2 - 100, 80), program, "images/easy_button.png");
-	level1->attachCallback(exit);
+	level1->attachCallback(callbacks[0]);
 
 	level2 = new MenuButton();
 	level2->init(glm::vec2(960 / 2 - 100, 250), program, "images/medium_button.png");
-	level2->attachCallback(callback);
+	level2->attachCallback(callbacks[1]);
 
 	level3 = new MenuButton();
 	level3->init(glm::vec2(960 / 2 - 100, 420), program, "images/hard_button.png");
@@ -57,6 +57,7 @@ void Menu::init(std::function<void()> callback, std::function<void()> exit)
 	projection = glm::ortho(0.f, float(960 - 1), float(642 - 1), 0.f);
 
 	MusicHandler::play("songs/background.mp3", true);
+	MusicHandler::setVolume("songs/background.mp3", 120);
 }
 
 void Menu::update(int deltaTime)
@@ -112,7 +113,6 @@ void Menu::render()
 
 void Menu::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
 { 
-	std::cout << mouseX << std::endl;
 	if (currentState == BASIC) {
 		playButton->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 		insButton->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);

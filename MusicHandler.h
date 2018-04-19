@@ -9,5 +9,7 @@ public:
 	~MusicHandler();
 
 	static void play(std::string command, bool repeat);
+	static void pause(std::string command);
+	static void setVolume(std::string, int volume);
 };
 

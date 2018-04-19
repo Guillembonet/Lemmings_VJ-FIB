@@ -39,9 +39,14 @@ bool MenuButton::isMouseOver() {
 void MenuButton::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton) {
 	auto pos = sprite->position();
 	if (mouseX > pos.x && mouseX < pos.x + width && mouseY > pos.y && mouseY < pos.y + height) {
+		if(mouseOver == false) MusicHandler::play("songs/mouseOverEffect.mp3", false);
 		mouseOver = true;
-		if (bLeftButton && callback != NULL)
+		if (bLeftButton && callback != NULL) {
+			std::cout << "POleeeee";
+			MusicHandler::play("songs/selectEffect.mp3", false);
+			MusicHandler::setVolume("songs/selectEffect.mp3", 200);
 			this->callback();
+		}
 	}
 	else mouseOver = false;
 }

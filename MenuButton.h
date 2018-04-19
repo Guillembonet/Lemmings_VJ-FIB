@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Sprite.h"
+#include "MusicHandler.h"
 #include <iostream>
 #include <functional>
 

@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "Scene2.h"
 #include "Menu.h"
+#include "MusicHandler.h"
 #include <functional>
 #include <iostream>
 
@@ -39,7 +40,8 @@ public:
 	void mousePress(int button);
 	void mouseRelease(int button);
 
-	void callback();
+	void callback1();
+	void callback2();
 	void end_game();
 
 	void faster();
@@ -50,14 +52,16 @@ public:
 
 private:
 	bool bPlay;                       // Continue to play game?
-	Scene2 scene;                      // Scene to render
+	Scene scene1;
+	Scene2 scene2;                      // Scene to render
+	//Scene3 scene3;
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
 	int mouseX, mouseY;               // Mouse position
 	bool bLeftMouse, bRightMouse;     // Mouse button states
 	bool paused;
 	enum STATE{
-		MENU, PLAYING
+		MENU, PLAYING_SCENE1, PLAYING_SCENE2
 	};
 
 	STATE state;

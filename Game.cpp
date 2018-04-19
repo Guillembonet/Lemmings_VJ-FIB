@@ -3,11 +3,24 @@
 #include "Game.h"
 
 
-void Game::callback(){ // En caso de que esta función sea llamada, se iniciará la escena del juego y se cambiará el estado
+void Game::callback1(){ // En caso de que esta función sea llamada, se iniciará la escena del juego y se cambiará el estado
 	std::function<void()> faster = std::bind(&Game::faster, this);
 	std::function<void()> slower = std::bind(&Game::slower, this);
-	scene.init(&paused, faster, slower);
-	state = PLAYING;
+
+	scene1.init(&paused, faster, slower);
+	state = PLAYING_SCENE1;
+
+	MusicHandler::pause("songs/background.mp3");
+}
+
+void Game::callback2() { // En caso de que esta función sea llamada, se iniciará la escena del juego y se cambiará el estado
+	std::function<void()> faster = std::bind(&Game::faster, this);
+	std::function<void()> slower = std::bind(&Game::slower, this);
+
+	scene2.init(&paused, faster, slower);
+	state = PLAYING_SCENE2;
+
+	MusicHandler::pause("songs/background.mp3");
 }
 
 void Game::end_game() {
@@ -24,9 +37,13 @@ void Game::init(float *speed)
 
 	state = MENU; // Inicialmente tendremos el menú
 
-	std::function<void()> functionObject = std::bind(&Game::callback, this); // Creamos obj. function y le enlazamos nuestro callback
+	std::function<void()> call1 = std::bind(&Game::callback1, this); // Creamos obj. function y le enlazamos nuestro callback
+	std::function<void()> call2 = std::bind(&Game::callback2, this);
+	vector<function<void()>> calls;
+	calls.push_back(call1);
+	calls.push_back(call2);
 	std::function<void()> exitFunction = std::bind(&Game::end_game, this);
-	menu.init(functionObject, exitFunction); // Iniciamos el menú pasándole el obj. function que se podrá ejecutar como si de una función se tratase
+	menu.init(calls, exitFunction); // Iniciamos el menú pasándole el obj. function que se podrá ejecutar como si de una función se tratase
 }
 
 bool Game::update(int deltaTime)
@@ -36,9 +53,13 @@ bool Game::update(int deltaTime)
 		case MENU:
 			menu.update(deltaTime);
 			break;
-		case PLAYING:
+		case PLAYING_SCENE1:
 			if (!paused)
-				scene.update(deltaTime);
+				scene1.update(deltaTime);
+			break;
+		case PLAYING_SCENE2:
+			if (!paused)
+				scene2.update(deltaTime);
 			break;
 		default:
 			break;
@@ -55,8 +76,11 @@ void Game::render()
 	case MENU:
 		menu.render();
 		break;
-	case PLAYING:
-		scene.render();
+	case PLAYING_SCENE1:
+		scene1.render();
+		break;
+	case PLAYING_SCENE2:
+		scene2.render();
 		break;
 	default:
 		break;
@@ -109,8 +133,11 @@ void Game::mouseMove(int x, int y)
 	case MENU:
 		menu.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
 		break;
-	case PLAYING:
-		scene.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
+	case PLAYING_SCENE1:
+		scene1.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
+		break;
+	case PLAYING_SCENE2:
+		scene2.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
 		break;
 	default:
 		break;
@@ -129,8 +156,11 @@ void Game::mousePress(int button)
 		case MENU:
 			menu.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
 			break;
-		case PLAYING:
-			scene.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
+		case PLAYING_SCENE1:
+			scene1.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
+			break;
+		case PLAYING_SCENE2:
+			scene2.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
 			break;
 		default:
 			break;
@@ -145,8 +175,11 @@ void Game::mousePress(int button)
 		case MENU:
 			menu.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
 			break;
-		case PLAYING:
-			scene.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
+		case PLAYING_SCENE1:
+			scene1.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
+			break;
+		case PLAYING_SCENE2:
+			scene2.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
 			break;
 		default:
 			break;

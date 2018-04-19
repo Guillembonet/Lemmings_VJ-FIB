@@ -21,7 +21,7 @@ public:
 	Menu();
 	~Menu();
 
-	void init(std::function<void()>, std::function<void()>);
+	void init(vector<std::function<void()>>, std::function<void()>);
 	void update(int deltaTime);
 	void render();
 
