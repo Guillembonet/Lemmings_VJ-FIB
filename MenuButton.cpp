@@ -42,7 +42,6 @@ void MenuButton::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRigh
 		if(mouseOver == false) MusicHandler::play("songs/mouseOverEffect.mp3", false);
 		mouseOver = true;
 		if (bLeftButton && callback != NULL) {
-			std::cout << "POleeeee";
 			MusicHandler::play("songs/selectEffect.mp3", false);
 			MusicHandler::setVolume("songs/selectEffect.mp3", 200);
 			this->callback();

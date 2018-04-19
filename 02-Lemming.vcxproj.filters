@@ -27,6 +27,7 @@
     <ClCompile Include="Poison.cpp" />
     <ClCompile Include="MenuButton.cpp" />
     <ClCompile Include="MusicHandler.cpp" />
+    <ClCompile Include="Scene3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h" />
@@ -56,5 +57,6 @@
     <ClInclude Include="Poison.h" />
     <ClInclude Include="MenuButton.h" />
     <ClInclude Include="MusicHandler.h" />
+    <ClInclude Include="Scene3.h" />
   </ItemGroup>
 </Project>

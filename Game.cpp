@@ -23,6 +23,16 @@ void Game::callback2() { // En caso de que esta función sea llamada, se iniciará
 	MusicHandler::pause("songs/background.mp3");
 }
 
+void Game::callback3() { // En caso de que esta función sea llamada, se iniciará la escena del juego y se cambiará el estado
+	std::function<void()> faster = std::bind(&Game::faster, this);
+	std::function<void()> slower = std::bind(&Game::slower, this);
+
+	scene3.init(&paused, faster, slower);
+	state = PLAYING_SCENE3;
+
+	MusicHandler::pause("songs/background.mp3");
+}
+
 void Game::end_game() {
 	bPlay = false;
 }
@@ -39,9 +49,11 @@ void Game::init(float *speed)
 
 	std::function<void()> call1 = std::bind(&Game::callback1, this); // Creamos obj. function y le enlazamos nuestro callback
 	std::function<void()> call2 = std::bind(&Game::callback2, this);
+	std::function<void()> call3 = std::bind(&Game::callback3, this);
 	vector<function<void()>> calls;
 	calls.push_back(call1);
 	calls.push_back(call2);
+	calls.push_back(call3);
 	std::function<void()> exitFunction = std::bind(&Game::end_game, this);
 	menu.init(calls, exitFunction); // Iniciamos el menú pasándole el obj. function que se podrá ejecutar como si de una función se tratase
 }
@@ -60,6 +72,10 @@ bool Game::update(int deltaTime)
 		case PLAYING_SCENE2:
 			if (!paused)
 				scene2.update(deltaTime);
+			break;
+		case PLAYING_SCENE3:
+			if (!paused)
+				scene3.update(deltaTime);
 			break;
 		default:
 			break;
@@ -81,6 +97,9 @@ void Game::render()
 		break;
 	case PLAYING_SCENE2:
 		scene2.render();
+		break;
+	case PLAYING_SCENE3:
+		scene3.render();
 		break;
 	default:
 		break;
@@ -139,6 +158,9 @@ void Game::mouseMove(int x, int y)
 	case PLAYING_SCENE2:
 		scene2.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
 		break;
+	case PLAYING_SCENE3:
+		scene3.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
+		break;
 	default:
 		break;
 	}
@@ -162,6 +184,9 @@ void Game::mousePress(int button)
 		case PLAYING_SCENE2:
 			scene2.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
 			break;
+		case PLAYING_SCENE3:
+			scene3.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
+			break;
 		default:
 			break;
 		}
@@ -180,6 +205,9 @@ void Game::mousePress(int button)
 			break;
 		case PLAYING_SCENE2:
 			scene2.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
+			break;
+		case PLAYING_SCENE3:
+			scene3.mouseMoved(mouseX, mouseY, bLeftMouse, bRightMouse);
 			break;
 		default:
 			break;

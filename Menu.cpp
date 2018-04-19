@@ -52,7 +52,7 @@ void Menu::init(vector<std::function<void()>> callbacks, std::function<void()> e
 
 	level3 = new MenuButton();
 	level3->init(glm::vec2(960 / 2 - 100, 420), program, "images/hard_button.png");
-	level3->attachCallback(exit);
+	level3->attachCallback(callbacks[2]);
 
 	projection = glm::ortho(0.f, float(960 - 1), float(642 - 1), 0.f);
 
