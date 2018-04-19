@@ -9,6 +9,10 @@ Menu::Menu(){}
 
 Menu::~Menu(){}
 
+void Menu::setState(state newState){
+	currentState = newState;
+}
+
 void Menu::init(std::function<void()> callback, std::function<void()> exit)
 {
 
@@ -29,7 +33,7 @@ void Menu::init(std::function<void()> callback, std::function<void()> exit)
 
 	playButton = new MenuButton();
 	playButton->init(glm::vec2(960/2 - 100, 80), program, "images/play_button.png");
-	playButton->attachCallback(callback);
+	playButton->attachCallback(std::bind(&Menu::setState, this, LEVELS));
 
 	insButton = new MenuButton();
 	insButton->init(glm::vec2(960 / 2 - 100, 250), program, "images/instructions_button.png");
@@ -37,6 +41,18 @@ void Menu::init(std::function<void()> callback, std::function<void()> exit)
 	exitButton = new MenuButton();
 	exitButton->init(glm::vec2(960 / 2 - 100, 420), program, "images/exit_button.png");
 	exitButton->attachCallback(exit);
+
+	level1 = new MenuButton();
+	level1->init(glm::vec2(960 / 2 - 100, 80), program, "images/easy_button.png");
+	level1->attachCallback(exit);
+
+	level2 = new MenuButton();
+	level2->init(glm::vec2(960 / 2 - 100, 250), program, "images/medium_button.png");
+	level2->attachCallback(callback);
+
+	level3 = new MenuButton();
+	level3->init(glm::vec2(960 / 2 - 100, 420), program, "images/hard_button.png");
+	level3->attachCallback(exit);
 
 	projection = glm::ortho(0.f, float(960 - 1), float(642 - 1), 0.f);
 
@@ -58,31 +74,55 @@ void Menu::render()
 	modelview = glm::mat4(1.0f);
 	program.setUniformMatrix4f("modelview", modelview);
 	bg->render(texBg);
-	if (playButton->isMouseOver()) {
-		program.setUniform4f("color", 0.0f, 1.0f, 1.0f, 1.0f);
-		//cout << "play" << endl;
+	if (currentState == BASIC) {
+		if (playButton->isMouseOver())
+			program.setUniform4f("color", 0.0f, 1.0f, 1.0f, 1.0f);
+		else
+			program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		playButton->render();
+		if (insButton->isMouseOver())
+			program.setUniform4f("color", 0.0f, 1.0f, 1.0f, 1.0f);
+		else
+			program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		insButton->render();
+		if (exitButton->isMouseOver())
+			program.setUniform4f("color", 0.5f, 1.0f, 0.5f, 1.0f);
+		else
+			program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		exitButton->render();
 	}
-	else
-		program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	playButton->render();
-	if (insButton->isMouseOver())
-		program.setUniform4f("color", 0.0f, 1.0f, 1.0f, 1.0f);
-	else
-		program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	insButton->render();
-	if (exitButton->isMouseOver())
-		program.setUniform4f("color", 0.5f, 1.0f, 0.5f, 1.0f);
-	else
-		program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	exitButton->render();
+	else if (currentState == LEVELS) {
+		if (level1->isMouseOver())
+			program.setUniform4f("color", 0.0f, 1.0f, 1.0f, 1.0f);
+		else
+			program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		level1->render();
+		if (level2->isMouseOver())
+			program.setUniform4f("color", 0.0f, 1.0f, 1.0f, 1.0f);
+		else
+			program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		level2->render();
+		if (level3->isMouseOver())
+			program.setUniform4f("color", 0.5f, 1.0f, 0.5f, 1.0f);
+		else
+			program.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		level3->render();
+	}
 }
 
 void Menu::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
 { 
 	std::cout << mouseX << std::endl;
-	playButton->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
-	insButton->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
-	exitButton->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+	if (currentState == BASIC) {
+		playButton->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+		insButton->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+		exitButton->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+	}
+	else if (currentState == LEVELS) {
+		level1->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+		level2->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+		level3->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+	}
 }
 
 void Menu::initShaders()

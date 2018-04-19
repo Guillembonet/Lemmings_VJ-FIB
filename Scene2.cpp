@@ -86,7 +86,7 @@ void Scene2::initHabilities(std::function<void()> faster, std::function<void()> 
 	habsQuant = { 5, 0, 6, 7, 6, 4, 5 };
 
 	bb = new BottomBox();
-	bb->init(&habsQuant, &selectedHab, &overlayProgram, std::bind(&Scene2::nuke, this), std::bind(&Scene2::pause, this), faster, slower, std::bind(&Scene2::fasterGen, this), std::bind(&Scene2::slowerGen, this));
+	bb->init(&lemmingCount, &habsQuant, &selectedHab, &overlayProgram, std::bind(&Scene2::nuke, this), std::bind(&Scene2::pause, this), faster, slower, std::bind(&Scene2::fasterGen, this), std::bind(&Scene2::slowerGen, this));
 }
 
 void Scene2::nuke() {

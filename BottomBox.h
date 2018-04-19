@@ -17,7 +17,7 @@ public:
 	BottomBox();
 	~BottomBox();
 
-	void init(vector<int> *habs, int *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen);
+	void init(int *lemmCount, vector<int> *habs, int *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen);
 
 	void render();
 	void update(int deltaTime);
@@ -40,6 +40,7 @@ private:
 	vector<int> *habsQuant;
 	float currentTime;
 	Text time, in, out;
+	int *outNum;
 };
 
 #endif //_BOTTOMBOX_INCLUDE

@@ -16,11 +16,12 @@ BottomBox::BottomBox() {}
 
 BottomBox::~BottomBox() {}
 
-void BottomBox::init(vector<int> *habs, int *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen)
+void BottomBox::init(int *lemmCount, vector<int> *habs, int *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen)
 {
 	currentTime = 0.0f;
 
 	this->habsQuant = habs;
+	this->outNum = lemmCount;
 
 	projection = glm::ortho(0.f, float(WIDTH - 1), float(HEIGHT - 1), 0.f);
 
@@ -185,7 +186,7 @@ void BottomBox::render()
 	in.render("In: " + static_cast<ostringstream*>(&(ostringstream() << 23))->str() + "%",
 		glm::vec2((TOTAL_BUTTONS * buttonsWidth + buttonsWidth / 2.0f - 1.0f)*3.0f, (float(HEIGHT) + 8.0f)*3.0f), 20, glm::vec4(1, 1, 1, 1));
 
-	out.render("Out: " + static_cast<ostringstream*>(&(ostringstream() << 10))->str(),
+	out.render("Out: " + static_cast<ostringstream*>(&(ostringstream() << *outNum))->str(),
 		glm::vec2((TOTAL_BUTTONS * buttonsWidth + buttonsWidth / 2.0f - 1.0f)*3.0f, (float(HEIGHT) + 18.0f)*3.0f), 20, glm::vec4(1, 1, 1, 1));
 }
 

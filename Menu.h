@@ -16,6 +16,8 @@ class Menu
 {
 
 public:
+	enum state { BASIC, LEVELS };
+
 	Menu();
 	~Menu();
 
@@ -24,6 +26,8 @@ public:
 	void render();
 
 	void mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton);
+
+	void setState(state newState);
 
 private:
 	void initShaders();
@@ -34,9 +38,10 @@ private:
 	ShaderProgram program;
 	Texture texPlay, texIns, texExit, texBg;
 	//Button *playButton, *insButton, *exitButton;
-	MenuButton  *playButton, *insButton, *exitButton;
+	MenuButton  *playButton, *insButton, *exitButton, *level1, *level2, *level3;
 	glm::mat4 projection;
 	TexturedQuad *bg;
+	state currentState = BASIC;
 };
 
 
