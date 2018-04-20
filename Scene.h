@@ -15,6 +15,7 @@
 #include "BottomBox.h"
 #include "MousePointer.h"
 #include "SquarePointer.h"
+#include "MusicHandler.h"
 #include "finalScreen.h"
 
 #define HEIGHT 190

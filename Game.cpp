@@ -12,6 +12,8 @@ void Game::callback1(){ // En caso de que esta función sea llamada, se iniciará 
 	state = PLAYING_SCENE1;
 
 	MusicHandler::pause("songs/background.mp3");
+	MusicHandler::play("songs/scene1.mp3", true);
+	MusicHandler::setVolume("songs/scene1.mp3", 130);
 }
 
 void Game::callback2() { // En caso de que esta función sea llamada, se iniciará la escena del juego y se cambiará el estado
@@ -23,6 +25,8 @@ void Game::callback2() { // En caso de que esta función sea llamada, se iniciará
 	state = PLAYING_SCENE2;
 
 	MusicHandler::pause("songs/background.mp3");
+	MusicHandler::play("songs/scene2.mp3", true);
+	MusicHandler::setVolume("songs/scene2.mp3", 130);
 }
 
 void Game::callback3() { // En caso de que esta función sea llamada, se iniciará la escena del juego y se cambiará el estado
@@ -34,6 +38,8 @@ void Game::callback3() { // En caso de que esta función sea llamada, se iniciará
 	state = PLAYING_SCENE3;
 
 	MusicHandler::pause("songs/background.mp3");
+	MusicHandler::play("songs/scene3.mp3", true);
+	MusicHandler::setVolume("songs/scene3.mp3", 130);
 }
 
 void Game::end_game() {

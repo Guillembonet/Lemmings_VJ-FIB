@@ -97,6 +97,7 @@ void Scene3::initHabilities(std::function<void()> faster, std::function<void()> 
 }
 
 void Scene3::nuke() {
+	MusicHandler::play("songs/moab.mp3", false);
 	for each (Lemming *lem in lemmings)
 	{
 		lem->nuke();
@@ -154,7 +155,7 @@ void Scene3::update(int deltaTime)
 		newLemming->init(&in, &habsQuant, glm::vec2(30 + 120.f, 27), simpleTexProgram);
 		newLemming->setLadderHandler(ladderHandler);
 		newLemming->setMapMask(&maskTexture);
-		newLemming->setExitDoorCoords(245 + 120.f, 23, 4, 5);
+		newLemming->setExitDoorCoords(550 + 8 + 130.f, 106 + 11, 4, 5);
 
 		lemmings.push_back(newLemming);
 
@@ -198,6 +199,7 @@ void Scene3::update(int deltaTime)
 void Scene3::render()
 {
 	if (out == 0 && currentTime > 8000) {
+		MusicHandler::pause("songs/scene3.mp3");
 		fs.set(out, in, MAX_LEMMINGS);
 		fs.render();
 	}
@@ -232,6 +234,11 @@ void Scene3::render()
 				++out;
 		}
 		for each(Poison *po in poisons) {
+			simpleTexProgram.use();
+			simpleTexProgram.setUniformMatrix4f("projection", projection);
+			simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+			modelview = glm::mat4(1.0f);
+			simpleTexProgram.setUniformMatrix4f("modelview", modelview);
 			po->render();
 		}
 		bb->render();
