@@ -157,13 +157,13 @@ void Menu::initShaders()
 {
 	Shader vShader, fShader;
 
-	vShader.initFromFile(VERTEX_SHADER, "shaders/maskedTexture.vert");
+	vShader.initFromFile(VERTEX_SHADER, "shaders/menu.vert");
 	if (!vShader.isCompiled())
 	{
 		cout << "Vertex Shader Error" << endl;
 		cout << "" << vShader.log() << endl << endl;
 	}
-	fShader.initFromFile(FRAGMENT_SHADER, "shaders/maskedTexture.frag");
+	fShader.initFromFile(FRAGMENT_SHADER, "shaders/menu.frag");
 	if (!fShader.isCompiled())
 	{
 		cout << "Fragment Shader Error" << endl;
