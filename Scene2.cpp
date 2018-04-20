@@ -230,7 +230,7 @@ void Scene2::render()
 			simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 			modelview = glm::mat4(1.0f);
 			simpleTexProgram.setUniformMatrix4f("modelview", modelview);
-			if (lem->render())
+			if (lem->render(leftPos))
 				++out;
 		}
 
@@ -254,7 +254,7 @@ void Scene2::render()
 			simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 			modelview = glm::mat4(1.0f);
 			simpleTexProgram.setUniformMatrix4f("modelview", modelview);
-			if (lem->render())
+			if (lem->render(leftPos))
 				++out;
 		}
 		for each(Poison *po in poisons) {

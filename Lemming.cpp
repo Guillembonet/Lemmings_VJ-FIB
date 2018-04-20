@@ -458,7 +458,7 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 	}
 }
 
-bool Lemming::render()
+bool Lemming::render(int offset)
 {
 	if (exploded) {
 		explosion.render();
@@ -471,7 +471,7 @@ bool Lemming::render()
 
 	if (exploding) {
 		explodingNumber.render(static_cast<ostringstream*>(&(ostringstream() << (int)(explodeTime - currentTime) / 1000))->str(),
-			glm::vec2(sprite->position().x*3.0f, sprite->position().y*3.2f) + glm::vec2(-340.0f, 30.0f), 15, glm::vec4(1, 1, 1, 1));
+			glm::vec2(sprite->position().x*3.0f + 20.0f - offset*3.0f, sprite->position().y*3.2f + 25.0f), 15, glm::vec4(1, 1, 1, 1));
 	}
 
 	if (state == OUT_OF_SCENE_STATE)
