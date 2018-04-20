@@ -15,7 +15,7 @@ void MusicHandler::play(std::string command, bool repeat) {
 	std::wstring stemp = std::wstring(command.begin(), command.end());
 	LPCWSTR sw = stemp.c_str();
 	int error = mciSendString(sw, NULL, 0, NULL);
-	std::cout << error << std::endl;
+	//std::cout << error << std::endl;
 }
 
 void MusicHandler::setVolume(std::string command, int volume) {
@@ -23,7 +23,7 @@ void MusicHandler::setVolume(std::string command, int volume) {
 	std::wstring stemp = std::wstring(command.begin(), command.end());
 	LPCWSTR sw = stemp.c_str();
 	int error = mciSendString(sw, NULL, 0, NULL);
-	std::cout << error << std::endl;
+	//std::cout << error << std::endl;
 }
 
 void MusicHandler::pause(std::string command) {
@@ -31,5 +31,5 @@ void MusicHandler::pause(std::string command) {
 	std::wstring stemp = std::wstring(command.begin(), command.end());
 	LPCWSTR sw = stemp.c_str();
 	int error = mciSendString(sw, NULL, 0, NULL);
-	std::cout << error << std::endl;
+	//std::cout << error << std::endl;
 }

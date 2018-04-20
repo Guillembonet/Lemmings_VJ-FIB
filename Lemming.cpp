@@ -410,10 +410,10 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 
 			//posBase += glm::vec2(120 + 5, 0);
 			for (int i = 0; i < 6; i++) { // 6 is the width of the ladder
-				mask->setPixel(posBase.x - i, posBase.y, 20);
+				mask->setPixel(posBase.x + 5 - i, posBase.y, 20);
 			}
-
-			if (ladderCount == 11) {
+			// || mask->pixel(posBase.x - 6, posBase.y - 1) == 255
+			if (ladderCount == 11 || mask->pixel(posBase.x - 1, posBase.y - 1) == 255) {
 				sprite->changeAnimation(WALKING_LEFT);
 				state = WALKING_LEFT_STATE;
 				ladderCount = 0;
@@ -427,15 +427,13 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 		}
 		else if (sprite->getCurrentKeyFrameIndex() == 15) {
 			glm::vec2 posBase = sprite->position() + glm::vec2(7, 15); // Add the map displacement
-
 			ladderHandler->addLadder(posBase); //Just for draw
-
-			//posBase+=glm::vec2(120, 0);
 			for (int i = 0; i < 6; i++){ // 6 is the width of the ladder
 				mask->setPixel(posBase.x + i, posBase.y, 10);
 			}
 
-			if (ladderCount == 11) {
+			std::cout << std::to_string(mask->pixel(posBase.x + 6, posBase.y-1)) << std::endl;
+			if (ladderCount == 11 || mask->pixel(posBase.x + 6, posBase.y-1) == 255) {
 				sprite->changeAnimation(WALKING_RIGHT);
 				state = WALKING_RIGHT_STATE;
 			}
