@@ -83,7 +83,7 @@ void Scene::initHabilities(std::function<void()> faster, std::function<void()> s
 {
 	std::function<void()> callback;
 
-	habsQuant = { 5, 0, 6, 7, 6, 4, 5 };
+	habsQuant = { 5, 1, 6, 7, 6, 0, 0 };
 
 	bb = new BottomBox();
 	bb->init(MAX_LEMMINGS, &in, &out, &habsQuant, &selectedHab, &overlayProgram, std::bind(&Scene::nuke, this), std::bind(&Scene::pause, this), faster, slower, std::bind(&Scene::fasterGen, this), std::bind(&Scene::slowerGen, this));
