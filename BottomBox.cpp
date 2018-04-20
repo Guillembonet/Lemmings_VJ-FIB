@@ -16,12 +16,14 @@ BottomBox::BottomBox() {}
 
 BottomBox::~BottomBox() {}
 
-void BottomBox::init(int *lemmCount, vector<int> *habs, int *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen)
+void BottomBox::init(int maxlems, int *in, int *lemmCount, vector<int> *habs, int *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen)
 {
 	currentTime = 0.0f;
 
 	this->habsQuant = habs;
 	this->outNum = lemmCount;
+	this->inNum = in;
+	this->MAX_LEMMS = maxlems;
 
 	projection = glm::ortho(0.f, float(WIDTH - 1), float(HEIGHT - 1), 0.f);
 
@@ -119,7 +121,7 @@ void BottomBox::init(int *lemmCount, vector<int> *habs, int *selectedHab, Shader
 		//if(!text.init("fonts/DroidSerif.ttf"))
 		cout << "Could not load font!!!" << endl;
 
-	if (!in.init("fonts/OpenSans-Regular.ttf"))
+	if (!this->in.init("fonts/OpenSans-Regular.ttf"))
 		//if(!text.init("fonts/OpenSans-Bold.ttf"))
 		//if(!text.init("fonts/DroidSerif.ttf"))
 		cout << "Could not load font!!!" << endl;
@@ -179,11 +181,16 @@ void BottomBox::render()
 	}
 
 	int mins = (totalTime - currentTime / 1000.0f) / 60.0f;
+	string separator;
+	if ((int)(totalTime - currentTime / 1000.0f - 60.0f*mins) < 10)
+		separator = ":0";
+	else
+		separator = ":";
 
-	time.render("Time left: " + static_cast<ostringstream*>(&(ostringstream() << mins << ":" << (int)(totalTime - currentTime / 1000.0f - 60.0f*mins)))->str(),
+	time.render("Time left: " + static_cast<ostringstream*>(&(ostringstream() << mins << separator << (int)(totalTime - currentTime / 1000.0f - 60.0f*mins)))->str(),
 		glm::vec2((TOTAL_BUTTONS * buttonsWidth + buttonsWidth / 2.0f - 1.0f)*3.0f, (float(HEIGHT) - 2.0f)*3.0f), 20, glm::vec4(1, 1, 1, 1));
 
-	in.render("In: " + static_cast<ostringstream*>(&(ostringstream() << 23))->str() + "%",
+	in.render("In: " + static_cast<ostringstream*>(&(ostringstream() << (int)((float)*inNum/(float)MAX_LEMMS *100.0f)))->str() + "%",
 		glm::vec2((TOTAL_BUTTONS * buttonsWidth + buttonsWidth / 2.0f - 1.0f)*3.0f, (float(HEIGHT) + 8.0f)*3.0f), 20, glm::vec4(1, 1, 1, 1));
 
 	out.render("Out: " + static_cast<ostringstream*>(&(ostringstream() << *outNum))->str(),

@@ -86,7 +86,7 @@ void Scene2::initHabilities(std::function<void()> faster, std::function<void()> 
 	habsQuant = { 5, 0, 6, 7, 6, 4, 5 };
 
 	bb = new BottomBox();
-	bb->init(&lemmingCount, &habsQuant, &selectedHab, &overlayProgram, std::bind(&Scene2::nuke, this), std::bind(&Scene2::pause, this), faster, slower, std::bind(&Scene2::fasterGen, this), std::bind(&Scene2::slowerGen, this));
+	bb->init(MAX_LEMMINGS, &in, &out, &habsQuant, &selectedHab, &overlayProgram, std::bind(&Scene2::nuke, this), std::bind(&Scene2::pause, this), faster, slower, std::bind(&Scene2::fasterGen, this), std::bind(&Scene2::slowerGen, this));
 }
 
 void Scene2::nuke() {
@@ -144,7 +144,7 @@ void Scene2::update(int deltaTime)
 	if (skyDoor->isDoorOpen() && (currentTimeSec % lemXsecs == 0) && currentTimeSec != lastLemmingGenTime && lemmingCount < MAX_LEMMINGS && !nuked) {
 		lastLemmingGenTime = currentTimeSec;
 		Lemming *newLemming = new Lemming();
-		newLemming->init(&habsQuant, glm::vec2(90 + 120.f, 27), simpleTexProgram);
+		newLemming->init(&in, &habsQuant, glm::vec2(90 + 120.f, 27), simpleTexProgram);
 		newLemming->setLadderHandler(ladderHandler);
 		newLemming->setMapMask(&maskTexture);
 		newLemming->setExitDoorCoords(245 + 120.f, 23, 4, 5);
@@ -208,6 +208,7 @@ void Scene2::render()
 	exitDoor->render();
 	skyDoor->render();
 	ladderHandler->render();
+	out = 0;
 	for each (Lemming *lem in lemmings)
 	{
 		simpleTexProgram.use();
@@ -215,7 +216,8 @@ void Scene2::render()
 		simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 		modelview = glm::mat4(1.0f);
 		simpleTexProgram.setUniformMatrix4f("modelview", modelview);
-		lem->render();
+		if (lem->render())
+			++out;
 	}
 	for each(Poison *po in poisons) {
 		po->render();

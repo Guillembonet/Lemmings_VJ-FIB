@@ -17,7 +17,7 @@ public:
 	BottomBox();
 	~BottomBox();
 
-	void init(int *lemmCount, vector<int> *habs, int *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen);
+	void init(int maxlems, int *in, int *lemmCount, vector<int> *habs, int *selectedHab, ShaderProgram *overlayProgram, std::function<void()> nuke, std::function<void()> pause, std::function<void()> faster, std::function<void()> slower, std::function<void()> fasterGen, std::function<void()> slowerGen);
 
 	void render();
 	void update(int deltaTime);
@@ -41,6 +41,8 @@ private:
 	float currentTime;
 	Text time, in, out;
 	int *outNum;
+	int *inNum;
+	int MAX_LEMMS;
 };
 
 #endif //_BOTTOMBOX_INCLUDE

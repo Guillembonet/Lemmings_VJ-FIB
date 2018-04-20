@@ -19,9 +19,10 @@ enum LemmingAnims
 	BUILDING_LEFT, BUILDING_RIGHT, CLIMBING_RIGHT, CLIMBING_END_RIGHT, CLIMBING_LEFT, CLIMBING_END_LEFT, EXPLODING
 };
 
-void Lemming::init(vector<int> *habs, const glm::vec2 &initialPosition, ShaderProgram &shaderProgram)
+void Lemming::init(int *in, vector<int> *habs, const glm::vec2 &initialPosition, ShaderProgram &shaderProgram)
 {
 	this->habsQuant = habs;
+	this->in = in;
 
 	exploding = false;
 	exploded = false;
@@ -454,11 +455,12 @@ void Lemming::update(int deltaTime, vector<glm::vec2> &blockers)
 		if (inFrontOfExitDoor(posBase.x, posBase.y)) {
 			state = LEAVING_STATE;
 			sprite->changeAnimation(LEAVING);
+			++*in;
 		}
 	}
 }
 
-void Lemming::render()
+bool Lemming::render()
 {
 	if (exploded) {
 		explosion.render();
@@ -468,9 +470,15 @@ void Lemming::render()
 	}
 
 	if (exploding) {
-		explodingNumber.render(static_cast<ostringstream*>(&(ostringstream() << (int)(explodeTime - currentTime)/1000))->str(),
-			sprite->position()*3.0f + glm::vec2(-330.0f, 30.0f) , 15, glm::vec4(1, 1, 1, 1));
+		explodingNumber.render(static_cast<ostringstream*>(&(ostringstream() << (int)(explodeTime - currentTime) / 1000))->str(),
+			sprite->position()*3.0f + glm::vec2(-330.0f, 30.0f), 15, glm::vec4(1, 1, 1, 1));
 	}
+
+	if (state == OUT_OF_SCENE_STATE)
+		return false;
+	else if (sprite->position().x > WIDTH - 15 || sprite->position().y > HEIGHT - 35 || sprite->position().x < 0 || sprite->position().y < 0)
+		return false;
+	else return true;
 
 	//ladderHandler.render();
 }

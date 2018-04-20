@@ -80,6 +80,8 @@ private:
 	int mouseX, mouseY; // last mouse coords
 	LadderHandler *ladderHandler;
 	vector<int> habsQuant;
+	int out;
+	int in = 0;
 
 	int offset = 3;
 	int leftPos = 70.f;

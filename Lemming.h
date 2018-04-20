@@ -23,9 +23,9 @@ public:
 		BASHER, BLOCKER, BUILDER, CLIMBER, DIGGER, FLOATER, MINER, PAUSED, NONE
 	};
 
-	void init(vector<int> *habs, const glm::vec2 &initialPosition, ShaderProgram &shaderProgram);
+	void init(int *in, vector<int> *habs, const glm::vec2 &initialPosition, ShaderProgram &shaderProgram);
 	void update(int deltaTime, vector<glm::vec2> &blockers);
-	void render();
+	bool render();
 	
 	void setMapMask(VariableTexture *mapMask);
 	void setExitDoorCoords(int x, int y, int w, int h);
@@ -80,6 +80,7 @@ private:
 	Side side;
 	float currentTime;
 	vector<int> *habsQuant;
+	int *in;
 
 	LadderHandler *ladderHandler;
 	int ladderCount = 0;
