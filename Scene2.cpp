@@ -219,10 +219,15 @@ void Scene2::render()
 		if (lem->render())
 			++out;
 	}
+	bb->render();
 	for each(Poison *po in poisons) {
+		simpleTexProgram.use();
+		simpleTexProgram.setUniformMatrix4f("projection", projection);
+		simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		simpleTexProgram.setUniformMatrix4f("modelview", modelview);
 		po->render();
 	}
-	bb->render();
 
 	simpleTexProgram.use();
 	simpleTexProgram.setUniformMatrix4f("projection", projection);

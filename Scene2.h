@@ -89,7 +89,7 @@ private:
 	float MAX_LEFT_POS;
 	float MAX_RIGHT_POS;
 
-	vector<Poison*> poisons;
+	std::vector<Poison*> poisons;
 };
 
 
