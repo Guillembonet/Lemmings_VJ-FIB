@@ -22,8 +22,15 @@ Scene3::~Scene3()
 }
 
 
-void Scene3::init(bool *paused, std::function<void()> faster, std::function<void()> slower)
+void Scene3::init(bool *paused, std::function<void()> faster, std::function<void()> slower, std::function<void()> init)
 {
+	lastLemmingGenTime = -1;
+	nuked = false;
+	out = 0;
+	in = 0;
+	lemmingCount = 0;
+	lemmings.clear();
+	fs.init(init);
 	this->paused = paused;
 	glm::vec2 geom[2] = { glm::vec2(0.f, 0.f), glm::vec2(float(WIDTH), float(HEIGHT)) };
 	glm::vec2 texCoords[2] = { glm::vec2(0.f / 512.0, 0.f), glm::vec2(512.f / 512.0f, 190.f / 256.0f) };
@@ -191,53 +198,59 @@ void Scene3::update(int deltaTime)
 
 void Scene3::render()
 {
-	glm::mat4 modelview;
+	if (out == 0 && currentTime > 8000) {
+		fs.set(out, in, MAX_LEMMINGS);
+		fs.render();
+	}
+	else {
+		glm::mat4 modelview;
 
-	maskedTexProgram.use();
-	maskedTexProgram.setUniformMatrix4f("projection", projection);
-	maskedTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
-	maskedTexProgram.setUniformMatrix4f("modelview", modelview);
-	map->render(maskedTexProgram, colorTexture, maskTexture);
+		maskedTexProgram.use();
+		maskedTexProgram.setUniformMatrix4f("projection", projection);
+		maskedTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		maskedTexProgram.setUniformMatrix4f("modelview", modelview);
+		map->render(maskedTexProgram, colorTexture, maskTexture);
 
-	simpleTexProgram.use();
-	simpleTexProgram.setUniformMatrix4f("projection", projection);
-	simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
-	simpleTexProgram.setUniformMatrix4f("modelview", modelview);
-
-	exitDoor->render();
-	skyDoor->render();
-	ladderHandler->render();
-	out = 0;
-	for each (Lemming *lem in lemmings)
-	{
 		simpleTexProgram.use();
 		simpleTexProgram.setUniformMatrix4f("projection", projection);
 		simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 		modelview = glm::mat4(1.0f);
 		simpleTexProgram.setUniformMatrix4f("modelview", modelview);
-		if (lem->render())
-			++out;
-	}
-	for each(Poison *po in poisons) {
+
+		exitDoor->render();
+		skyDoor->render();
+		ladderHandler->render();
+		out = 0;
+		for each (Lemming *lem in lemmings)
+		{
+			simpleTexProgram.use();
+			simpleTexProgram.setUniformMatrix4f("projection", projection);
+			simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+			modelview = glm::mat4(1.0f);
+			simpleTexProgram.setUniformMatrix4f("modelview", modelview);
+			if (lem->render())
+				++out;
+		}
+		for each(Poison *po in poisons) {
+			simpleTexProgram.use();
+			simpleTexProgram.setUniformMatrix4f("projection", projection);
+			simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+			modelview = glm::mat4(1.0f);
+			simpleTexProgram.setUniformMatrix4f("modelview", modelview);
+			po->render();
+		}
+		bb->render();
+
 		simpleTexProgram.use();
 		simpleTexProgram.setUniformMatrix4f("projection", projection);
 		simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 		modelview = glm::mat4(1.0f);
 		simpleTexProgram.setUniformMatrix4f("modelview", modelview);
-		po->render();
+
+		mousePointer->render();
+		squarePointer->render();
 	}
-	bb->render();
-
-	simpleTexProgram.use();
-	simpleTexProgram.setUniformMatrix4f("projection", projection);
-	simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
-	simpleTexProgram.setUniformMatrix4f("modelview", modelview);
-
-	mousePointer->render();
-	squarePointer->render();
 }
 
 void Scene3::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
@@ -246,6 +259,11 @@ void Scene3::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightBut
 	eraseMask(mouseX, mouseY);
 	else if(bRightButton)
 	applyMask(mouseX, mouseY);*/
+
+	if (out == 0 && currentTime > 5000) {
+		glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+		fs.mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+	}
 
 	mousePointer->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 	auto pos = mousePointer->getPosition();

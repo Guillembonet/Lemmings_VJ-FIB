@@ -22,8 +22,15 @@ Scene::~Scene()
 }
 
 
-void Scene::init(bool *paused, std::function<void()> faster, std::function<void()> slower)
+void Scene::init(bool *paused, std::function<void()> faster, std::function<void()> slower, std::function<void()> init)
 {
+	lastLemmingGenTime = -1;
+	out = 0;
+	in = 0;
+	nuked = false;
+	lemmings.clear();
+	lemmingCount = 0;
+	fs.init(init);
 	this->paused = paused;
 	glm::vec2 geom[2] = {glm::vec2(0.f, 0.f), glm::vec2(float(WIDTH), float(HEIGHT))};
 	glm::vec2 texCoords[2] = {glm::vec2(0.f / 512.0, 0.f), glm::vec2(512.f / 512.0f, 190.f / 256.0f)};
@@ -181,45 +188,51 @@ void Scene::update(int deltaTime)
 
 void Scene::render()
 {
-	glm::mat4 modelview;
+	if (out == 0 && currentTime > 8000) {
+		fs.set(out, in, MAX_LEMMINGS);
+		fs.render();
+	}
+	else {
+		glm::mat4 modelview;
 
-	maskedTexProgram.use();
-	maskedTexProgram.setUniformMatrix4f("projection", projection);
-	maskedTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
-	maskedTexProgram.setUniformMatrix4f("modelview", modelview);
-	map->render(maskedTexProgram, colorTexture, maskTexture);
-	
-	simpleTexProgram.use();
-	simpleTexProgram.setUniformMatrix4f("projection", projection);
-	simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
-	simpleTexProgram.setUniformMatrix4f("modelview", modelview);
+		maskedTexProgram.use();
+		maskedTexProgram.setUniformMatrix4f("projection", projection);
+		maskedTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		maskedTexProgram.setUniformMatrix4f("modelview", modelview);
+		map->render(maskedTexProgram, colorTexture, maskTexture);
 
-	exitDoor->render();
-	skyDoor->render();
-	ladderHandler->render();
-	out = 0;
-	for each (Lemming *lem in lemmings)
-	{
 		simpleTexProgram.use();
 		simpleTexProgram.setUniformMatrix4f("projection", projection);
 		simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 		modelview = glm::mat4(1.0f);
 		simpleTexProgram.setUniformMatrix4f("modelview", modelview);
-		if (lem->render())
-			++out;
+
+		exitDoor->render();
+		skyDoor->render();
+		ladderHandler->render();
+		out = 0;
+		for each (Lemming *lem in lemmings)
+		{
+			simpleTexProgram.use();
+			simpleTexProgram.setUniformMatrix4f("projection", projection);
+			simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+			modelview = glm::mat4(1.0f);
+			simpleTexProgram.setUniformMatrix4f("modelview", modelview);
+			if (lem->render())
+				++out;
+		}
+		bb->render();
+
+		simpleTexProgram.use();
+		simpleTexProgram.setUniformMatrix4f("projection", projection);
+		simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		simpleTexProgram.setUniformMatrix4f("modelview", modelview);
+
+		mousePointer->render();
+		squarePointer->render();
 	}
-	bb->render();
-
-	simpleTexProgram.use();
-	simpleTexProgram.setUniformMatrix4f("projection", projection);
-	simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
-	simpleTexProgram.setUniformMatrix4f("modelview", modelview);
-
-	mousePointer->render();
-	squarePointer->render();
 }
 
 void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButton)
@@ -228,6 +241,11 @@ void Scene::mouseMoved(int mouseX, int mouseY, bool bLeftButton, bool bRightButt
 		eraseMask(mouseX, mouseY);
 	else if(bRightButton)
 		applyMask(mouseX, mouseY);*/
+
+	if (out == 0 && currentTime > 5000) {
+		fs.mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
+		glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+	}
 
 	mousePointer->mouseMoved(mouseX, mouseY, bLeftButton, bRightButton);
 	auto pos = mousePointer->getPosition();

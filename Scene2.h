@@ -16,6 +16,7 @@
 #include "MousePointer.h"
 #include "SquarePointer.h"
 #include "Poison.h"
+#include "finalScreen.h"
 #include "MusicHandler.h"
 
 #define HEIGHT 190
@@ -39,7 +40,7 @@ public:
 	Scene2();
 	~Scene2();
 
-	void init(bool *paused, std::function<void()> faster, std::function<void()> slower);
+	void init(bool *paused, std::function<void()> faster, std::function<void()> slower, std::function<void()> init);
 	void initHabilities(std::function<void()> faster, std::function<void()> slower);
 	void update(int deltaTime);
 	void render();
@@ -74,6 +75,7 @@ private:
 	int selectedHab;
 	bool *paused, nuked;
 	SkyDoor *skyDoor;
+	finalScreen fs;
 	ExitDoor *exitDoor;
 	BottomBox *bb;
 	MousePointer *mousePointer;
@@ -81,8 +83,8 @@ private:
 	int mouseX, mouseY; // last mouse coords
 	LadderHandler *ladderHandler;
 	vector<int> habsQuant;
-	int out = 0;
-	int in = 0;
+	int out;
+	int in;
 
 	int offset = 3;
 	int leftPos = 120.f;

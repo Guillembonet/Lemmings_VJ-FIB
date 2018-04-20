@@ -28,6 +28,7 @@
     <ClCompile Include="MenuButton.cpp" />
     <ClCompile Include="MusicHandler.cpp" />
     <ClCompile Include="Scene3.cpp" />
+    <ClCompile Include="finalScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h" />
@@ -58,5 +59,6 @@
     <ClInclude Include="MenuButton.h" />
     <ClInclude Include="MusicHandler.h" />
     <ClInclude Include="Scene3.h" />
+    <ClInclude Include="finalScreen.h" />
   </ItemGroup>
 </Project>

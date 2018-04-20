@@ -15,6 +15,7 @@
 #include "BottomBox.h"
 #include "MousePointer.h"
 #include "SquarePointer.h"
+#include "finalScreen.h"
 #include "Poison.h"
 #include "MusicHandler.h"
 
@@ -39,7 +40,7 @@ public:
 	Scene3();
 	~Scene3();
 
-	void init(bool *paused, std::function<void()> faster, std::function<void()> slower);
+	void init(bool *paused, std::function<void()> faster, std::function<void()> slower, std::function<void()> init);
 	void initHabilities(std::function<void()> faster, std::function<void()> slower);
 	void update(int deltaTime);
 	void render();
@@ -68,13 +69,14 @@ private:
 	glm::mat4 projection;
 	int lastLemmingGenTime;
 	int const MAX_LEMMINGS = 10;
-	int lemmingCount = 0;
+	int lemmingCount;
 	int lemXsecs;
 	std::vector<Lemming*> lemmings;
 	int selectedHab;
 	bool *paused, nuked;
 	SkyDoor *skyDoor;
 	ExitDoor *exitDoor;
+	finalScreen fs;
 	BottomBox *bb;
 	MousePointer *mousePointer;
 	SquarePointer *squarePointer;
