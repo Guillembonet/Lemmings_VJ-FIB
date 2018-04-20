@@ -90,6 +90,7 @@ void Scene3::initHabilities(std::function<void()> faster, std::function<void()> 
 }
 
 void Scene3::nuke() {
+	MusicHandler::play("songs/moab.mp3", false);
 	for each (Lemming *lem in lemmings)
 	{
 		lem->nuke();
@@ -220,6 +221,11 @@ void Scene3::render()
 			++out;
 	}
 	for each(Poison *po in poisons) {
+		simpleTexProgram.use();
+		simpleTexProgram.setUniformMatrix4f("projection", projection);
+		simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		simpleTexProgram.setUniformMatrix4f("modelview", modelview);
 		po->render();
 	}
 	bb->render();

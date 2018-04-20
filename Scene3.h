@@ -16,6 +16,7 @@
 #include "MousePointer.h"
 #include "SquarePointer.h"
 #include "Poison.h"
+#include "MusicHandler.h"
 
 #define HEIGHT 190
 #define WIDTH 848

@@ -66,7 +66,7 @@ void Menu::init(vector<std::function<void()>> callbacks, std::function<void()> e
 	projection = glm::ortho(0.f, float(960 - 1), float(642 - 1), 0.f);
 
 	MusicHandler::play("songs/background.mp3", true);
-	MusicHandler::setVolume("songs/background.mp3", 120);
+	MusicHandler::setVolume("songs/background.mp3", 130);
 }
 
 void Menu::update(int deltaTime)

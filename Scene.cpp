@@ -83,6 +83,7 @@ void Scene::initHabilities(std::function<void()> faster, std::function<void()> s
 }
 
 void Scene::nuke() {
+	MusicHandler::play("songs/moab.mp3", false);
 	for each (Lemming *lem in lemmings)
 	{
 		lem->nuke();
