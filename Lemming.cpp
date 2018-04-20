@@ -464,6 +464,8 @@ bool Lemming::render()
 {
 	if (exploded) {
 		explosion.render();
+		if (currentTime > explodeTime + 3000)
+			return false;
 	}
 	else {
 		sprite->render();
@@ -471,7 +473,7 @@ bool Lemming::render()
 
 	if (exploding) {
 		explodingNumber.render(static_cast<ostringstream*>(&(ostringstream() << (int)(explodeTime - currentTime) / 1000))->str(),
-			sprite->position()*3.0f + glm::vec2(-330.0f, 30.0f), 15, glm::vec4(1, 1, 1, 1));
+			glm::vec2(sprite->position().x*3.0f, sprite->position().y*3.2f) + glm::vec2(-340.0f, 30.0f), 15, glm::vec4(1, 1, 1, 1));
 	}
 
 	if (state == OUT_OF_SCENE_STATE)

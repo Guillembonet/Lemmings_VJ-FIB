@@ -15,6 +15,7 @@
 #include "BottomBox.h"
 #include "MousePointer.h"
 #include "SquarePointer.h"
+#include "finalScreen.h"
 
 #define HEIGHT 190
 #define WIDTH 512
@@ -37,7 +38,7 @@ public:
 	Scene();
 	~Scene();
 
-	void init(bool *paused, std::function<void()> faster, std::function<void()> slower);
+	void init(bool *paused, std::function<void()> faster, std::function<void()> slower, std::function<void()> init);
 	void initHabilities(std::function<void()> faster, std::function<void()> slower);
 	void update(int deltaTime);
 	void render();
@@ -73,6 +74,7 @@ private:
 	SkyDoor *skyDoor;
 	ExitDoor *exitDoor;
 	BottomBox *bb;
+	finalScreen fs;
 	MousePointer *mousePointer;
 	SquarePointer *squarePointer;
 	int mouseX, mouseY; // last mouse coords

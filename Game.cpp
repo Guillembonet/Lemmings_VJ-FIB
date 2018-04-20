@@ -6,8 +6,9 @@
 void Game::callback1(){ // En caso de que esta función sea llamada, se iniciará la escena del juego y se cambiará el estado
 	std::function<void()> faster = std::bind(&Game::faster, this);
 	std::function<void()> slower = std::bind(&Game::slower, this);
+	std::function<void()> init = std::bind(&Game::init, this, speed);
 
-	scene1.init(&paused, faster, slower);
+	scene1.init(&paused, faster, slower, init);
 	state = PLAYING_SCENE1;
 
 	MusicHandler::pause("songs/background.mp3");
@@ -16,8 +17,9 @@ void Game::callback1(){ // En caso de que esta función sea llamada, se iniciará 
 void Game::callback2() { // En caso de que esta función sea llamada, se iniciará la escena del juego y se cambiará el estado
 	std::function<void()> faster = std::bind(&Game::faster, this);
 	std::function<void()> slower = std::bind(&Game::slower, this);
+	std::function<void()> init = std::bind(&Game::init, this, speed);
 
-	scene2.init(&paused, faster, slower);
+	scene2.init(&paused, faster, slower, init);
 	state = PLAYING_SCENE2;
 
 	MusicHandler::pause("songs/background.mp3");
@@ -26,8 +28,9 @@ void Game::callback2() { // En caso de que esta función sea llamada, se iniciará
 void Game::callback3() { // En caso de que esta función sea llamada, se iniciará la escena del juego y se cambiará el estado
 	std::function<void()> faster = std::bind(&Game::faster, this);
 	std::function<void()> slower = std::bind(&Game::slower, this);
+	std::function<void()> init = std::bind(&Game::init, this, speed);
 
-	scene3.init(&paused, faster, slower);
+	scene3.init(&paused, faster, slower, init);
 	state = PLAYING_SCENE3;
 
 	MusicHandler::pause("songs/background.mp3");
@@ -46,7 +49,6 @@ void Game::init(float *speed)
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
 	state = MENU; // Inicialmente tendremos el menú
-
 	std::function<void()> call1 = std::bind(&Game::callback1, this); // Creamos obj. function y le enlazamos nuestro callback
 	std::function<void()> call2 = std::bind(&Game::callback2, this);
 	std::function<void()> call3 = std::bind(&Game::callback3, this);

@@ -17,6 +17,7 @@
     <ClInclude Include="common_defs.h" />
     <ClInclude Include="ExitDoor.h" />
     <ClInclude Include="Explosion.h" />
+    <ClInclude Include="finalScreen.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="LadderHandler.h" />
     <ClInclude Include="Lemming.h" />
@@ -45,6 +46,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="ExitDoor.cpp" />
     <ClCompile Include="Explosion.cpp" />
+    <ClCompile Include="finalScreen.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="LadderHandler.cpp" />
     <ClCompile Include="Lemming.cpp" />
