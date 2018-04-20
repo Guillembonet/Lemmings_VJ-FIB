@@ -199,6 +199,7 @@ void Scene2::update(int deltaTime)
 void Scene2::render()
 {
 	if (out == 0 && currentTime > 8000) {
+		MusicHandler::pause("songs/scene2.mp3");
 		fs.set(out, in, MAX_LEMMINGS);
 		fs.render();
 	}

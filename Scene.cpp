@@ -191,6 +191,7 @@ void Scene::render()
 	if (out == 0 && currentTime > 8000) {
 		fs.set(out, in, MAX_LEMMINGS);
 		fs.render();
+		MusicHandler::pause("songs/scene1.mp3");
 	}
 	else {
 		glm::mat4 modelview;
