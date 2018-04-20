@@ -60,7 +60,7 @@ void Menu::init(vector<std::function<void()>> callbacks, std::function<void()> e
 	level3->attachCallback(callbacks[2]);
 
 	back = new MenuButton();
-	back->init(glm::vec2(960*2 / 3 - 100, 460), program, "images/back_button.png");
+	back->init(glm::vec2(960*4 / 5 - 100, 480), program, "images/back_button.png");
 	back->attachCallback(std::bind(&Menu::setState, this, BASIC));
 
 	projection = glm::ortho(0.f, float(960 - 1), float(642 - 1), 0.f);

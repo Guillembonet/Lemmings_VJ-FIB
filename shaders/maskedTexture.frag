@@ -12,7 +12,7 @@ void main()
 	// otherwise compose the texture sample with the fragment's interpolated color
 	vec4 texColor = texture(tex, texCoordFrag);
 	vec4 maskColor = texture(mask, texCoordFrag);
-	if((texColor.a < 0.5f) || (maskColor.r < 0.1f))
+	if(texColor.a < 0.5f)
 		discard;
 	outColor = color * texColor;
 }
