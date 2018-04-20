@@ -97,6 +97,7 @@ void Scene2::initHabilities(std::function<void()> faster, std::function<void()> 
 }
 
 void Scene2::nuke() {
+	MusicHandler::play("songs/moab.mp3", false);
 	for each (Lemming *lem in lemmings)
 	{
 		lem->nuke();
@@ -231,10 +232,39 @@ void Scene2::render()
 			if (lem->render())
 				++out;
 		}
+
+		bb->render();
 		for each(Poison *po in poisons) {
+			simpleTexProgram.use();
+			simpleTexProgram.setUniformMatrix4f("projection", projection);
+			simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+			modelview = glm::mat4(1.0f);
+			simpleTexProgram.setUniformMatrix4f("modelview", modelview);
 			po->render();
 		}
+		exitDoor->render();
+		skyDoor->render();
+		ladderHandler->render();
+		out = 0;
+		for each (Lemming *lem in lemmings)
+		{
+			simpleTexProgram.use();
+			simpleTexProgram.setUniformMatrix4f("projection", projection);
+			simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+			modelview = glm::mat4(1.0f);
+			simpleTexProgram.setUniformMatrix4f("modelview", modelview);
+			if (lem->render())
+				++out;
+		}
 		bb->render();
+		for each(Poison *po in poisons) {
+			simpleTexProgram.use();
+			simpleTexProgram.setUniformMatrix4f("projection", projection);
+			simpleTexProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+			modelview = glm::mat4(1.0f);
+			simpleTexProgram.setUniformMatrix4f("modelview", modelview);
+			po->render();
+		}
 
 		simpleTexProgram.use();
 		simpleTexProgram.setUniformMatrix4f("projection", projection);

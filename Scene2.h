@@ -17,6 +17,7 @@
 #include "SquarePointer.h"
 #include "Poison.h"
 #include "finalScreen.h"
+#include "MusicHandler.h"
 
 #define HEIGHT 190
 #define WIDTH 512
@@ -91,7 +92,7 @@ private:
 	float MAX_LEFT_POS;
 	float MAX_RIGHT_POS;
 
-	vector<Poison*> poisons;
+	std::vector<Poison*> poisons;
 };
 
 
