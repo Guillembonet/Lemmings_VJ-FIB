@@ -25,7 +25,7 @@ public:
 
 	void init(int *in, vector<int> *habs, const glm::vec2 &initialPosition, ShaderProgram &shaderProgram);
 	void update(int deltaTime, vector<glm::vec2> &blockers);
-	bool render();
+	bool render(int offset);
 	
 	void setMapMask(VariableTexture *mapMask);
 	void setExitDoorCoords(int x, int y, int w, int h);
