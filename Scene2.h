@@ -68,7 +68,7 @@ private:
 	float currentTime;
 	glm::mat4 projection;
 	int lastLemmingGenTime;
-	int const MAX_LEMMINGS = 10;
+	int const MAX_LEMMINGS = 15;
 	int lemmingCount = 0;
 	int lemXsecs;
 	std::vector<Lemming*> lemmings;

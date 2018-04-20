@@ -92,6 +92,7 @@ int main(int argc, char **argv)
 	glutInitWindowSize(960, 642);
 
 	glutCreateWindow(argv[0]);
+	glutSetWindowTitle("Lemmings by Omar Garcia & Guillem Bonet");
 	glutDisplayFunc(drawCallback);
 	glutIdleFunc(idleCallback);
 	glutKeyboardFunc(keyboardDownCallback);
