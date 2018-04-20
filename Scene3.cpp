@@ -155,7 +155,7 @@ void Scene3::update(int deltaTime)
 		newLemming->init(&in, &habsQuant, glm::vec2(30 + 120.f, 27), simpleTexProgram);
 		newLemming->setLadderHandler(ladderHandler);
 		newLemming->setMapMask(&maskTexture);
-		newLemming->setExitDoorCoords(245 + 120.f, 23, 4, 5);
+		newLemming->setExitDoorCoords(550 + 8 + 130.f, 106 + 11, 4, 5);
 
 		lemmings.push_back(newLemming);
 

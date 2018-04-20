@@ -155,7 +155,7 @@ void Scene2::update(int deltaTime)
 		newLemming->init(&in, &habsQuant, glm::vec2(90 + 120.f, 27), simpleTexProgram);
 		newLemming->setLadderHandler(ladderHandler);
 		newLemming->setMapMask(&maskTexture);
-		newLemming->setExitDoorCoords(245 + 120.f, 23, 4, 5);
+		newLemming->setExitDoorCoords(245 + 8 + 120.f, 23 + 11, 4, 5);
 
 		lemmings.push_back(newLemming);
 
@@ -256,7 +256,6 @@ void Scene2::render()
 			if (lem->render())
 				++out;
 		}
-		bb->render();
 		for each(Poison *po in poisons) {
 			simpleTexProgram.use();
 			simpleTexProgram.setUniformMatrix4f("projection", projection);
@@ -265,6 +264,7 @@ void Scene2::render()
 			simpleTexProgram.setUniformMatrix4f("modelview", modelview);
 			po->render();
 		}
+		bb->render();
 
 		simpleTexProgram.use();
 		simpleTexProgram.setUniformMatrix4f("projection", projection);
